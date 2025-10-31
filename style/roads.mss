@@ -298,6 +298,8 @@
 @halo-color-for-minor-road:       white;
 @lowzoom-halo-color:              white;
 @lowzoom-halo-width:              1;
+/* opacity for halo of coloured roads at mid low zoom (Z10-Z12) */
+@lowzoom-halo-opacity:			  0.4; 
 
 @motorway-oneway-arrow-color:     darken(@motorway-casing, 25%);
 @trunk-oneway-arrow-color:        darken(@trunk-casing, 25%);
@@ -1130,7 +1132,7 @@ tertiary is rendered from z10 and is not included in osm_planet_roads. */
     [zoom = 11][feature = 'highway_secondary'] {
       line-color: @halo-color-for-minor-road;
       line-width: 2.7;
-      line-opacity: 0.4;
+      line-opacity: @lowzoom-halo-opacity;
       line-join: round;
       //Missing line-cap: round; is intentional. It would cause rendering glow multiple times in some places - what as result of partial transparency would cause differences in rendering
       //Also, bridges - including bridge casings - are rendered on top of roads. Enabling line-cap: round would result in glow from bridges rendered on top of road around bridges.
@@ -1175,7 +1177,7 @@ tertiary is rendered from z10 and is not included in osm_planet_roads. */
         [zoom >= 11] { line-width: @primary-width-z11 + 2 * @lowzoom-halo-width; }
       }
       line-color: @lowzoom-halo-color;
-      line-opacity: .4;
+      line-opacity: @lowzoom-halo-opacity;
     }
   }
 
