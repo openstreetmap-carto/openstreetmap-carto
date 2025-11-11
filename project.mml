@@ -1562,7 +1562,7 @@ Layer:
                                                     'car_rental', 'car_wash', 'casino', 'charging_station', 'childcare', 'cinema', 'clinic', 'college',
                                                     'community_centre', 'courthouse', 'dentist', 'doctors', 'drinking_water', 'driving_school',
                                                     'fast_food', 'ferry_terminal', 'fire_station', 'food_court', 'fountain', 'fuel', 'grave_yard',
-                                                    'hospital', 'hunting_stand', 'ice_cream', 'internet_cafe', 'kindergarten', 'library', 'marketplace',
+                                                    'hospital', 'hunting_stand', 'ice_cream', 'internet_cafe', 'kindergarten', 'library', 'library_dropoff', 'marketplace',
                                                     'nightclub', 'nursing_home', 'pharmacy', 'place_of_worship', 'police', 'post_box',
                                                     'post_office', 'prison', 'pub', 'public_bath', 'public_bookcase', 'recycling', 'restaurant', 'school',
                                                     'shelter', 'shower', 'social_facility', 'taxi', 'telephone', 'theatre', 'toilets', 'townhall',
