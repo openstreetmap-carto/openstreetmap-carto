@@ -1,0 +1,47 @@
+settings:
+  temp_schema: loading
+  schema: public
+  data_dir: data
+  database: gis
+  taginfo_url: "https://taginfo.openstreetmap.org/api/4/key"
+  common_exclusions:
+    - "no"
+    - "yes"
+    - vacant
+    - empty
+    - disused
+    - unknown
+    - closed
+    - fixme
+    - FIXME
+    - FixMe
+    - other
+    - "*"
+keys:
+  shop:
+    min_count: 100
+    exclusions:
+      - winery #see discussion in https://github.com/gravitystorm/openstreetmap-carto/pull/1632
+      - antique #see https://github.com/gravitystorm/openstreetmap-carto/pull/1900
+      - betting #see https://github.com/gravitystorm/openstreetmap-carto/pull/1900
+      - delicatessen #see https://github.com/gravitystorm/openstreetmap-carto/pull/1900
+      - dive #see https://github.com/gravitystorm/openstreetmap-carto/pull/1900
+      - fish #see https://github.com/gravitystorm/openstreetmap-carto/pull/1900
+      - gambling #see https://github.com/gravitystorm/openstreetmap-carto/pull/1900
+      - insurance #see https://github.com/gravitystorm/openstreetmap-carto/pull/1900
+      - pharmacy #see https://github.com/gravitystorm/openstreetmap-carto/pull/1900
+      - street_vendor #see https://github.com/gravitystorm/openstreetmap-carto/issues/2090
+      - storage_rental #see https://github.com/gravitystorm/openstreetmap-carto/issues/2090
+      - retail # nonspecific
+      - organic # https://wiki.openstreetmap.org/wiki/Tag:shop%3Dorganic
+      - watch # duplicate of shop=watches
+      - shopping_centre # duplicate of mall
+      - marketplace # duplicate of amenity=marketplace
+      - market # duplicate of amenity=marketplace
+      - baby_care # duplicate of shop=baby_goods
+      - board # very poor name, rare use
+      - robot # duplicate of shop=electronics
+      - business_machines # duplicate of shop=electronics
+      - tyres # duplicate of shop=tires
+  office:
+    min_count: 100
