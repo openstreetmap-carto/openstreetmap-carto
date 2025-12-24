@@ -1971,7 +1971,6 @@ Layer:
               WHEN (railway = 'tram' AND service IN ('spur', 'siding', 'yard')) THEN 'tram-service'
               ELSE railway
             END AS railway,
-            CASE WHEN (tunnel IN ('yes', 'building_passage', 'avalanche_protector') OR covered = 'yes') THEN 'yes' ELSE 'no' END AS tunnel,
             tags->'highspeed' as highspeed,
             tags->'usage' as usage,
             construction,
