@@ -7,26 +7,31 @@ point:
   place:
     where: place IS NOT NULL AND name IS NOT NULL
 line:
-  name:
-    where: name IS NOT NULL
+  label:
+    where: name IS NOT NULL OR ref IS NOT NULL
   ferry:
-    where: route = 'ferry'
+    where: route = 'ferry' AND osm_id > 0
   river:
     where: waterway = 'river'
+  waterway:
+    where: waterway IN ('river', 'canal', 'stream', 'drain', 'ditch')
 polygon:
   # The polygon table is by far the largest, and generally the slowest
   name:
+    function: ST_PointOnSurface(way)
     where: name IS NOT NULL
+  name_z6:
+    function: ST_PointOnSurface(way)
+    where: name IS NOT NULL AND way_area > 5980000
+  admin:
+    function: ST_PointOnSurface(way)
+    where: name IS NOT NULL AND boundary = 'administrative' AND admin_level IN ('0', '1', '2', '3', '4')
   nobuilding:
     where: building IS NULL
   military:
     where: (landuse = 'military' OR military = 'danger_area') AND building IS NULL
   water:
-    # The indentation here makes sense in the SQL output
-    where: |-
-      waterway IN ('dock', 'riverbank', 'canal')
-          OR landuse IN ('reservoir', 'basin')
-          OR "natural" IN ('water', 'glacier')
+    where: waterway IN ('dock', 'riverbank', 'canal') OR landuse IN ('reservoir', 'basin') OR "natural" IN ('water', 'glacier')
   way_area_z6:
     where: way_area > 5980000
   way_area_z10:

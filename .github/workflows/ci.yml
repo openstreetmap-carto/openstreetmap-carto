@@ -1,0 +1,73 @@
+name: CI
+on:
+  - push
+  - pull_request
+jobs:
+  syntax:
+    runs-on: ubuntu-22.04
+    steps:
+    - uses: actions/checkout@v3
+    - uses: actions/setup-python@v4
+      with:
+        python-version: 3.7
+    - uses: actions/setup-node@v3
+      with:
+        node-version: 16
+    - name: Install python dependencies
+      run: pip install pyyaml colormath
+    - name: Set up xmllint
+      run: sudo apt-get update -qq && sudo apt-get install -qq --no-install-recommends libxml2-utils
+    - name: Set up CartoCSS
+      run: npm install -g carto@1.2.0
+    - name: Set up shell
+      run: set -o pipefail
+    - name: Validate YAML files
+      run: |
+        find . \( -type f -name '*.yaml' -o -name '*.yml' -o -name '*.mml' \) -print0 \
+        | xargs -0 -I '{}' python3 -c 'from yaml import safe_load; safe_load(open("{}"))'
+    - name: Validate SVGs for valid XML
+      run: find symbols/ -name '*.svg' | xargs xmllint --noout
+    - name: Check indexes are up to date
+      run: diff -qu <(scripts/indexes.py) indexes.sql
+    - name: Check colors of paved roads are up to date
+      run: diff -qu <(scripts/generate_road_colours.py) style/road-colors-generated.mss
+    - name: Check colors of unpaved roads are up to date
+      run: |
+        cp -r symbols/unpaved temp
+        scripts/generate_unpaved_patterns.py
+        diff -qu temp symbols/unpaved
+    - name: Check for unsupported class usage
+      run: '! grep "class:" project.mml > /dev/null'
+    - name: Validate with CartoCSS
+      run: 'carto project.mml --api 3.0.22 --quiet > /dev/null'
+    - name: Check that index script works without errors
+      run: |
+        scripts/indexes.py --fillfactor 100 > /dev/null &&
+        scripts/indexes.py --concurrent > /dev/null &&
+        scripts/indexes.py --reindex > /dev/null &&
+        scripts/indexes.py --concurrent --reindex > /dev/null &&
+        scripts/indexes.py --notexist > /dev/null &&
+        scripts/indexes.py --null > /dev/null &&
+        scripts/indexes.py --null > /dev/null
+  import:
+    needs: [syntax]
+    runs-on: ubuntu-22.04
+    steps:
+    - uses: actions/checkout@v3
+    - name: Install osm2pgsql and database
+      run: sudo apt-get update -qq && sudo apt-get install -qq --no-install-recommends osm2pgsql postgresql-14-postgis-3 gdal-bin
+    - name: Wait for database
+      run : sudo pg_ctlcluster 14 main start; until pg_isready; do sleep 0.5; done
+    - name: Setup database
+      run: sudo -i -u postgres createuser -s $USER && createdb -E utf8 gis && psql -Xq -d gis -c "CREATE EXTENSION postgis; CREATE EXTENSION hstore;"
+    - name: Import empty file
+      run: |
+        osm2pgsql -O flex -S openstreetmap-carto-flex.lua -d gis -r xml <(echo '<osm version="0.6"/>')
+    - name: Create indexes
+      run: psql -1Xq -v ON_ERROR_STOP=1 -d gis -f indexes.sql
+    - name: Load functions
+      run: psql -1Xq -v ON_ERROR_STOP=1 -d gis -f functions.sql
+    - name: Load empty shapefiles
+      run: scripts/get-external-data.py --no-update --cache -D scripts/empty_files
+    - name: Test queries are valid
+      run: scripts/test-queries.py project.mml

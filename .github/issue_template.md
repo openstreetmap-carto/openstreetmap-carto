@@ -2,4 +2,4 @@
 
 ### Actual behavior
 
-### Links and screenshots illustrating the problem
+### Screenshots with links illustrating the problem

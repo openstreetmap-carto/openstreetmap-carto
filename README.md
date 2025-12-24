@@ -2,13 +2,15 @@
 
 ![screenshot](https://raw.github.com/gravitystorm/openstreetmap-carto/master/preview.png)
 
-These are the CartoCSS map stylesheets for the Standard map layer on [OpenStreetMap.org](https://www.openstreetmap.org).
+These are the CartoCSS map stylesheets for the Standard map layer on [OpenStreetMap.org](https://www.openstreetmap.org/).
+
+The general purpose, the cartographic design goals and guidelines for this style are outlined in [CARTOGRAPHY.md](CARTOGRAPHY.md).
 
 These stylesheets can be used in your own cartography projects, and are designed
 to be easily customised. They work with [Kosmtik](https://github.com/kosmtik/kosmtik)
  and also with the command-line [CartoCSS](https://github.com/mapbox/carto) processor.
 
-Since August 2013 these stylesheets have been used on the OSMF tileservers (tile.openstreetmap.org), and
+Since August 2013 these stylesheets have been used on the [OSMF tileservers](https://operations.osmfoundation.org/policies/tiles/) (tile.openstreetmap.org), and
 are updated from each point release. They supersede the previous [XML-based stylesheets](https://github.com/openstreetmap/mapnik-stylesheets).
 
 # Installation
@@ -35,7 +37,7 @@ cartographic project you can expect the following:
   shapefiles and fonts but will not contain changes that require software or
   database upgrades.
 * MAJOR: Any change the requires reloading a database, or upgrading software
-  dependecies will trigger a major version change.
+  dependencies will trigger a major version change.
 
 # Roadmap
 
@@ -58,18 +60,19 @@ versions.
 
 Care has been taken to not get too clever with variables and expressions. While
 these often make it easier to customise, experience has shown that over-cleverness
-(e.g. [interpolated entities][cleverness]) can discourage contributions.
-
-[issues]: https://github.com/gravitystorm/openstreetmap-carto/issues
-[cleverness]: https://github.com/openstreetmap/mapnik-stylesheets/blob/master/inc/settings.xml.inc.template#L16
+(e.g. [interpolated entities](https://github.com/openstreetmap/mapnik-stylesheets/blob/master/inc/settings.xml.inc.template#L16)) can discourage contributions.
 
 ## Database schema change (v4.x)
 
-The v4.x series includes [osm2pgsql lua transforms](https://github.com/openstreetmap/osm2pgsql/blob/master/docs/lua.md)
+The v4.x series includes [osm2pgsql lua transforms](https://osm2pgsql.org/doc/manual.html#lua-tag-transformations)
 and a hstore column with all other tags, allowing use of more OpenStreetMap data. Users need
 to reload their databases, v3.x compatibility is not maintained.
 
-There are over [300 open requests][issues], some that have been open for years.
+## Database schema change (v5.x)
+
+The v5.x series updates Lua tag transforms, linestring and polygon decisions have changed.
+
+There are over [500 open requests](https://github.com/gravitystorm/openstreetmap-carto/issues), some that have been open for years.
 These need reviewing and dividing into obvious fixes, or additional new features
 that need some cartographic judgement.
 
@@ -78,18 +81,22 @@ that need some cartographic judgement.
 There are many open-source stylesheets written for creating OpenStreetMap-based
 maps using Mapnik, many based on this project. Some alternatives are:
 
-* [OSM-Bright](https://github.com/mapbox/osm-bright)
-* [XML-based stylesheets](https://trac.openstreetmap.org/browser/subversion/applications/rendering/mapnik)
-* [osmfr-cartocss](https://github.com/cquest/osmfr-cartocss)
-* [openstreetmap-carto-german](https://github.com/giggls/openstreetmap-carto-de)
+* [OSM Bright](https://github.com/geofabrik/osm-bright)
+* [XML-based stylesheets](https://github.com/openstreetmap/mapnik-stylesheets)
+* [OpenStreetMap "FR" Carto](https://github.com/cquest/osmfr-cartocss)
+* [OpenStreetMap Carto German](https://github.com/giggls/openstreetmap-carto-de)
 
 # Maintainers
 
-* Andy Allan [@gravitystorm](https://github.com/gravitystorm/)
-* Matthijs Melissen [@matthijsmelissen](https://github.com/matthijsmelissen/)
-* Paul Norman [@pnorman](https://github.com/pnorman/)
-* Mateusz Konieczny [@matkoniecz](https://github.com/matkoniecz/)
 * Daniel Koć [@kocio-pl](https://github.com/kocio-pl)
 * Christoph Hormann [@imagico](https://github.com/imagico)
 * Lukas Sommer [@sommerluk](https://github.com/sommerluk)
 * Joseph Eisenberg [@jeisenbe](https://github.com/jeisenbe)
+
+## Previous maintainers
+
+* Andy Allan [@gravitystorm](https://github.com/gravitystorm)
+* Paul Norman [@pnorman](https://github.com/pnorman)
+* Michael Glanznig [@nebulon42](https://github.com/nebulon42)
+* Matthijs Melissen [@matthijsmelissen](https://github.com/matthijsmelissen)
+* Mateusz Konieczny [@matkoniecz](https://github.com/matkoniecz)

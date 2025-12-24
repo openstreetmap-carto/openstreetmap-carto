@@ -1,13 +1,3 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<svg
-   xmlns="http://www.w3.org/2000/svg"
-   version="1.1"
-   width="6"
-   height="6">
-  <path
-     style="fill:#fdfdfc;stroke:#575749;stroke-width:1"
-     d="m 5.5,3 a 2.5,2.5 0 0 1 -5,0 2.5,2.5 0 1 1 5,0 z" />
-  <path
-     style="fill:#575749;stroke:none"
-     d="M 4,3 A 1,1 0 0 1 2,3 1,1 0 1 1 4,3 z" />
+<svg xmlns="http://www.w3.org/2000/svg" width="6" height="6" viewBox="0 0 6 6">
+  <path d="m3,.5 a2.5,2.5 0 0 1 0,5 2.5,2.5 0 1 1 0,-5 z m0,2 a.5,.5 0 0 0 0,1 .5,.5 0 0 0 0,-1z" fill="#fdfdfc" stroke="#575749" stroke-width="1"/>
 </svg>

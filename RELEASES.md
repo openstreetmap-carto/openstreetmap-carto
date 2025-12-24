@@ -28,9 +28,9 @@ Decide among the maintainers if a new release is due.
 Dear all,
 
 Today, $NEW_VERSION of the OpenStreetMap Carto stylesheet (the default
-stylesheet on the OSM website) has been released. Once changes are deployed
-on the openstreetmap.org it will take couple of days before all tiles
-show the new rendering.
+stylesheet on the OSM website) has been released. Once changes are
+deployed on the openstreetmap.org it will take couple of days before
+all tiles show the new rendering.
 
 If the tile server admins have rolled out the new version, change it to:
 

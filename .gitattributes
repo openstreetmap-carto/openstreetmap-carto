@@ -3,3 +3,7 @@
 
 # Declare files that will always have LF line endings on checkout.
 *.sh text eol=lf
+*.py text eol=lf
+
+# YAML highlighting on GitHub webpage for CartoCSS MML files.
+*.mml linguist-language=YAML linguist-detectable

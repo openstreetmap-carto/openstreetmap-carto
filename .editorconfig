@@ -18,3 +18,7 @@ indent_size = 4
 [*.svg]
 indent_style = undef
 indent_size = undef
+
+# Lastmod files are used by the scripts and should not contain newlines
+[*.lastmod]
+insert_final_newline = false

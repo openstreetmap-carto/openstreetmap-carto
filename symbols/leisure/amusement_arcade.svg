@@ -1,22 +1,3 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<!-- Created with Inkscape (http://www.inkscape.org/) -->
-<svg width="14" height="14" version="1.1" viewBox="0 0 3.7042 3.7042" xmlns="http://www.w3.org/2000/svg" xmlns:cc="http://creativecommons.org/ns#" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
- <metadata>
-  <rdf:RDF>
-   <cc:Work rdf:about="">
-    <dc:format>image/svg+xml</dc:format>
-    <dc:type rdf:resource="http://purl.org/dc/dcmitype/StillImage"/>
-    <dc:title/>
-   </cc:Work>
-  </rdf:RDF>
- </metadata>
- <g transform="translate(0 -293.3)">
-  <g>
-   <rect x="-3.9736e-7" y="293.56" width="1.0583" height=".52917"/>
-   <rect x="2.6458" y="293.56" width="1.0583" height=".52917"/>
-   <rect x="2.1167" y="294.09" width=".52917" height=".52917"/>
-   <rect x="1.0583" y="294.09" width=".52917" height=".52917"/>
-  </g>
-  <path d="m0.52917 294.62v0.52917h-0.52917v1.8521h0.52917v-0.52917h0.52917v0.52917h0.52917v-0.52917h0.52917v0.52917h0.52917v-0.52917h0.52917v0.52917h0.52917v-1.8521h-0.52917v-0.52917zm0.52917 0.52917h0.52917v0.52917h-0.52917zm1.0583 0h0.52917v0.52917h-0.52917z"/>
- </g>
+<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 14 14">
+  <path d="m0,1 h4 v2 h-4z m10,0 h4 v2 h-4z m-6,2 v2 h-2 v2 h-2 v7 h2 v-2 h2 v2 h2 v-2 h2 v2 h2 v-2 h2 v2 h2 v-7 h-2 v-2 h-2 v-2 h-2 v2 h-2 v-2z m0,4 h2 v2 h-2 z m4,0 h2 v2 h-2 z"/>
 </svg>

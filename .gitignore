@@ -1,6 +1,7 @@
 .thumb.png
 layers/
 data/
+fonts/
 tmp/
 *.xml
 *.osm.pbf

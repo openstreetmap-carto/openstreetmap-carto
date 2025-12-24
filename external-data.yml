@@ -1,0 +1,61 @@
+settings:
+  temp_schema: loading
+  schema: public
+  data_dir: data
+  database: gis
+  metadata_table: external_data
+sources:
+  simplified_water_polygons:
+    # The type of file this source is
+    type: shp
+    # Where to get it
+    url: https://osmdata.openstreetmap.de/download/simplified-water-polygons-split-3857.zip
+    # The location within the archive
+    file: simplified-water-polygons-split-3857/simplified_water_polygons.shp
+    archive:
+      format: zip
+      # Files to extract from the archive
+      files:
+        - simplified-water-polygons-split-3857/simplified_water_polygons.cpg
+        - simplified-water-polygons-split-3857/simplified_water_polygons.dbf
+        - simplified-water-polygons-split-3857/simplified_water_polygons.prj
+        - simplified-water-polygons-split-3857/simplified_water_polygons.shp
+        - simplified-water-polygons-split-3857/simplified_water_polygons.shx
+  water_polygons:
+    type: shp
+    url: https://osmdata.openstreetmap.de/download/water-polygons-split-3857.zip
+    file: water-polygons-split-3857/water_polygons.shp
+    archive:
+      format: zip
+      files:
+        - water-polygons-split-3857/water_polygons.cpg
+        - water-polygons-split-3857/water_polygons.dbf
+        - water-polygons-split-3857/water_polygons.prj
+        - water-polygons-split-3857/water_polygons.shp
+        - water-polygons-split-3857/water_polygons.shx
+  icesheet_polygons:
+    type: shp
+    url: https://osmdata.openstreetmap.de/download/antarctica-icesheet-polygons-3857.zip
+    file: antarctica-icesheet-polygons-3857/icesheet_polygons.shp
+    archive:
+      format: zip
+      files:
+        - antarctica-icesheet-polygons-3857/icesheet_polygons.cpg
+        - antarctica-icesheet-polygons-3857/icesheet_polygons.dbf
+        - antarctica-icesheet-polygons-3857/icesheet_polygons.prj
+        - antarctica-icesheet-polygons-3857/icesheet_polygons.shp
+        - antarctica-icesheet-polygons-3857/icesheet_polygons.shx
+  icesheet_outlines:
+    type: shp
+    url: https://osmdata.openstreetmap.de/download/antarctica-icesheet-outlines-3857.zip
+    file: antarctica-icesheet-outlines-3857/icesheet_outlines.shp
+    ogropts:
+      - "-explodecollections"
+    archive:
+      format: zip
+      files:
+        - antarctica-icesheet-outlines-3857/icesheet_outlines.cpg
+        - antarctica-icesheet-outlines-3857/icesheet_outlines.dbf
+        - antarctica-icesheet-outlines-3857/icesheet_outlines.prj
+        - antarctica-icesheet-outlines-3857/icesheet_outlines.shp
+        - antarctica-icesheet-outlines-3857/icesheet_outlines.shx

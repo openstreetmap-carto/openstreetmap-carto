@@ -49,6 +49,7 @@ These actions are explicitly forbidden in OpenStreetMap Carto spaces:
 - Insulting, demeaning, hateful, or threatening remarks.
 - Discrimination based on age, disability, gender, nationality, ethnicity, religion, sexuality, or similar personal characteristic.
 - Bullying or systematic harassment.
+- Revealing private information about other participants without explicit permission ("doxxing").
 - Unwelcome sexual advances.
 - Incitement to any of these.
 
@@ -62,7 +63,7 @@ When using the OpenStreetMap Carto spaces you should act in the spirit of the va
 
 The OpenStreetMap Carto maintainers are responsible for handling conduct-related issues. Their goal is to de-escalate conflicts and try to resolve issues to the satisfaction of all parties.
 
-If you encounter a conduct-related issue, you should report it to the maintainers by sending them [all an email](mailto:openstreetmap-carto@gravitystorm.co.uk,penorman@mac.com,info@matthijsmelissen.nl,matkoniecz@gmail.com,chris_hormann@gmx.de,daniel@xn--ko-wla.pl,sommerluk@gmail.com,joseph.eisenberg@gmail.com).
+If you encounter a conduct-related issue, you should report it to the maintainers by sending them [all an email](mailto:chris_hormann@gmx.de,daniel@xn--ko-wla.pl,sommerluk@gmail.com,joseph.eisenberg@gmail.com). In the event that you wish to make a complaint against a maintainer, you may instead contact the other maintainers.
 
 **Note that the goal of the Code of Conduct and the maintainers is to resolve conflicts in the most harmonious way possible.** We hope that in most cases issues may be resolved through polite discussion and mutual agreement. Bans and other forceful measures are to be employed only as a last resort.
 
@@ -77,6 +78,6 @@ Changes to the Code of Conduct should be proposed as pull requests.
 
 ## Acknowledgements
 
-This document is based on the [Go Code of Conduct](https://golang.org/conduct), which in turn has parts derived from the Code of Conduct documents of the Django, FreeBSD, and Rust projects.
+This document is based on the [Go Community Code of Conduct](https://go.dev/conduct), which in turn has parts derived from the Code of Conduct documents of the Django, FreeBSD, and Rust projects.
 
 This documented is licensed under the Creative Commons Attribution 3.0 License.

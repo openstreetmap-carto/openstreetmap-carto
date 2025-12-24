@@ -1,4 +1,4 @@
 <?xml version='1.0' encoding='utf-8'?>
-<svg xmlns="http://www.w3.org/2000/svg" width="100%" height="100%" viewBox="0 0 71.0 54.0">
-  <rect x="0.5" y="0.5" width="70.0" height="53.0" rx="2" ry="2" id="shield" style="fill:#f1f1f1;stroke:#c6c6c6;stroke-width:1;"/>
+<svg xmlns="http://www.w3.org/2000/svg" width="71" height="54" viewBox="0 0 71 54">
+  <rect x="0.5" y="0.5" width="70" height="53" rx="2" ry="2" fill="#f1f1f1" stroke="#c6c6c6" stroke-width="1"/>
 </svg>

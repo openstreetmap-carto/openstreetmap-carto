@@ -1,4 +1,4 @@
-#!/usr/bin/env python2
+#!/usr/bin/env python3
 
 # Generates a set of highway colors to be stored in road-colors-generated.mss.
 
@@ -32,7 +32,7 @@ class Color:
 
 def load_settings():
     """Read the settings from YAML."""
-    return yaml.load(open('road-colors.yaml', 'r'))
+    return yaml.safe_load(open('road-colors.yaml', 'r'))
 
 def generate_colours(settings, section):
     """Generate colour ranges.
@@ -50,7 +50,7 @@ def generate_colours(settings, section):
     max_h = settings['hue'][1]
 
     delta_h = (max_h - min_h) / colour_divisions
-    
+
     h = min_h
     for name in road_classes:
         hues[name] = h
@@ -69,7 +69,7 @@ def generate_colours(settings, section):
     # the roads get brighter towards the lower end of the classification.
 
     classes = settings['classes'][section]
-    for cls, params in classes.iteritems():
+    for cls, params in sorted(classes.items()):
         l = params['lightness']
         c = params['chroma']
         line_colour_infos[cls] = ColourInfo(start_l = l[0], end_l = l[1], start_c = c[0], end_c = c[1])
@@ -77,7 +77,7 @@ def generate_colours(settings, section):
     # Colours for the MSS
     colours = OrderedDict()
 
-    for line_name, line_colour_info in line_colour_infos.iteritems():
+    for line_name, line_colour_info in line_colour_infos.items():
         c = line_colour_info.start_c
         delta_c = (line_colour_info.end_c - line_colour_info.start_c) / colour_divisions
         l = line_colour_info.start_l
@@ -102,20 +102,20 @@ def main():
     colours = generate_colours(settings, 'mss')
 
     # Print a warning about the nature of these definitions.
-    print "/* This is generated code, do not change this file manually.         */"
-    print "/*                                                                   */"
-    print "/* To change these definitions, alter road-colors.yaml and run:      */"
-    print "/*                                                                   */"
-    print "/*   ./scripts/generate_road_colours.py > road-colors-generated.mss  */"
-    print "/*                                                                   */"
+    print("/* This is generated code, do not change this file manually.          */")
+    print("/*                                                                    */")
+    print("/* To change these definitions, alter road-colors.yaml and run:       */")
+    print("/*                                                                    */")
+    print("/* scripts/generate_road_colours.py > style/road-colors-generated.mss */")
+    print("/*                                                                    */")
 
-    for line_name, line_colours in colours.iteritems():
-        for name, colour in line_colours.iteritems():
+    for line_name, line_colours in colours.items():
+        for name, colour in line_colours.items():
             if args.verbose:
                 line = "@{name}-{line_name}: {rgb}; // {lch}, error {delta:.1f}"
             else:
                 line = "@{name}-{line_name}: {rgb};"
-            print line.format(name = name, line_name=line_name, rgb = colour.rgb(), lch = colour.lch(), delta = colour.rgb_error())
+            print((line.format(name = name, line_name=line_name, rgb = colour.rgb(), lch = colour.lch(), delta = colour.rgb_error())))
 
 if __name__ == "__main__":
     main()
