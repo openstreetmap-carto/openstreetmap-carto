@@ -2278,7 +2278,6 @@ Layer:
             way,
             name,
             COALESCE(
-              'railway_' || CASE WHEN railway IN ('level_crossing', 'crossing') AND way_area IS NULL THEN railway END,
               'amenity_' || CASE WHEN amenity IN ('bench', 'waste_basket', 'waste_disposal') AND way_area IS NULL THEN amenity END,
               'historic_' || CASE WHEN historic IN ('wayside_cross', 'wayside_shrine') AND way_area IS NULL THEN historic END,
               'man_made_' || CASE WHEN man_made IN ('cross') AND way_area IS NULL THEN man_made END,
@@ -2333,6 +2332,30 @@ Layer:
               END DESC,
               way_pixels DESC NULLS LAST
           ) AS amenity_low_priority
+    properties:
+      cache-features: true
+      minzoom: 14
+# Render railway crossings except if they concern tramways only
+  - id: railway-crossings
+    geometry: point
+    <<: *extents
+    Datasource:
+      <<: *osm2pgsql
+      table: &railway-crossing_sql |-
+        (SELECT DISTINCT ON (crossing.way)
+            'railway_' || crossing.railway AS feature,
+            crossing.way AS way,
+            crossing.access AS access,
+            crossing.railway AS type,
+            crossing.railway AS railway,
+            track.railway AS int_lc_type
+          FROM planet_osm_point crossing
+            JOIN planet_osm_line track
+              ON ST_DWithin(crossing.way, track.way, 0.1) -- Assumes Mercator
+          WHERE crossing.railway IN ('crossing', 'level_crossing')
+            AND track.railway IS NOT NULL AND track.railway <> 'tram'
+          ORDER BY crossing.way
+        ) AS railway_crossing_sql
     properties:
       cache-features: true
       minzoom: 14
