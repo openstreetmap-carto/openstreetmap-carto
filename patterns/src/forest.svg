@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="600" height="400" viewBox="0 0 60 40">
+<defs>
+  <g id="grid">
+    <path d="m-5,-5 v20 m1,0 v-20 m1,0 v20 m1,0 v-20 m1,0 v20 m1,0 v-20 m1,0 v20 m1,0 v-20 m1,0 v20 m1,0 v-20 m1,0 v20 m1,0 v-20 m1,0 v20 m1,0 v-20 m1,0 v20 m1,0 v-20 m1,0 v20 m1,0 v-20 m1,0 v20 m1,0 v-20 m1,0 v20" stroke-width=".05" stroke="#ccc" fill="none"/>
+    <path d="m-5,-5 h20 m0,1 h-20 m0,1 h20 m0,1 h-20 m0,1 h20 m0,1 h-20 m0,1 h20 m0,1 h-20 m0,1 h20 m0,1 h-20 m0,1 h20 m0,1 h-20 m0,1 h20 m0,1 h-20 m0,1 h20 m0,1 h-20 m0,1 h20 m0,1 h-20 m0,1 h20 m0,1 h-20 m0,1 h20" stroke-width=".05" stroke="#ccc" fill="none"/>
+    <path d="m0,-5 v20 m-5,-15 h20" stroke-width=".1" stroke="blue" fill="none"/>
+  </g>
+</defs>
+<g id="broadleaved" transform="translate(5,5)">
+  <path d="m3.5,13 v-5.5 a3,3.5 0 0 1 0,-7 3,3.5 0 0 1 0,7" stroke-width="1" stroke="#000" fill="none"/>
+  <use xlink:href="#grid"/>
+</g>
+<g id="needleleaved" transform="translate(5,25)">
+  <path d="m3.5,13 v-4.5 m-3,0 v-.4093 l2.8465,-7.5907 h.307 l2.8465,7.5907 v.4093 z" stroke-width="1" stroke="#000" fill="none"/>
+  <use xlink:href="#grid"/>
+</g>
+<g id="mixed1" transform="translate(25,5)">
+  <path d="m1.5,11 v-3.5 m-2,0 v-.4189 l1.8604,-5.5811 h.2792 l1.8604,5.5811 v.4189 z m7,3.5 v-4.5 a2,2.5 0 0 1 0,-5 2,2.5 0 0 1 0,5" stroke-width="1" stroke="#000" fill="none"/>
+  <use xlink:href="#grid"/>
+</g>
+<g id="mixed2" transform="translate(25,25)">
+  <path d="m6.5,11 v-3.5 m-2,0 v-.4189 l1.8604,-5.5811 h.2792 l1.8604,5.5811 v.4189 z m-3,3.5 v-4.5 a2,2.5 0 0 1 0,-5 2,2.5 0 0 1 0,5" stroke-width="1" stroke="#000" fill="none"/>
+  <use xlink:href="#grid"/>
+</g>
+<g id="leafless1" transform="translate(45,5)">
+  <path d="m.5,1.5 v4 m0,0 h3 m0,0 v6.5 v-11.5 m0,8 h3 m0,0 v-5" stroke="#000" stroke-width="1" stroke-linecap="round"/>
+  <use xlink:href="#grid"/>
+</g>
+<g id="leafless2" transform="translate(45,25)">
+  <path d="m.5,3.5 v5 m0,0 h3 m0,0 v3.5 v-11.5 m0,5 h3 m0,0 v-4" stroke="#000" stroke-width="1" stroke-linecap="round"/>
+  <use xlink:href="#grid"/>
+</g>
+</svg>
