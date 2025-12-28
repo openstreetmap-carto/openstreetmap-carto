@@ -833,6 +833,9 @@
   [man_made = 'embankment'][zoom >= 15]::man_made {
     line-pattern-file: url('symbols/embankment.svg');
   }
+  [natural = 'earth_bank'][zoom >= 16] {
+    line-pattern-file: url('symbols/earth_bank.svg');
+  }  
 }
 
 #barriers {

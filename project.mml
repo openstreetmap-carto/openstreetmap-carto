@@ -600,7 +600,7 @@ Layer:
         (SELECT
             way, "natural", man_made
           FROM planet_osm_line
-          WHERE "natural" IN ('arete', 'cliff', 'ridge') OR man_made = 'embankment'
+          WHERE "natural" IN ('arete', 'cliff', 'ridge', 'earth_bank') OR man_made = 'embankment'
         ) AS cliffs
     properties:
       cache-features: true
@@ -2101,7 +2101,7 @@ Layer:
               OR aerialway IN ('cable_car', 'gondola', 'mixed_lift', 'goods', 'chair_lift', 'drag_lift', 't-bar', 'j-bar', 'platter', 'rope_tow', 'zip_line')
               OR leisure IN ('slipway', 'track')
               OR waterway IN ('dam', 'weir')
-              OR "natural" IN ('arete', 'cliff', 'ridge'))
+              OR "natural" IN ('arete', 'cliff', 'ridge', 'earth_bank'))
             AND name IS NOT NULL)
             OR (tags @> 'golf=>hole' AND ref IS NOT NULL)
         ) AS text_line
