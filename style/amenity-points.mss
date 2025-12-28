@@ -384,7 +384,8 @@
   }
 
   [feature = 'tourism_information'][zoom >= 19],
-  [feature = 'tourism_information']["information"='office'][zoom >= 17] {
+  [feature = 'tourism_information']["information"='office'][zoom >= 17],
+  [feature = 'tourism_information']["information"='visitor_centre'][zoom >= 17] {
     [information = 'audioguide'] {
       marker-file: url('symbols/tourism/audioguide.svg');
     }
@@ -396,6 +397,10 @@
     }
     [information = 'office'] {
       marker-file: url('symbols/tourism/office.svg');
+      marker-fill: @amenity-brown;
+    }
+    [information = 'visitor_centre'] {
+      marker-file: url('symbols/tourism/visitor_centre.svg');
       marker-fill: @amenity-brown;
     }
     [information = 'map'],
@@ -1895,13 +1900,14 @@
   }
 
   [feature = 'tourism_information'][information != 'board'][zoom >= 19],
-  [feature = 'tourism_information'][information = 'office'][zoom >= 17] {
+  [feature = 'tourism_information'][information = 'office'][zoom >= 17],
+  [feature = 'tourism_information'][information = 'visitor_centre'][zoom >= 17] {
     text-name: "[name]";
     text-size: @standard-font-size;
     text-wrap-width: @standard-wrap-width;
     text-line-spacing: @standard-line-spacing-size;
     text-fill: darken(black, 30%);
-    [information = 'office'] { text-fill: @amenity-brown; }
+    [information = 'office'], [information = 'visitor_centre'] { text-fill: @amenity-brown; }
     text-face-name: @standard-font;
     text-halo-radius: @standard-halo-radius;
     text-halo-fill: @standard-halo-fill;
