@@ -2268,6 +2268,22 @@ Layer:
         ) AS protected_areas_text
     properties:
       minzoom: 13
+  - id: train-stop-positions
+    geometry: point
+    <<: *extents
+    Datasource:
+      <<: *osm2pgsql
+      table: |-
+        (SELECT
+          way,
+          ref
+        FROM planet_osm_point
+        WHERE tags @> 'public_transport=>stop_position'
+          AND tags @> 'train=>yes'
+          AND ref IS NOT NULL
+        ) AS stop_positions
+    properties:
+      minzoom: 18
   - id: amenity-low-priority
     geometry: point
     <<: *extents
