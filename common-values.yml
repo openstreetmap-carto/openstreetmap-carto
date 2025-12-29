@@ -1,12 +1,12 @@
 settings:
-  temp_schema: loading
+#  temp_schema: loading
   schema: public
-  data_dir: data
+#  data_dir: data
+  name: poi_table
   database: gis
   taginfo_url: "https://taginfo.openstreetmap.org/api/4/key"
   common_exclusions:
     - "no"
-    - "yes"
     - vacant
     - empty
     - disused

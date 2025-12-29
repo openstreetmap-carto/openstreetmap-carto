@@ -3,16 +3,16 @@
 # It is used to creating/update a database table to determine which key value pairs will be rendered
 
 import sys
-import copy
 import yaml
 import argparse
-from itertools import count
-from collections import OrderedDict
+from itertools import count, repeat
 import urllib.request
 import json
+import psycopg2
+from psycopg2.extras import execute_values
+from psycopg2.sql import Identifier, SQL
 import logging
 
-page_size = 200
 
 def get_common_values(key, min_count, settings, exclude):
 
@@ -46,13 +46,14 @@ def get_common_values(key, min_count, settings, exclude):
                 break
             candidates += [x["value"] for x in page_data if check_include(x)]
 
-    notfound = exclude - found
-    if notfound:
-        logging.info(f"  Did not find these excluded values above threshold for {key}: " + ",".join(notfound))
+    notfound = all_exclude - found
     if not candidates:
         logging.critical(f"  No valid values for key {key}")
-    # Output in SQL style
-    logging.info(f"  Found {len(candidates)} matches for key {key}")
+    else:
+        logging.info(f"  Found {len(candidates)} matches for key {key}")
+    if notfound:
+        logging.info(f"  Did not find these excluded values above threshold for {key}: " + ", ".join(notfound))
+
     return candidates
 
 
@@ -105,14 +106,44 @@ def main():
         database = opts.database or config["settings"].get("database")
         host = opts.host or config["settings"].get("host")
         port = opts.port or config["settings"].get("port")
+        port = opts.port or config["settings"].get("port")
         user = opts.username or config["settings"].get("username")
         password = opts.password or config["settings"].get("password")
         renderuser = opts.renderuser or config["settings"].get("renderuser")
 
     for key, val in keys.items():
-        logging.info(f"  Obtaining frequency information for key {key}")
         specific_exclusions = set(val.get("exclusions", []))
         results[key] = get_common_values(key, val["min_count"], settings=config["settings"], exclude=specific_exclusions)
+
+    if opts.no_update:
+        for key, val in results.items():
+            output = ", ".join(val)
+            print(f"Whitelisted values for {key}: {output}")
+    else:
+        conn = psycopg2.connect(database=database,
+                         host=host, port=port,
+                         user=user,
+                         password=password)
+        try:
+            schema = config["settings"].get("schema", "public")
+            name = config["settings"]["name"]
+            with conn.cursor() as cur:
+                cur.execute(SQL('DROP TABLE IF EXISTS {}').format(Identifier(schema, name)))
+                cur.execute(SQL('''CREATE TABLE {} ('''
+                    '''key text NOT NULL,'''
+                    '''value text NOT NULL,'''
+                    '''PRIMARY KEY (key, value)'''
+                    ''')''').format(Identifier(schema, name)))
+                for key, val in results.items():
+                    logging.info(f"Inserting {len(val)} {key} entries")
+                    rawvals = zip(repeat(key), val)
+                    insert_query = SQL('INSERT INTO {} (key, value) VALUES %s').format(Identifier(schema, name))
+                    execute_values(cur, insert_query, rawvals)
+                cur.execute(SQL('GRANT SELECT ON {} TO {}').format(Identifier(schema, name), Identifier(renderuser)))
+            conn.commit()
+        finally:
+            conn.close()
+
 
 if __name__ == '__main__':
     main()
