@@ -62,7 +62,8 @@
     ["entrance" = 'main'],
     ["entrance" = 'home'],
     ["entrance" = 'service'],
-    ["entrance" = 'staircase'] {
+    ["entrance" = 'staircase'],
+    ["entrance" = 'shop'] {
       marker-opacity: 1.0;
       marker-width: 6.0;
       marker-height: 6.0;

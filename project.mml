@@ -483,7 +483,7 @@ Layer:
                 osm_id,
                 z_order
               FROM planet_osm_line
-              WHERE (tunnel = 'yes' OR tunnel = 'building_passage' OR covered = 'yes')
+              WHERE (tunnel IN ('yes', 'building_passage', 'avalanche_protector') OR covered = 'yes')
                 AND highway IS NOT NULL -- end of road select
             UNION ALL
             SELECT
@@ -506,7 +506,7 @@ Layer:
                 osm_id,
                 z_order
               FROM planet_osm_line
-              WHERE (tunnel = 'yes' OR tunnel = 'building_passage' OR covered = 'yes')
+              WHERE (tunnel IN ('yes', 'building_passage', 'avalanche_protector') OR covered = 'yes')
                 AND (railway NOT IN ('platform') AND railway IS NOT NULL) -- end of rail select
             ) AS features
           ORDER BY
@@ -670,14 +670,14 @@ Layer:
               'highway_' || (CASE WHEN highway IN ('pedestrian', 'footway', 'service', 'platform') THEN highway END)),
               ('railway_' || (CASE WHEN (railway IN ('platform')
                               AND (tags->'location' NOT IN ('underground') OR (tags->'location') IS NULL)
-                              AND (tunnel NOT IN ('yes', 'building_passage') OR tunnel IS NULL))
+                              AND (tunnel NOT IN ('yes', 'building_passage', 'avalanche_protector') OR tunnel IS NULL))
                               THEN railway END))
             ) AS feature
           FROM planet_osm_polygon
           WHERE highway IN ('pedestrian', 'footway', 'service', 'platform')
             OR (railway IN ('platform')
                 AND (tags->'location' NOT IN ('underground') OR (tags->'location') IS NULL)
-                AND (tunnel NOT IN ('yes', 'building_passage') OR tunnel IS NULL))
+                AND (tunnel NOT IN ('yes', 'building_passage', 'avalanche_protector') OR tunnel IS NULL))
           ORDER BY COALESCE(layer,0), way_area DESC
         ) AS highway_area_casing
     properties:
@@ -732,7 +732,7 @@ Layer:
                 osm_id,
                 z_order
               FROM planet_osm_line
-              WHERE (tunnel IS NULL OR NOT tunnel IN ('yes', 'building_passage'))
+              WHERE (tunnel IS NULL OR NOT tunnel IN ('yes', 'building_passage', 'avalanche_protector'))
                 AND (covered IS NULL OR NOT covered = 'yes')
                 AND (bridge IS NULL OR NOT bridge IN ('yes', 'boardwalk', 'cantilever', 'covered', 'low_water_crossing', 'movable', 'trestle', 'viaduct'))
                 AND highway IS NOT NULL -- end of road select
@@ -757,7 +757,7 @@ Layer:
                 osm_id,
                 z_order
               FROM planet_osm_line
-              WHERE (tunnel IS NULL OR NOT tunnel IN ('yes', 'building_passage'))
+              WHERE (tunnel IS NULL OR NOT tunnel IN ('yes', 'building_passage', 'avalanche_protector'))
                 AND (covered IS NULL OR NOT covered = 'yes' OR railway IN ('platform'))
                 AND (bridge IS NULL OR NOT bridge IN ('yes', 'boardwalk', 'cantilever', 'covered', 'low_water_crossing', 'movable', 'trestle', 'viaduct'))
                 AND (railway NOT IN ('platform') OR (tags->'location' NOT IN ('underground')) OR (tags->'location') IS NULL)
@@ -788,7 +788,7 @@ Layer:
                                                     'platform', 'services') THEN highway END)),
               ('railway_' || (CASE WHEN (railway IN ('platform')
                               AND (tags->'location' NOT IN ('underground') OR (tags->'location') IS NULL)
-                              AND (tunnel NOT IN ('yes', 'building_passage') OR tunnel IS NULL))
+                              AND (tunnel NOT IN ('yes', 'building_passage', 'avalanche_protector') OR tunnel IS NULL))
                               THEN railway END)),
               (('aeroway_' || CASE WHEN aeroway IN ('runway', 'taxiway', 'helipad') THEN aeroway ELSE NULL END))
             ) AS feature,
@@ -802,7 +802,7 @@ Layer:
           WHERE highway IN ('pedestrian', 'footway', 'service', 'living_street', 'platform', 'services')
             OR (railway IN ('platform')
                 AND (tags->'location' NOT IN ('underground') OR (tags->'location') IS NULL)
-                AND (tunnel NOT IN ('yes', 'building_passage') OR tunnel IS NULL))
+                AND (tunnel NOT IN ('yes', 'building_passage', 'avalanche_protector') OR tunnel IS NULL))
             OR aeroway IN ('runway', 'taxiway', 'helipad')
           ORDER BY COALESCE(layer,0), way_area desc
         ) AS highway_area_fill
@@ -839,7 +839,7 @@ Layer:
                                      THEN substr(highway, 0, length(highway)-4) ELSE highway end)),
               ('railway_' || railway)
             ) AS feature,
-            CASE WHEN tunnel = 'yes' OR tunnel = 'building_passage' OR covered = 'yes' THEN 'yes' ELSE 'no' END AS int_tunnel,
+            CASE WHEN tunnel IN ('yes', 'building_passage', 'avalanche_protector') OR covered = 'yes' THEN 'yes' ELSE 'no' END AS int_tunnel,
             CASE WHEN highway IN ('motorway_link', 'trunk_link', 'primary_link', 'secondary_link', 'tertiary_link') THEN 'yes' ELSE 'no' END AS link,
             CASE WHEN surface IN ('unpaved', 'compacted', 'dirt', 'earth', 'fine_gravel', 'grass', 'grass_paver', 'gravel', 'ground',
                                   'mud', 'pebblestone', 'salt', 'sand', 'woodchips', 'clay', 'ice', 'snow') THEN 'unpaved'
@@ -1018,7 +1018,7 @@ Layer:
       table: |-
         (SELECT
             way,
-            CASE WHEN (tunnel = 'yes' OR tunnel = 'building_passage' OR covered = 'yes' OR tags->'indoor' = 'yes') THEN 'yes' ELSE 'no' END AS tunnel,
+            CASE WHEN (tunnel IN ('yes', 'building_passage') OR covered = 'yes' OR tags->'indoor' = 'yes') THEN 'yes' ELSE 'no' END AS tunnel,
             CASE WHEN (bridge = 'yes' OR bridge = 'covered' OR bridge = 'viaduct') THEN 'yes' ELSE 'no' END AS bridge
           FROM planet_osm_line
           WHERE tags @> 'roller_coaster=>track' AND railway IS NULL
@@ -1034,7 +1034,7 @@ Layer:
         (SELECT
             way,
             COALESCE(layer,0) AS layernotnull,
-            CASE WHEN (tunnel = 'yes' OR tunnel = 'building_passage' OR covered = 'yes' OR tags->'indoor' = 'yes') THEN 'yes' ELSE 'no' END AS tunnel,
+            CASE WHEN (tunnel IN ('yes', 'building_passage') OR covered = 'yes' OR tags->'indoor' = 'yes') THEN 'yes' ELSE 'no' END AS tunnel,
             CASE WHEN (bridge = 'yes' OR bridge = 'covered' OR bridge = 'viaduct') THEN 'yes' ELSE 'no' END AS bridge
           FROM planet_osm_line
           WHERE tags @> 'roller_coaster=>track' AND railway IS NULL
@@ -1894,7 +1894,7 @@ Layer:
             AND (highway IN ('pedestrian', 'footway', 'service', 'living_street', 'platform')
               OR (railway IN ('platform')
                   AND (tags->'location' NOT IN ('underground') OR (tags->'location') IS NULL)
-                  AND (tunnel NOT IN ('yes', 'building_passage') OR tunnel IS NULL)
+                  AND (tunnel NOT IN ('yes', 'building_passage', 'avalanche_protector') OR tunnel IS NULL)
                   AND (covered NOT IN ('yes') OR covered IS NULL)))
             AND way_area > 3000*POW(!scale_denominator!*0.001*0.28,2)
             AND way_area < 768000*POW(!scale_denominator!*0.001*0.28,2)
@@ -1911,7 +1911,7 @@ Layer:
         (SELECT
             way,
             CASE WHEN substr(highway, length(highway)-4, 5) = '_link' THEN substr(highway, 0, length(highway)-4) ELSE highway END,
-            CASE WHEN (tunnel = 'yes' OR tunnel = 'building_passage' OR covered = 'yes') THEN 'yes' ELSE 'no' END AS tunnel,
+            CASE WHEN (tunnel IN ('yes', 'building_passage', 'avalanche_protector') OR covered = 'yes') THEN 'yes' ELSE 'no' END AS tunnel,
             construction,
             name,
             CASE
@@ -1971,7 +1971,6 @@ Layer:
               WHEN (railway = 'tram' AND service IN ('spur', 'siding', 'yard')) THEN 'tram-service'
               ELSE railway
             END AS railway,
-            CASE WHEN (tunnel = 'yes' OR tunnel = 'building_passage' OR covered = 'yes') THEN 'yes' ELSE 'no' END AS tunnel,
             tags->'highspeed' as highspeed,
             tags->'usage' as usage,
             construction,
@@ -1982,7 +1981,7 @@ Layer:
             END) AS preserved
           FROM planet_osm_line l
           WHERE railway IN ('rail', 'subway', 'narrow_gauge', 'light_rail', 'funicular', 'monorail', 'miniature', 'tram', 'disused', 'construction')
-            AND (tunnel IS NULL OR NOT tunnel IN ('yes', 'building_passage'))
+            AND (tunnel IS NULL OR NOT tunnel IN ('yes', 'building_passage', 'avalanche_protector'))
             AND highway IS NULL -- Prevent duplicate rendering
             AND name IS NOT NULL
           ORDER BY

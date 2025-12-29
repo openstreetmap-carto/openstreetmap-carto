@@ -121,7 +121,7 @@ Some colours, SVGs and other files are generated with helper scripts. Not all us
 
 CartoCSS and Mapnik are required for deployment.
 
-* [CartoCSS](https://github.com/mapbox/carto) >= `1.2.0` *(we're using YAML)*
+* [CartoCSS](https://github.com/cartocss/carto) >= `1.2.0` *(we're using YAML)*
 * [Mapnik](https://github.com/mapnik/mapnik/wiki/Mapnik-Installation) >= `3.0.22`
 
 With CartoCSS, these sources are compiled into a Mapnik compatible XML file. When running CartoCSS, specify the Mapnik API version you are using (at least 3.0.22: `carto -a "3.0.22"`).
