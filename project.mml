@@ -1669,9 +1669,7 @@ Layer:
                                 'copyshop', 'sports', 'deli', 'tobacco', 'art', 'tea', 'coffee', 'tyres', 'pastry', 'chocolate',
                                 'music', 'medical_supply', 'dairy', 'video_games', 'houseware', 'ticket', 'charity', 'second_hand',
                                 'interior_decoration', 'video', 'paint', 'massage', 'trade', 'wholesale', 'hearing_aids') THEN shop
-                                ELSE
-                                    CASE WHEN EXISTS (SELECT 1 FROM poi_table WHERE key = 'shop' AND value = shop) THEN 'other' ELSE NULL END								
-                                END AS shop,
+                                ELSE 'other' END AS shop,
               CASE WHEN building = 'no' OR building IS NULL THEN 'no' ELSE 'yes' END AS is_building,
               tags->'operator' AS operator,
               ref,
