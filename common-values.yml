@@ -1,0 +1,87 @@
+settings:
+  schema: public
+  taginfo_url: "https://taginfo.openstreetmap.org/api/4/key"
+  common_exclusions:
+    - "no"
+    - vacant
+    - empty
+    - disused
+    - unknown
+    - closed
+    - fixme
+    - FIXME
+    - other
+    - "*"
+keys:
+  shop:
+    min_count: 50
+    exclusions:
+      - winery #see discussion in https://github.com/gravitystorm/openstreetmap-carto/pull/1632
+      - antique #see https://github.com/gravitystorm/openstreetmap-carto/pull/1900
+      - betting #see https://github.com/gravitystorm/openstreetmap-carto/pull/1900
+      - delicatessen #see https://github.com/gravitystorm/openstreetmap-carto/pull/1900
+      - dive #see https://github.com/gravitystorm/openstreetmap-carto/pull/1900
+      - fish #see https://github.com/gravitystorm/openstreetmap-carto/pull/1900
+      - gambling #see https://github.com/gravitystorm/openstreetmap-carto/pull/1900
+      - insurance #see https://github.com/gravitystorm/openstreetmap-carto/pull/1900
+      - pharmacy #see https://github.com/gravitystorm/openstreetmap-carto/pull/1900
+      - street_vendor #see https://github.com/gravitystorm/openstreetmap-carto/issues/2090
+      - storage_rental #see https://github.com/gravitystorm/openstreetmap-carto/issues/2090
+      - retail # nonspecific
+      - organic # https://wiki.openstreetmap.org/wiki/Tag:shop%3Dorganic
+      - watch # duplicate of shop=watches
+      - shopping_centre # duplicate of mall
+      - marketplace # duplicate of amenity=marketplace
+      - market # duplicate of amenity=marketplace
+      - baby_care # duplicate of shop=baby_goods
+      - board # very poor name, rare use
+      - robot # duplicate of shop=electronics [Still true?]
+      - business_machines # duplicate of shop=electronics [Still true?]
+      - tyres # duplicate of shop=tires
+      - souvenir # discouraged duplicate of gift
+      - workshop # No wiki. Unlikely to be shop selling workshops
+      - construction # No wiki. Vague
+      - glass # discouraged duplicate
+      - salon # discouraged duplicate
+      - bathroom # duplicate of shop=bathroom_furnishing
+      - health # discouraged duplicate
+      - builder # No wiki. office=builder?
+      - discount # discouraged as vague
+      - fireworks # discouraged duplicate
+      - communication # discouraged
+      - microenterprises # No wiki. Presumably shared office space?
+      - spa # No wiki. Presumably not a shop selling spas
+      - print # No wiki. Vague
+      - saloon # No wiki. Mis-spelling of salon?
+      - plumber # No wiki. Presumably not selling plumbers?
+      - cleaning # No wiki. Duplicate of cleaning_supplies or office
+      - conveneince_store # Typo
+      - photography # Discouraged unspecific taginfo
+      - sign # duplicate of shop=signs
+      - bridal # No wiki. Vague, overlap with shop=bridal or shop=clothes
+      - fast_food
+      - wood # No wiki. Vague, overlap with shop=firewood, shop=trade
+      - greengrocer;hardware;bakery;butcher;clothes;shoes;fabric;electronics # Individual strange combination
+      - builders_merchant # Duplicate of shop=trade
+      - car_service # discouraged as duplicate
+      - internet # No wiki. Vague
+      - printer # No wiki. Vague
+      - supplements # No wiki. Duplicate of shop=nutrition_supplements
+      - gold # No wiki. Vague (gold_buyer or jeweller?)
+      - local_shop # Vague
+      - commerce #  Vague
+      - grossery # Mis-spelling of grocers?
+      - office # Unlikely to be shop selling offices
+      - ceramics # Below 50, but discouraged
+      - cafe # Below 50, but discouraged
+      - cell_phones # Below 50, but discouraged
+     # Problem areas: chandler vs. ship_chandler vs. marine; mobility vs. mobility_scooter, auctioneer vs. auction vs. auction_house
+     # Questionable: bicycle_repair (discouraged but other repair tags used), various fuels (firewood, charcoal), 
+     # bakery;pastry, headshop (wiki, but duplicate of cannabis?), ironing (overlap with laundry), lumber (shop=trade?), metal
+  office:
+    min_count: 50
+    exclusions:
+      - tax # discouraged as vague
+      - register # Below 50, but discouraged
+    # Questionable: many potential overlaps/duplicates e.g. trade_union vs. labour_union
+ 
