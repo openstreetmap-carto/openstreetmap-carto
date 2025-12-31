@@ -14,7 +14,6 @@ INSERT INTO public.carto_POIs (key, value) VALUES
     ('shop', 'hairdresser'),
     ('shop', 'car_repair'),
     ('shop', 'bakery'),
-    ('shop', 'yes'),
     ('shop', 'beauty'),
     ('shop', 'car'),
     ('shop', 'hardware'),
