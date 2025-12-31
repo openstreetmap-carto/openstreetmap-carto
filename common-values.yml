@@ -11,11 +11,11 @@ settings:
     - fixme
     - FIXME
     - other
-    - "*"
 keys:
   shop:
     min_count: 50
     exclusions:
+      - "yes" # match current behaviour
       - winery #see discussion in https://github.com/gravitystorm/openstreetmap-carto/pull/1632
       - antique #see https://github.com/gravitystorm/openstreetmap-carto/pull/1900
       - betting #see https://github.com/gravitystorm/openstreetmap-carto/pull/1900
