@@ -15,7 +15,7 @@ keys:
   shop:
     min_count: 50
     exclusions:
-      - "yes" # match current behaviour
+      - "yes" # match current behaviour where shop=yes (but not office=yes) is suppressed
       - winery #see discussion in https://github.com/gravitystorm/openstreetmap-carto/pull/1632
       - antique #see https://github.com/gravitystorm/openstreetmap-carto/pull/1900
       - betting #see https://github.com/gravitystorm/openstreetmap-carto/pull/1900
@@ -82,6 +82,8 @@ keys:
     min_count: 50
     exclusions:
       - tax # discouraged as vague
+      - trade_union # discouraged as duplicate
+      - labour_union # discouraged as duplicate
       - register # Below 50, but discouraged
-    # Questionable: many potential overlaps/duplicates e.g. trade_union vs. labour_union
+    # Questionable: many potential overlaps/duplicates
  
