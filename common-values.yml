@@ -18,6 +18,7 @@ keys:
       - "yes" # match current behaviour where shop=yes (but not office=yes) is suppressed
       - retail # nonspecific
       - market # nonspecific. duplicate of amenity=marketplace?
+      - marketplace # mistake for amenity=marketplace
       - saloon # Mis-spelling of salon (itself discouraged)
       - conveneince_store # Typo
       - fast_food

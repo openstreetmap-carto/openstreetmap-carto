@@ -13,7 +13,7 @@ CREATE TABLE carto_pois (
 -- If there are permission problems reading the carto_pois table,
 -- uncomment line below, setting <render user> to relevant database user
 -- GRANT SELECT ON carto_pois TO <render user>;
--- Found 458 matches for key shop using threshold of 25
+-- Found 457 matches for key shop using threshold of 25
 INSERT INTO carto_pois (key, value) VALUES
     ('shop', '3d_printing'),  -- count: 72
     ('shop', 'accessories'),  -- count: 347
@@ -271,7 +271,6 @@ INSERT INTO carto_pois (key, value) VALUES
     ('shop', 'mall'),  -- count: 76524
     ('shop', 'maps'),  -- count: 34
     ('shop', 'marine'),  -- count: 70
-    ('shop', 'marketplace'),  -- count: 45
     ('shop', 'massage'),  -- count: 33261
     ('shop', 'medical'),  -- count: 109
     ('shop', 'medical_supply'),  -- count: 17462
