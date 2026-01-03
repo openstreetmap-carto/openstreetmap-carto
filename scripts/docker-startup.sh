@@ -57,6 +57,7 @@ EOF
   echo "Setting up indexes and functions"
   psql -d gis -f indexes.sql
   psql -d gis -f functions.sql
+  psql -d gis -f common-values.sql
 
   # Downloading and importing needed shapefiles
   scripts/get-external-data.py $EXTERNAL_DATA_SCRIPT_FLAGS

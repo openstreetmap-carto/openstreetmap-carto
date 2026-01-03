@@ -1,0 +1,31 @@
+settings:
+  taginfo_url: "https://taginfo.openstreetmap.org/api/4/key"
+  sort_by_name: yes
+  common_exclusions:
+    - "no"
+    - vacant
+    - empty
+    - disused
+    - unknown
+    - closed
+    - fixme
+    - FIXME
+    - other
+keys:
+  shop:
+    min_count: 25
+    exclusions:
+      - "yes" # match current behaviour where shop=yes (but not office=yes) is suppressed
+      - retail # nonspecific
+      - market # nonspecific. duplicate of amenity=marketplace?
+      - marketplace # mistake for amenity=marketplace
+      - saloon # Mis-spelling of salon (itself discouraged)
+      - conveneince_store # Typo
+      - fast_food
+      - local_shop # nonspecific
+      - commerce # nonspecific
+      - industrial # nonspecific
+      - cafe # mistake for amenity=cafe
+      - bar # mistake for amenity=bar
+  office:
+    min_count: 25
