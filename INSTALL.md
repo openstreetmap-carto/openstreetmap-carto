@@ -48,11 +48,19 @@ scripts/indexes.py -0 | xargs -0 -P0 -I{} psql -d gis -c "{}"
 ```
 
 ### Database functions
-Some functions need to be loaded into the database for current versions. These can be added / re-loaded at any point using:
+Some functions need to be loaded into the database for current versions (5.9.0 onwards). These can be added / re-loaded at any point using:
 
 ```sh
 psql -d gis -f functions.sql
 ```
+
+### Additional database tables
+Current versions involve a database table of white-listed key/tag values. This list be added / updated at any point using:
+
+```sh
+psql -d gis -f common-values.sql
+```
+Failure to create this table will result in errors such as `relation "carto_pois" does not exist"`.
 
 ## Scripted download
 Some features are rendered using preprocessed shapefiles.

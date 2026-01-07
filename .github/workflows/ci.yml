@@ -67,6 +67,8 @@ jobs:
       run: psql -1Xq -v ON_ERROR_STOP=1 -d gis -f indexes.sql
     - name: Load functions
       run: psql -1Xq -v ON_ERROR_STOP=1 -d gis -f functions.sql
+    - name: Load POI common values
+      run: psql -1Xq -v ON_ERROR_STOP=1 -d gis -f common-values.sql
     - name: Load empty shapefiles
       run: scripts/get-external-data.py --no-update --cache -D scripts/empty_files
     - name: Test queries are valid
