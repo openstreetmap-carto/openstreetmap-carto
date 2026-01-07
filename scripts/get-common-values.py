@@ -9,10 +9,13 @@ from itertools import count
 from datetime import date
 from operator import itemgetter
 import urllib.request
+import re
 import json
 
 configfilename = 'common-values.yml'
 tablename = 'carto_pois'
+
+valid_tag_chars = re.compile(r'[a-z0-9_\-;]+')
 
 
 def get_common_values(key, min_count, settings, exclude, verbose):
@@ -21,15 +24,17 @@ def get_common_values(key, min_count, settings, exclude, verbose):
     taginfo_url = settings["taginfo_url"]
     max_page = settings.get("max_page", 100)
     all_exclude = set(settings["common_exclusions"]).union(exclude)
+    rejected = []
 
     def check_include(x):
         """ Check whether a taginfo object should be included as valid candidate """
         if x["count"] < min_count:
             return False
         tag = x["value"]
-        if (' ' in tag) or ("'" in tag):
+        if not valid_tag_chars.fullmatch(tag) or (tag in all_exclude):
+            rejected.append(tag)
             return False
-        return not (tag in all_exclude)
+        return True
 
     for page in count(1):
         url = f'{taginfo_url}/values?key={key}&sortname=count&sortorder=desc&rp={max_page}&page={page}'
@@ -44,7 +49,7 @@ def get_common_values(key, min_count, settings, exclude, verbose):
     if not candidates:
         sys.exit(f"No valid values found for key {key}")
 
-    return candidates
+    return (candidates, sorted(rejected))
 
 
 def main():
@@ -103,8 +108,8 @@ def main():
               f'''-- GRANT SELECT ON {use_tablename} TO <render user>;''')
 
 
-
-    for key, vals in results.items():
+    for key, valrej in results.items():
+        vals, rejected = valrej
         print(f"-- Found {len(vals)} matches for key {key} using threshold of {keys[key]["min_count"]}")
         print(f'INSERT INTO {use_tablename} (key, value) VALUES')
         if settings.get("sort_by_name", False):
@@ -117,6 +122,8 @@ def main():
             if ind == end_item:
                 endstr = ';'
             print(f"    ('{key}', '{item[0]}'){endstr}{comment}")
+        if rejected:
+            print(f"-- Rejected these invalid tags for {key}: {', '.join(rejected)}")
 
 
 if __name__ == '__main__':
