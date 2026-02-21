@@ -2217,7 +2217,7 @@
   [feature = 'natural_beach'],
   [feature = 'natural_shoal'],
   [feature = 'natural_reef'],
-  [feature = 'leisure_sports_centre'],
+  [feature = 'leisure_sports_centre'][sport != 'swimming'],
   [feature = 'leisure_stadium'],
   [feature = 'leisure_track'],
   [feature = 'leisure_ice_rink'],
