@@ -679,6 +679,15 @@
     [way_pixels >= 4]  { polygon-gamma: 0.75; }
     [way_pixels >= 64] { polygon-gamma: 0.3;  }
   }
+
+  [feature = 'leisure_bleachers'][zoom >= 10] {
+    polygon-fill: @pedestrian-fill;
+    [zoom >= 15] {
+      line-width: 0.5;
+      line-opacity: 0.25;
+      line-color: @pedestrian-casing;
+    }
+  }
 }
 
 /* man_made=cutline */
