@@ -38,7 +38,8 @@
   [aerialway = 'j-bar'],
   [aerialway = 'platter'],
   [aerialway = 'rope_tow'],
-  [aerialway = 'zip_line'] {
+  [aerialway = 'zip_line'],
+  [aerialway = 'magic_carpet'] {
     [zoom >= 12] {
       line/line-width: 1;
       line/line-join: round;
@@ -140,6 +141,7 @@
   [feature = 'aerialway_platter'],
   [feature = 'aerialway_rope_tow'],
   [feature = 'aerialway_zip_line'],
+  [feature = 'aerialway_magic_carpet'],
   [feature = 'man_made_pipeline'] {
     [zoom >= 17] {
       text-name: "[name]";
