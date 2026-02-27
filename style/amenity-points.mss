@@ -997,11 +997,8 @@
       marker-file: url('symbols/shop/fabric.svg');
     }
 
-    [shop = 'fishmonger'],
-    [shop = 'seafood'] {
-      [zoom >= 18] {
-        marker-file: url('symbols/shop/seafood.svg');
-      }
+    [shop = 'seafood'][zoom >= 18] {
+      marker-file: url('symbols/shop/seafood.svg');
     }
 
     [shop = 'florist'][zoom >= 18] {
@@ -1060,8 +1057,7 @@
     }
 
     [shop = 'photo'],
-    [shop = 'photo_studio'],
-    [shop = 'photography'] {
+    [shop = 'photo_studio'] {
       [zoom >= 18] {
         marker-file: url('symbols/shop/photo.svg');
       }
