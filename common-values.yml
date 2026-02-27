@@ -21,7 +21,6 @@ keys:
       - marketplace # mistake for amenity=marketplace
       - saloon # Mis-spelling of salon (itself discouraged)
       - conveneince_store # Typo
-      - fast_food
       - local_shop # nonspecific
       - commerce # nonspecific
       - industrial # nonspecific
