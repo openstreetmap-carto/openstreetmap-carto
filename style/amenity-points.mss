@@ -997,11 +997,8 @@
       marker-file: url('symbols/shop/fabric.svg');
     }
 
-    [shop = 'fishmonger'],
-    [shop = 'seafood'] {
-      [zoom >= 18] {
-        marker-file: url('symbols/shop/seafood.svg');
-      }
+    [shop = 'seafood'][zoom >= 18] {
+      marker-file: url('symbols/shop/seafood.svg');
     }
 
     [shop = 'florist'][zoom >= 18] {
@@ -1060,8 +1057,7 @@
     }
 
     [shop = 'photo'],
-    [shop = 'photo_studio'],
-    [shop = 'photography'] {
+    [shop = 'photo_studio'] {
       [zoom >= 18] {
         marker-file: url('symbols/shop/photo.svg');
       }
@@ -2596,6 +2592,7 @@
       text-wrap-width: @standard-wrap-width;
       text-line-spacing: @standard-line-spacing-size;
       text-dy: 12;
+      [shop = 'other'] { text-dy: 8; }
       text-fill: @shop-text;
       text-face-name: @standard-font;
       text-halo-radius: @standard-halo-radius;
@@ -2608,57 +2605,6 @@
 
   [feature = 'office'] {
     [zoom >= 18] {
-      [office = 'accountant'],
-      [office = 'adoption_agency'],
-      [office = 'advertising_agency'],
-      [office = 'architect'],
-      [office = 'association'],
-      [office = 'charity'],
-      [office = 'company'],
-      [office = 'educational_institution'],
-      [office = 'diplomatic'],
-      [office = 'employment_agency'],
-      [office = 'energy_supplier'],
-      [office = 'estate_agent'],
-      [office = 'financial'],
-      [office = 'forestry'],
-      [office = 'foundation'],
-      [office = 'government'],
-      [office = 'guide'],
-      [office = 'insurance'],
-      [office = 'it'],
-      [office = 'lawyer'],
-      [office = 'logistics'],
-      [office = 'moving_company'],
-      [office = 'newspaper'],
-      [office = 'ngo'],
-      [office = 'notary'],
-      [office = 'political_party'],
-      [office = 'private_investigator'],
-      [office = 'property_management'],
-      [office = 'quango'],
-      [office = 'religion'],
-      [office = 'research'],
-      [office = 'surveyor'],
-      [office = 'tax'],
-      [office = 'tax_advisor'],
-      [office = 'telecommunication'],
-      [office = 'travel_agent'],
-      [office = 'water_utility'] {
-        text-name: "[name]";
-        text-size: @standard-font-size;
-        text-wrap-width: @standard-wrap-width;
-        text-line-spacing: @standard-line-spacing-size;
-        text-dy: 8;
-        text-fill: @office;
-        text-face-name: @standard-font;
-        text-halo-radius: @standard-halo-radius;
-        text-halo-fill: rgba(255, 255, 255, 0.6);
-      }
-    }
-
-    // all other offices
-    [zoom >= 19] {
       text-name: "[name]";
       text-size: @standard-font-size;
       text-wrap-width: @standard-wrap-width;
