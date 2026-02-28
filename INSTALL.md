@@ -1,6 +1,6 @@
 # Installation
 
-This document describes how to manually configure your system for running OpenStreetMap Carto. If you prefer quick, platform independent setup for a development environment, without the need to install and configure tools by hand, follow a Docker installation guide in [DOCKER.md](DOCKER.md).
+This document describes how to manually configure your system for running OpenStreetMap Carto. If you prefer a quick, platform independent setup for a development environment, without the need to install and configure tools by hand, follow the Docker installation guide in [DOCKER.md](DOCKER.md).
 
 ## OpenStreetMap data
 You need OpenStreetMap data loaded into a PostGIS database (see below for [dependencies](#dependencies)). These stylesheets expect a database generated with osm2pgsql using the flex backend.
@@ -55,7 +55,7 @@ psql -d gis -f functions.sql
 ```
 
 ### Additional database tables
-Current versions involve a database table of white-listed key/tag values. This list be added / updated at any point using:
+Current versions (6.0.0 onwards) involve a database table of white-listed key/tag values which are updated with each release. This list be added / updated at any point using:
 
 ```sh
 psql -d gis -f common-values.sql
@@ -133,3 +133,10 @@ CartoCSS and Mapnik are required for deployment.
 * [Mapnik](https://github.com/mapnik/mapnik/wiki/Mapnik-Installation) >= `3.0.22`
 
 With CartoCSS, these sources are compiled into a Mapnik compatible XML file. When running CartoCSS, specify the Mapnik API version you are using (at least 3.0.22: `carto -a "3.0.22"`).
+
+### Maintenance
+
+The compiled sylesheet (`project.xml`) associated with each release is fixed. The white-list of allowed shop / office values, however, can be updated between releases using current usage data from `taginfo` by:
+1. Regenerating `common-values.sql` using `scripts/get-common-values.py > common-values.sql` 
+2. Re-uploading the `carto_pois` database table using `psql -d gis -f common-values.sql`
+3. Flushing any tiles cached for zoom levels 17+.

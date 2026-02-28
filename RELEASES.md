@@ -4,12 +4,13 @@ Throughout this document, replace $OLD_VERSION with the previous release and $NE
 
 # Deciding to release
 
+Decide among the maintainers if a new release is due.
+
 1. Update your local master branch
 2. Review the changes in git since the last release with a command like `git log --graph $OLD_VERSION...master` or online at https://github.com/gravitystorm/openstreetmap-carto/compare/$OLD_VERSION...master
 3. Review [pull requests](https://github.com/gravitystorm/openstreetmap-carto/pulls) for anything that should be merged before release
-4. Check [`preview.png`](preview.png) and update it if needed. Preferred way is to import current Chicago data, export new image (for example from Kosmtik via [this link](http://127.0.0.1:6789/openstreetmap-carto/export/?showExtent=true&format=png&width=849&height=310&scale=1&zoom=15&bounds=-87.65145778656006%2C41.86914537674214%2C-87.61502265930177%2C41.8790515319021)) and upload as new version of this file
-
-Decide among the maintainers if a new release is due.
+4. [From v6.0.0] Update the white-list of shop and office values using `scripts/get-common-values.py > common-values.sql`
+5. Check [`preview.png`](preview.png) and update it if needed. Preferred way is to import current Chicago data, export new image (for example from Kosmtik via [this link](http://127.0.0.1:6789/openstreetmap-carto/export/?showExtent=true&format=png&width=849&height=310&scale=1&zoom=15&bounds=-87.65145778656006%2C41.86914537674214%2C-87.61502265930177%2C41.8790515319021)) and upload as new version of this file
 
 # Tagging a release
 1. Check out master with git
