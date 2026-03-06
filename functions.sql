@@ -74,6 +74,19 @@ SELECT
 	END
 $$;
 
+CREATE OR REPLACE FUNCTION carto_highway_int_surface(surface text)
+  RETURNS text
+  LANGUAGE SQL
+  IMMUTABLE PARALLEL SAFE
+AS $$
+SELECT
+	CASE
+		WHEN surface IN ('unpaved', 'compacted', 'dirt', 'earth', 'fine_gravel', 'grass', 'grass_paver', 'gravel', 'ground', 'mud', 'pebblestone', 'salt', 'sand', 'woodchips', 'clay', 'ice', 'snow') THEN 'unpaved'
+		WHEN surface IN ('paved', 'asphalt', 'cobblestone', 'cobblestone:flattened', 'sett', 'concrete', 'concrete:lanes', 'concrete:plates', 'paving_stones', 'metal', 'wood', 'unhewn_cobblestone') THEN 'paved'
+		ELSE NULL
+	END
+$$;
+
 /* Convert a Mapnik scale_denominator to an integer Web Mercator zoom level.
    Adapted from https://github.com/mapbox/postgis-vt-util/blob/master/src/Z.sql
    Intended usage:
