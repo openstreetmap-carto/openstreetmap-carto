@@ -183,6 +183,9 @@
     [vending = 'excrement_bags'] {
       marker-file: url('symbols/amenity/excrement_bags.svg');
     }
+    [vending = 'ice_cream'] {
+      marker-file: url('symbols/amenity/vending_ice_cream.svg');
+    }
     [vending = 'parking_tickets'] {
       marker-file: url('symbols/amenity/parking_tickets.svg');
     }
