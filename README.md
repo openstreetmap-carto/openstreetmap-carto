@@ -1,6 +1,6 @@
 # OpenStreetMap Carto
 
-![screenshot](https://raw.github.com/gravitystorm/openstreetmap-carto/master/preview.png)
+![screenshot](https://raw.github.com/openstreetmap-carto/openstreetmap-carto/master/preview.png)
 
 These are the CartoCSS map stylesheets for the Standard map layer on [OpenStreetMap.org](https://www.openstreetmap.org/).
 
@@ -72,9 +72,17 @@ to reload their databases, v3.x compatibility is not maintained.
 
 The v5.x series updates Lua tag transforms, linestring and polygon decisions have changed.
 
-There are over [500 open requests](https://github.com/gravitystorm/openstreetmap-carto/issues), some that have been open for years.
-These need reviewing and dividing into obvious fixes, or additional new features
-that need some cartographic judgement.
+## Move to flex backend (v6.x)
+
+The v6.x series moves to using the osm2pgsql flex backend.  This is going to allow improving the database schema more
+easily and provides more flexibly to accomondate the needs of map design.
+
+To resolve the over [600 open requests](https://github.com/openstreetmap-carto/openstreetmap-carto/issues) [substantial
+changes](https://github.com/openstreetmap-carto/openstreetmap-carto/issues/4901) are going to be necessary that require
+larger investments of work and consensus building to reduce the substantial technical and design debt we have accumulated
+over the years.  In addition, there is also plenty of smaller maintainance work to be done to resolve inconsistencies,
+fix individual issues and to adjust to changing mapping practice.  How much of this will get done is going to depend on
+how much energy and time the OSM community is going to invest in the project.
 
 # Alternatives
 
