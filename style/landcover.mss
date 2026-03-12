@@ -417,7 +417,9 @@
   [feature = 'power_plant'][zoom >= 10],
   [feature = 'power_generator'][zoom >= 10],
   [feature = 'power_substation'][zoom >= 13] {
-    polygon-fill: @industrial;
+    polygon-fill: @built-up-lowzoom;
+    [zoom >= 12] { polygon-fill: @built-up-z12; }
+    [zoom >= 13] { polygon-fill: @industrial; }
     [zoom >= 15] {
       polygon-fill: @power;
     }
