@@ -2,28 +2,39 @@
 
 ## Reporting issues
 
+The OSM Carto project is now very mature and many issue reports turn out to be
+duplicates of existing issues. Before reporting a potential issue, please do a
+quick search of the respository to check for related issues, open or closed.
+If you do find a matching issue, please review the previous discussion before 
+re-opening, and ensure that any additional comments are constructive. Unhelpful 
+comments e.g. "Why hasn't this been fixed yet?" are not constructive and will be
+marked as off-topic.
+
 As OpenStreetMap data is always changing, rendering bug reports should **always**
 contain a cropped screenshot of the problem, and a link to the area. Don't assume
 that we will see exactly what you see. If a particular OSM object is an issue,
 the issue should contain the tagging of the object.
 
-## Workflow
+
+## Workflow for making contributions
+
+Contributions to the development of OSM Carto are very welcome; the project is
+entirely reliant on external contributions. Significant changes, including 
+additional rendering, should always be discussed through the issue mechanism
+first; this will avoid potential frustration at the review stage.
 
 We operate the "Fork & Pull" model explained at
-
 https://help.github.com/articles/about-pull-requests/
 
 You should fork the project into your own repo, create a topic branch
-there and then make one or more pull requests back to the gravitystorm repository.
+there and then make one or more pull requests back to the upstream repository.
 Your pull requests will then be reviewed and discussed.
 
 Pull requests that change the cartography should contain a few images selected
 to show the changes. The easiest way to make these is by taking screenshots and
 cropping them, then pasting them into the issue. Avoid adding an overwhelming
-number of screenshots.
-
-The images are not intended to replace reviewing changes in Kosmtik or TileMill,
-but to provide an overview.
+number of screenshots. The images are not intended to replace reviewing changes
+in Kosmtik or TileMill, but to provide an overview.
 
 ### Previews
 
@@ -34,30 +45,24 @@ images might not be sufficient and a demo layer is necessary. pnorman has a serv
 
 ## Easy pickings
 
-Some [easy issues](https://github.com/gravitystorm/openstreetmap-carto/labels/good%20first%20issue) have been selected
+Some [easy issues](https://github.com/openstreetmap-carto/openstreetmap-carto/labels/good%20first%20issue) have been selected
 that are particularly suitable for new contributors to get familiar with the project's code base and the contribution process.
 
 ## Editing layers
 
-OpenStreetMap Carto uses a YAML file for defining layers, because it [works much
-better for big projects](https://github.com/gravitystorm/openstreetmap-carto/issues/711).
-This requires CartoCSS 0.18.0 or later. If you need JSON MML, you can generate it
-with `python -c 'import sys, yaml, json; json.dump(yaml.safe_load(sys.stdin), sys.stdout)' < project.mml > project.json`
-or the equivalent in a different language.
-
+OpenStreetMap Carto uses a YAML file for defining layers.
 [Kosmtik](https://github.com/kosmtik/kosmtik) and CartoCSS can directly load the project from
 the YAML file with `node index.js serve path/to/openstreetmap-carto/project.mml`
 
 ## CartoCSS style guidelines
 
-* Always specify zoom levels as either >= or < . Don't use = or =< or >
+* Always specify zoom levels as either >= or < . Don't use = or =< or >.
 * Open curly braces on the same line, and close on an empty line.
 * One space before and after = etc
 * Two space indents. No tabs.
 * space after : but not before
 * Dashes, not underscores, in layer names
-* Avoid restating defaults, e.g. don't add `point-allow-overlap = false`. Where
-  Mapnik 2.x and 3.0 have different defaults, they should be stated
+* Avoid restating defaults, e.g. don't add `point-allow-overlap = false`.
 * Avoid repeating the layer name for layers with multiple attachments, i.e., prefer
 
 ```mss
@@ -139,7 +144,7 @@ instead of
 ```
 
 ## SQL style guidelines
-Because SQL within JSON or YAML will not generally be syntax highlighted, indentation and caps are particularly important.
+Because SQL within YAML will not generally be syntax highlighted, indentation and caps are particularly important.
 
 * SQL keywords in caps, as in PostgreSQL documentation
 * Two space indents. No tabs.
@@ -157,13 +162,13 @@ Because SQL within JSON or YAML will not generally be syntax highlighted, indent
 
 ## Map icon guidelines
 
-* All new icons must be SVG format only.  The SVG must be saved as standards compliant SVG without any proprietary tags. In Inkscape software, you will need to "Save As..." and choose the format Optimized SVG (preferable) or Plain SVG.
+* All new icons must be in SVG format.  The SVG must be saved as standards compliant SVG without any proprietary tags. In Inkscape software, you will need to "Save As..." and choose the format Optimized SVG (preferable) or Plain SVG.
 * Icons must use SVG fills only, not SVG strokes or any feature Mapnik does not support.
 * Use no color for the icon's fill if the icon is monochromatic. This allows the color to be set in the MSS.
 * Use a common canvas size, which is usually 14x14 px.
 * Convert shapes and other components to paths and merge them into a compound path.
 * Draw a simple siloutte of the subject with an "on the shelf" perspective.
-* Align vectors to the pixel grid.
+* Align vectors to the pixel grid otherwise detail will be lost when rendered to a bitmap.
 * Make a clean design, so reduced complexity where possible.
 
 ### External icon design resources
@@ -175,7 +180,7 @@ The project's goals and design philsophy are different from other projects, but 
 ## Typography
 
 This style uses the font "Noto" for a world-wide coverage of scripts. The font
-size should be ≥ 10 (legibility).
+size should be ≥ 10 pt for legibility once rastered to screen resolution.
 
 ### Multi-line labels
 
@@ -219,6 +224,6 @@ are seldom and even then the text stays legible).
 
 Most of the style development happens within CartoCSS MSS and MML files. Syntax highlighting can make editing more pleasant.
 
-Editors based on KDE Frameworks (Kate, KWrite, KDevelop…) provide syntax highlighting for CartoCSS MSS out-of-the-box, and starting with KF 5.100 also for CartoCSS MML including SQL highlighting within the YAML structure.
+Editors based on KDE Frameworks (Kate, KWrite, KDevelop…) provide syntax highlighting for CartoCSS MSS out-of-the-box, and starting with KF 5.100 also for CartoCSS MML, including SQL highlighting within the YAML structure.
 
 Also, Yohan Boniface [has developed](https://github.com/yohanboniface/carto-atom) highlighting for CartoCSS MSS for editors that use the TextMate Language Grammar for syntax highlighting: Atom (install package “language-carto”), Visual Studio Code, Jetbrains…
