@@ -1525,7 +1525,134 @@ Layer:
       <<: *osm2pgsql
       table: &amenity_points_sql |-
         (SELECT
-            *
+            *,
+            CASE
+              WHEN feature IN ('place_island') 
+                AND way_pixels > 3000 
+              THEN 4
+              WHEN feature IN ('landuse_military','natural_wood', 'landuse_forest','boundary_national_park','leisure_nature_reserve',
+                                'boundary_aboriginal_lands','boundary_protected_area', 'natural_sand', 'natural_bare_rock')
+                AND way_pixels > 3000
+                AND is_building = 'no'
+              THEN 8
+              WHEN feature IN ('natural_glacier')
+                AND way_pixels > 10000
+                AND is_building = 'no'
+              THEN 8
+              WHEN feature IN ('natural_scree', 'natural_shingle', 'military_danger_area')
+                AND way_pixels > 3000
+                AND is_building = 'no'
+              THEN 9
+              WHEN feature IN ('aeroway_aerodrome')
+                AND int_access = 'yes'
+                AND 'icao' != null
+                AND 'iata' != null
+              THEN 10
+              WHEN  feature in ('natural_wetland','natural_mud', 'leisure_park', 'landuse_recreation_ground', 'landuse_village_green', 'leisure_garden',
+                                'landuse_quarry', 'landuse_vineyard', 'landuse_orchard', 'landuse_plant_nursery', 'landuse_cemetery', 'amenity_grave_yard',
+                                'landuse_residential', 'landuse_meadow', 'natural_grassland', 'landuse_grass', 'landuse_allotments', 'landuse_farmyard',
+                                'landuse_farmland', 'landuse_greenhouse_horticulture', 'landuse_retail', 'landuse_industrial', 'landuse_railway',
+                                'man_made_works', 'man_made_water_works', 'man_made_wastewater_plant', 'landuse_commercial', 'landuse_brownfield',
+                                'landuse_landfill', 'landuse_construction', 'landuse_salt_pond', 'tourism_theme_park', 'tourism_zoo', 'amenity_kindergarten',
+                                'amenity_school', 'amenity_college', 'amenity_university', 'landuse_religious', 'natural_heath', 'natural_scrub', 'natural_beach',
+                                'natural_shoal', 'natural_reef', 'leisure_fitness_centre', 'leisure_fitness_station', 'leisure_sports_centre', 'leisure_stadium',
+                                'leisure_track', 'leisure_dog_park', 'leisure_ice_rink', 'leisure_pitch', 'power_plant', 'aeroway_apron', 'highway_services',
+                                'highway_rest_area')
+                AND way_pixels > 3000
+                AND is_building = 'no'
+              THEN 10
+              WHEN feature in ('shop')
+                AND shop = 'mall'
+                AND location != 'underground'
+                AND way_pixels > 3000
+              THEN 10
+              WHEN feature IN ('power_generator')
+                AND "generator:source" != 'wind'
+                AND is_building = 'no'
+              THEN 10
+              WHEN feature IN ('natural_glacier')
+                AND way_pixels > 750
+                AND is_building = 'no'
+              THEN 10
+              WHEN feature in ('natural_peak', 'natural_volcano')
+              THEN 11
+              WHEN feature in ('place_islet')
+                AND way_pixels > 3000
+              THEN 11
+              WHEN feature IN ('aeroway_aerodrome')
+              THEN 12
+              WHEN feature IN ('tourism_alpine_hut', 'tourism_wilderness_hut')
+              THEN 13
+              WHEN feature IN ('waterway_waterfall')
+                AND height > 20
+              THEN 13
+              WHEN feature IN ('landuse_garages', 'power_substation', 'leisure_swimming_pool')
+                AND is_building = 'no'
+                AND way_pixels > 3000
+              THEN 13
+              WHEN feature IN ('man_made_mast')
+                AND "tower:type" != 'lighting'
+                AND height >= 160
+              THEN 14
+              WHEN feature IN ('man_made_tower')
+                AND "tower:type" NOT IN ('cooling', 'lighting', 'bell_tower', 'watchtower')
+                AND height >= 160
+              THEN 14
+              WHEN feature IN ('man_made_communications_tower', 'natural_spring', 'railway_level_crossing', 'natural_cape')
+              THEN 14
+              WHEN feature IN ('man_made_telescope')
+                AND "telescope:type" IS NOT NULL
+                AND "telescope:type" != 'optical'
+                AND "telescope:diameter" >= 60
+              THEN 14
+              WHEN feature IN ('man_made_telescope')
+                AND ("telescope:type" != 'optical' OR "telescope:type" IS NULL)
+                AND "telescope:diameter" >= 8
+              THEN 14
+              WHEN feature IN ('waterway_waterfall')
+                AND height > 10
+              THEN 14
+              WHEN feature in ('amenity_parking', 'amenity_bicycle_parking', 'amenity_motorcycle_parking', 'amenity_parking_entrance')
+                AND way_pixels > 750
+                AND parking NOT IN ('street_side', 'lane')
+              THEN 14
+              WHEN feature in ('leisure_water_park', 'leisure_swimming_area', 'leisure_playground', 'leisure_dog_park', 'leisure_fitness_centre', 
+                               'leisure_fitness_station')
+                AND way_pixels > 3000
+              THEN 14
+              WHEN feature in ('leisure_sports_centre')
+                AND sport = 'swimming'
+                AND way_pixels > 3000
+              THEN 14
+              WHEN feature IN ('man_made_mast')
+                AND "tower:type" != 'lighting'
+                AND height >= 80
+              THEN 15
+              WHEN feature IN ('man_made_tower')
+                AND "tower:type" NOT IN ('lighting', 'bell_tower', 'watchtower')
+                AND height >= 80
+              THEN 15
+              WHEN feature IN ('man_made_telescope')
+                AND "telescope:type" IS NOT NULL
+                AND "telescope:type" != 'optical'
+                AND "telescope:diameter" >= 30
+              THEN 15
+              WHEN feature IN ('man_made_telescope')
+                AND ("telescope:type" != 'optical' OR "telescope:type" IS NULL)
+                AND "telescope:diameter" >=4
+              THEN 15
+              WHEN feature IN ('amenity_hospital', 'historic_castle', 'leisure_golf_course', 'amenity_ferry_terminal', 'man_made_lighthouse', 'natural_saddle',
+                               'mountain_pass', 'natural_cave_entrance', 'natural_cave_entrance', 'leisure_marina', 'railway_crossing')
+                AND castle_type NOT IN ('stately', 'manor')
+              THEN 15
+              WHEN feature IN ('waterway_waterfall')
+                AND name IS NOT NULL
+              THEN 15
+              WHEN feature IN ('power_generator')
+                AND "generator:source" = 'wind'
+                AND (location IS NULL OR location NOT IN ('rooftop', 'roof'))
+              THEN 15
+            END AS minzoom
           FROM
           (SELECT -- This subselect allows filtering on the feature column
               way,
@@ -1628,6 +1755,8 @@ Layer:
                   CASE
                     WHEN tags->'height' ~ '^\d{1,3}(\.\d+)?( m)?$' THEN (SUBSTRING(tags->'height', '^(\d{1,3}(\.\d+)?)( m)?$'))::NUMERIC
                   END
+                WHEN "amenity" IN ('bus_station') THEN 1
+                WHEN "highway" IN ('bus_stop') THEN 0 --renders bus stops above other zoom 16 amenity points, such as bus shelters
               END AS score,
               religion,
               tags->'denomination' as denomination,
@@ -1735,7 +1864,9 @@ Layer:
               ) _
             ) AS features
           WHERE feature IS NOT NULL
-          ORDER BY score DESC NULLS LAST,
+          ORDER BY 
+            minzoom ASC NULLS LAST,
+            score DESC NULLS LAST,
             way_pixels DESC NULLS LAST
           ) AS amenity_points
     properties:
