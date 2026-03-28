@@ -4,11 +4,10 @@
 
 The OSM Carto project is now very mature and many issue reports turn out to be
 duplicates of existing issues. Before reporting a potential issue, please do a
-quick search of the respository to check for related issues, open or closed.
-If you do find a matching issue, please review the previous discussion before 
-re-opening, and ensure that any additional comments are constructive. Unhelpful 
-comments e.g. "Why hasn't this been fixed yet?" are not constructive and will be
-marked as off-topic.
+quick search of the repository to check for related issues.
+If you do find a matching issue, please review the previous discussion and ensure
+that any additional comments are constructive. Unhelpful comments e.g. "Why hasn't
+this been fixed yet?" are not constructive and will be marked as off-topic.
 
 As OpenStreetMap data is always changing, rendering bug reports should **always**
 contain a cropped screenshot of the problem, and a link to the area. Don't assume
@@ -180,7 +179,7 @@ The project's goals and design philsophy are different from other projects, but 
 ## Typography
 
 This style uses the font "Noto" for a world-wide coverage of scripts. The font
-size should be ≥ 10 pt for legibility once rastered to screen resolution.
+size should be ≥ 10 px for legibility once rastered to screen resolution.
 
 ### Multi-line labels
 
