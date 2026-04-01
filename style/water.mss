@@ -310,7 +310,7 @@
   [waterway = 'drain'] {
     [int_intermittent != 'yes'][zoom >= 14],
     [zoom >= 15] {
-      [int_tunnel = 'yes'][zoom >= 15] {
+      [int_tunnel = 'yes'] {
         // Background for dashed tunnel casings
         // The line widths are adjusted later - this just "books in" the background layer
         background/line-color: @water-tunnelfill-color;
@@ -339,7 +339,7 @@
         water/line-join: round;
       }
 
-      [int_tunnel = 'yes'][zoom >= 15]  {
+      [int_tunnel = 'yes']  {
         water/line-dasharray: 4,2;
         // PROBLEM HERE: join/cap not set, differs from river/canal
         background/line-width: @ditchdrain-width-z14 + 1.5;
