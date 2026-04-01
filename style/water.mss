@@ -1,9 +1,9 @@
 @water-text: #4d80b3;
 @glacier: #ddecec;
 @glacier-line: #9cf;
-//@water-tunnelfill-color: #f3f7f7;
 @water-tunnelfill-color: lighten(@water-color, 20%);
 @waterway-text-repeat-distance: 200;
+@waterway-text-spacing: 500;
 
 @river-width-z8:          0.7;
 @river-width-z9:          1.2;
@@ -365,10 +365,10 @@
 #water-lines-text {
   [lock = 'yes'][zoom >= 17] {
       text-name: "[lock_name]";
-      text-face-name: @oblique-fonts;
+      text-face-name: @standard-font;
       text-placement: line;
       text-fill: @water-text;
-      text-spacing: 400;
+      text-spacing: @waterway-text-spacing;
       text-size: 10;
       text-halo-radius: @standard-halo-radius;
       text-halo-fill: @standard-halo-fill;
@@ -382,7 +382,7 @@
       text-fill: @water-text;
       text-halo-radius: @standard-halo-radius;
       text-halo-fill: @standard-halo-fill;
-      text-spacing: 400;
+      text-spacing: @waterway-text-spacing;
       text-placement: line;
       text-repeat-distance: @waterway-text-repeat-distance;
       [zoom >= 14] { text-size: 12; }
@@ -391,12 +391,14 @@
     [waterway = 'canal'][zoom >= 13] {
       text-name: "[name]";
       text-size: 10;
-      text-face-name: @oblique-fonts;
+      text-face-name: @standard-font;
       text-fill: @water-text;
       text-halo-radius: @standard-halo-radius;
       text-halo-fill: @standard-halo-fill;
       text-placement: line;
       text-repeat-distance: @waterway-text-repeat-distance;
+      text-spacing: @waterway-text-spacing;
+      [zoom >= 14] { text-size: 12; }
     }
 
     [waterway = 'stream'][zoom >= 15] {
@@ -406,7 +408,7 @@
       text-fill: @water-text;
       text-halo-radius: @standard-halo-radius;
       text-halo-fill: @standard-halo-fill;
-      text-spacing: 600;
+      text-spacing: @waterway-text-spacing;
       text-placement: line;
       text-vertical-alignment: middle;
       text-dy: 8;
@@ -415,14 +417,14 @@
 
     [waterway = 'drain'],
     [waterway = 'ditch'] {
-      [zoom >= 15] {
+      [zoom >= 16] {
         text-name: "[name]";
         text-size: 10;
-        text-face-name: @oblique-fonts;
+        text-face-name: @standard-font;
         text-fill: @water-text;
         text-halo-radius: @standard-halo-radius;
         text-halo-fill: @standard-halo-fill;
-        text-spacing: 600;
+        text-spacing: @waterway-text-spacing;
         text-placement: line;
         text-vertical-alignment: middle;
         text-dy: 8;

@@ -194,20 +194,26 @@ Layer:
       <<: *osm2pgsql
       table: |-
         (SELECT
-            way,
-            waterway,
-            name,
-            CASE WHEN tags->'intermittent' IN ('yes')
-              OR tags->'seasonal' IN ('yes', 'spring', 'summer', 'autumn', 'winter', 'wet_season', 'dry_season')
-              THEN 'yes' ELSE 'no' END AS int_intermittent,
-            CASE WHEN tunnel IN ('yes', 'culvert') 
-              OR waterway = 'canal' AND tunnel = 'flooded'
-              THEN 'yes' ELSE 'no' END AS int_tunnel,
+            *,
             'no' AS bridge
-          FROM planet_osm_line
-          WHERE waterway IN ('river', 'canal', 'stream', 'drain', 'ditch')
-            AND (bridge IS NULL OR bridge NOT IN ('yes', 'aqueduct'))
-          ORDER BY COALESCE(layer,0)
+          FROM
+          (SELECT -- This subselect allows sorting on the int_tunnel column
+              way,
+              waterway,
+              CASE WHEN tags->'intermittent' IN ('yes')
+                OR tags->'seasonal' IN ('yes', 'spring', 'summer', 'autumn', 'winter', 'wet_season', 'dry_season')
+                THEN 'yes' ELSE 'no' END AS int_intermittent,
+              CASE WHEN tunnel IN ('yes', 'culvert') 
+                OR waterway = 'canal' AND tunnel = 'flooded'
+                THEN 'yes' ELSE 'no' END AS int_tunnel,
+              COALESCE(layer,0) AS layernotnull
+            FROM planet_osm_line
+            WHERE waterway IN ('river', 'canal', 'stream', 'drain', 'ditch')
+              AND (bridge IS NULL OR bridge NOT IN ('yes', 'aqueduct'))
+          ) _
+          ORDER BY
+            layernotnull,
+            CASE WHEN int_tunnel = 'yes' THEN 1 ELSE 0 END  -- render tunnels after normal waterways (bridges are in later layer)
         ) AS water_lines
     properties:
       minzoom: 12
