@@ -3384,7 +3384,7 @@ tertiary is rendered from z10 and is not included in osm_planet_roads. */
 
 #junctions {
   [highway = 'motorway_junction'] {
-    [zoom >= 11] {
+    [zoom >= 13] {
       text-name: "[ref]";
       text-size: 10;
       text-fill: @junction-text-color;
@@ -3394,7 +3394,7 @@ tertiary is rendered from z10 and is not included in osm_planet_roads. */
       text-wrap-character: ";";
       text-wrap-width: 2; // effectively break after every wrap character
       text-line-spacing: -1.5; // -0.15 em
-      [zoom >= 13] {
+      [zoom >= 14] {
         ["name" != null]["ref" = null] {
           text-name: "[name]";
         }
