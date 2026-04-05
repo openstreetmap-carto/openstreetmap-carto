@@ -1471,7 +1471,7 @@ Layer:
           ORDER BY way_pixels DESC NULLS LAST
         ) AS junctions
     properties:
-      minzoom: 11
+      minzoom: 12
   - id: bridge-text
     geometry: point
     <<: *extents
