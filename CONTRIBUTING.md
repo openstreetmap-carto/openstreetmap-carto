@@ -116,6 +116,27 @@ instead of
   }
 }
 ```
+* Use the PostgreSQL quoting syntax for attributes (columns) and string-values of selectors.
+  Use no quotes or double quotes for attributes (columns) and single quotes for string-values.
+  For Example:
+
+```mss
+#layer[entrance = 'yes'] {
+  marker-width: 6.0;
+}
+#layer["generator:source" = 'wind'] {
+  marker-width: 8.0;
+}
+```
+instead of
+```mss
+#layer[entrance = "yes"] {
+  marker-width: 6.0;
+}
+#layer['generator:source' = 'wind'] {
+  marker-width: 8.0;
+}
+```
 
 ## SQL style guidelines
 Because SQL within JSON or YAML will not generally be syntax highlighted, indentation and caps are particularly important.

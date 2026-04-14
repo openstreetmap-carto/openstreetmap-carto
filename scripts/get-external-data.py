@@ -313,7 +313,7 @@ def main():
                            config["settings"]["metadata_table"])
 
             for name, source in config["sources"].items():
-                logging.info("Checking table {}".format(name))
+                logging.info("Table {}".format(name))
                 # Don't attempt to handle strange names
                 # Even if there was code to escape them properly here, you don't want
                 # in a style with all the quoting headaches
@@ -327,6 +327,7 @@ def main():
                                    config["settings"]["metadata_table"])
                 this_table.clean_temp()
 
+                logging.info("  Downloading file {}".format(source["url"]))
                 # This will fetch data needed for import
                 download = d.download(source["url"], name, opts, data_dir, this_table.last_modified())
 

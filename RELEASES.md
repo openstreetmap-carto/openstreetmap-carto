@@ -4,12 +4,13 @@ Throughout this document, replace $OLD_VERSION with the previous release and $NE
 
 # Deciding to release
 
+Decide among the maintainers if a new release is due.
+
 1. Update your local master branch
 2. Review the changes in git since the last release with a command like `git log --graph $OLD_VERSION...master` or online at https://github.com/gravitystorm/openstreetmap-carto/compare/$OLD_VERSION...master
-3. Review [pull requests](https://github.com/gravitystorm/openstreetmap-carto/pulls) for anything that should be merged before release
-4. Check [`preview.png`](preview.png) and update it if needed. Preferred way is to import current Chicago data, export new image (for example from Kosmtik via [this link](http://127.0.0.1:6789/openstreetmap-carto/export/?showExtent=true&format=png&width=849&height=310&scale=1&zoom=15&bounds=-87.65145778656006%2C41.86914537674214%2C-87.61502265930177%2C41.8790515319021)) and upload as new version of this file
-
-Decide among the maintainers if a new release is due.
+3. Review [pull requests](https://github.com/openstreetmap-carto/openstreetmap-carto/pulls) for anything that should be merged before release
+4. [From v6.0.0] Update the white-list of shop and office values using `scripts/get-common-values.py > common-values.sql`
+5. Check [`preview.png`](preview.png) and update it if needed. Preferred way is to import current Chicago data, export new image (for example from Kosmtik via [this link](http://127.0.0.1:6789/openstreetmap-carto/export/?showExtent=true&format=png&width=849&height=310&scale=1&zoom=15&bounds=-87.65145778656006%2C41.86914537674214%2C-87.61502265930177%2C41.8790515319021)) and upload as new version of this file
 
 # Tagging a release
 1. Check out master with git
@@ -22,9 +23,15 @@ Decide among the maintainers if a new release is due.
 
 1. Notify OSMF tile server admins [with an issue on OpenStreetMap Chef](https://github.com/openstreetmap/chef/issues/new?title=New%20OpenStreetMap%20Carto%20release,%20$NEW_RELEASE&body=A%20new%20version%20of%20OpenStreetMap%20Carto,%20[$NEW_RELEASE]%28https://github.com/gravitystorm/openstreetmap-carto/releases/tag/$NEW_RELEASE%29,%20has%20been%20released.). Add any deployment-related changes like new shapefiles or font changes to the ticket.
 
-2. Write an email to dev@openstreetmap.org and talk@openstreetmap.org with the subject "OpenStreetMap Carto release $NEW_VERSION" and the body
+2. Post an [openstreetmap.org diary entry](https://www.openstreetmap.org/diary/new) using the template shown below. Add links and other markdown if needed.  *Optional: add descriptions and illustrations of significant changes.*
+
+3. *Optional: Post messages on {OSMF discourse](https://community.openstreetmap.org/), Mastodon or other communication channels frequented by the OSM community with a link to the diary entry.*
+
+Message template for announcements:
 
 ```
+OpenStreetMap Carto release $NEW_VERSION
+
 Dear all,
 
 Today, $NEW_VERSION of the OpenStreetMap Carto stylesheet (the default
@@ -51,12 +58,9 @@ If there are new contributors, add
 If there has been a major PR merged, additional thanks can be added
 
 For a full list of commits, see
-https://github.com/gravitystorm/openstreetmap-carto/compare/$OLD_VERSION...$NEW_VERSION
+https://github.com/openstreetmap-carto/openstreetmap-carto/compare/$OLD_VERSION...$NEW_VERSION
 
 As always, we welcome any bug reports at
-https://github.com/gravitystorm/openstreetmap-carto/issues
+https://github.com/openstreetmap-carto/openstreetmap-carto/issues
 ```
 
-3. Post an [openstreetmap.org diary entry](https://www.openstreetmap.org/diary/new) with the text from the email. Add links and other markdown if needed.
-
-4. *Optional: Post on twitter with a link to the diary entry.*

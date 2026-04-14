@@ -1003,11 +1003,8 @@
       marker-file: url('symbols/shop/fabric.svg');
     }
 
-    [shop = 'fishmonger'],
-    [shop = 'seafood'] {
-      [zoom >= 18] {
-        marker-file: url('symbols/shop/seafood.svg');
-      }
+    [shop = 'seafood'][zoom >= 18] {
+      marker-file: url('symbols/shop/seafood.svg');
     }
 
     [shop = 'florist'][zoom >= 18] {
@@ -1048,6 +1045,10 @@
     [shop = 'car_repair'][zoom >= 18] {
       marker-file: url('symbols/shop/car_repair.svg');
     }
+	
+    [shop = 'motorcycle_repair'][zoom >= 18] {
+      marker-file: url('symbols/shop/motorcycle_repair.svg');
+    }
 
     [shop = 'dairy'][zoom >= 18] {
       marker-file: url('symbols/shop/dairy.svg');
@@ -1062,8 +1063,7 @@
     }
 
     [shop = 'photo'],
-    [shop = 'photo_studio'],
-    [shop = 'photography'] {
+    [shop = 'photo_studio'] {
       [zoom >= 18] {
         marker-file: url('symbols/shop/photo.svg');
       }
@@ -1094,6 +1094,10 @@
 
     [shop = 'optician'][zoom >= 18] {
       marker-file: url('symbols/shop/optician.svg');
+    }
+
+    [shop = 'hearing_aids'][zoom >= 18] {
+      marker-file: url('symbols/shop/hearing_aids.svg');
     }
 
     [shop = 'outdoor'][zoom >= 18] {
@@ -1140,8 +1144,7 @@
       }
     }
 
-    [shop = 'jewelry'],
-    [shop = 'jewellery'] {
+    [shop = 'jewelry'] {
       [zoom >= 18] {
         marker-file: url('symbols/shop/jewelry.svg');
       }
@@ -1230,7 +1233,7 @@
     marker-clip: false;
   }
 
-  [feature = 'leisure_water_park'][zoom >= 17],
+  [feature = 'leisure_water_park'][zoom >= 16],
   [feature = 'leisure_sports_centre'][sport = 'swimming'][zoom >= 17],
   [feature = 'leisure_swimming_area'][zoom >= 17] {
     marker-file: url('symbols/leisure/water_park.svg');
@@ -1252,6 +1255,9 @@
     marker-file: url('symbols/shop/pet.svg');
     marker-fill: @leisure-green;
     marker-clip: false;
+    [int_access = 'restricted'] {
+      marker-opacity: @private-opacity;
+    }
   }
 
   [feature = 'leisure_playground'][zoom >= 17] {
@@ -1344,6 +1350,12 @@
      marker-clip: false;
   }
 
+  [feature = 'leisure_dance'][zoom >= 17] {
+     marker-file: url('symbols/leisure/dance.svg');
+     marker-fill: @leisure-green;
+     marker-clip: false;
+  }
+
   // Slipway tagging on points - slipway on lines is defined later
   [feature = 'leisure_slipway'][zoom >= 17] {
     marker-file: url('symbols/leisure/slipway.svg');
@@ -1363,10 +1375,10 @@
     marker-fill: @airtransport;
   }
 
-  [feature = 'aeroway_aerodrome']['int_access' = 'yes']['icao' != null]['iata' != null][zoom >= 10][zoom < 17],
-  [feature = 'aeroway_aerodrome']['int_access' = 'restricted'][zoom >= 12][zoom < 18],
-  [feature = 'aeroway_aerodrome']['icao' = null][zoom >= 12][zoom < 18],
-  [feature = 'aeroway_aerodrome']['iata' = null][zoom >= 12][zoom < 18] {
+  [feature = 'aeroway_aerodrome'][int_access = 'yes'][icao != null][iata != null][zoom >= 10][zoom < 17],
+  [feature = 'aeroway_aerodrome'][int_access = 'restricted'][zoom >= 12][zoom < 18],
+  [feature = 'aeroway_aerodrome'][icao = null][zoom >= 12][zoom < 18],
+  [feature = 'aeroway_aerodrome'][iata = null][zoom >= 12][zoom < 18] {
     [way_pixels <= 192000],
     [way_pixels = null] {
       marker-file: url('symbols/amenity/aerodrome.svg');
@@ -1439,7 +1451,7 @@
     marker-clip: false;
   }
 
-  [feature = 'power_generator']['generator:source' = 'wind'] {
+  [feature = 'power_generator']["generator:source" = 'wind'] {
     [zoom >= 15][location != 'rooftop'][location != 'roof'],
     [zoom >= 15][location = null],
     [zoom >= 19] {
@@ -1633,6 +1645,7 @@
     text-halo-fill: @standard-halo-fill;
   }
 
+  [feature = 'natural_peninsula'][zoom >= 16],
   [feature = 'place_locality'][zoom >= 16] {
     text-name: "[name]";
     text-size: 10;
@@ -1723,7 +1736,8 @@
     text-halo-fill: @standard-halo-fill;
   }
 
-  [feature = 'leisure_sauna'][zoom >= 17] {
+  [feature = 'leisure_sauna'][zoom >= 17],
+  [feature = 'leisure_dance'][zoom >= 17] {
     text-name: "[name]";
     text-size: @standard-font-size;
     text-wrap-width: @standard-wrap-width;
@@ -1916,9 +1930,9 @@
     }
   }
 
-  [feature = 'power_generator']['generator:source' = 'wind'][location != 'rooftop'][location != 'roof'][zoom >= 17],
-  [feature = 'power_generator']['generator:source' = 'wind'][location = null][zoom >= 17],
-  [feature = 'power_generator']['generator:source' = 'wind'][zoom >= 19],
+  [feature = 'power_generator']["generator:source" = 'wind'][location != 'rooftop'][location != 'roof'][zoom >= 17],
+  [feature = 'power_generator']["generator:source" = 'wind'][location = null][zoom >= 17],
+  [feature = 'power_generator']["generator:source" = 'wind'][zoom >= 19],
   [feature = 'historic_city_gate'][zoom >= 17],
   [feature = 'natural_cave_entrance'][zoom >= 15],
   [feature = 'man_made_mast'][zoom >= 18],
@@ -1937,7 +1951,7 @@
     text-wrap-width: @standard-wrap-width;
     text-line-spacing: @standard-line-spacing-size;
     text-fill: darken(@man-made-icon, 20%);
-    [feature = 'power_generator']['generator:source' = 'wind'],
+    [feature = 'power_generator']["generator:source" = 'wind'],
     [feature = 'historic_city_gate'],
     [feature = 'man_made_mast'],
     [feature = 'man_made_tower'],
@@ -2008,21 +2022,18 @@
     text-dy: 13;
   }
 
-  [feature = 'leisure_water_park'],
-  [feature = 'leisure_sports_centre'][sport = 'swimming'],
-  [feature = 'leisure_swimming_area'] {
-    [zoom >= 14][way_pixels > 3000],
-    [zoom >= 17] {
-      text-name: "[name]";
-      text-size: @standard-font-size;
-      text-wrap-width: @standard-wrap-width;
-      text-line-spacing: @standard-line-spacing-size;
-      text-fill: @leisure-green;
-      text-dy: 11;
-      text-face-name: @standard-font;
-      text-halo-radius: @standard-halo-radius;
-      text-halo-fill: @standard-halo-fill;
-    }
+  [feature = 'leisure_water_park'][zoom >= 16],
+  [feature = 'leisure_sports_centre'][sport = 'swimming'][zoom >= 17],
+  [feature = 'leisure_swimming_area'][zoom >= 17] {
+    text-name: "[name]";
+    text-size: @standard-font-size;
+    text-wrap-width: @standard-wrap-width;
+    text-line-spacing: @standard-line-spacing-size;
+    text-fill: @leisure-green;
+    text-dy: 11;
+    text-face-name: @standard-font;
+    text-halo-radius: @standard-halo-radius;
+    text-halo-fill: @standard-halo-fill;
   }
 
   [feature = 'leisure_swimming_pool'][is_building = 'no'] {
@@ -2053,7 +2064,6 @@
   [feature = 'leisure_dog_park'],
   [feature = 'leisure_fitness_centre'],
   [feature = 'leisure_fitness_station'] {
-    [zoom >= 14][way_pixels > 3000],
     [zoom >= 17] {
       text-name: "[name]";
       text-size: @standard-font-size;
@@ -2062,10 +2072,13 @@
       text-dy: 13;
       text-fill: @leisure-green;
       text-face-name: @standard-font;
-      text-halo-radius: @standard-halo-radius;
       text-halo-fill: @standard-halo-fill;
+      [feature = 'leisure_dog_park'] { 
+        text-halo-radius: @standard-halo-radius * 1.5; /* Extra halo needed to stand out from paw pattern. */
+      }
       [int_access = 'restricted'] {
         text-fill: darken(@park, 50%);
+        text-halo-radius: 0;
       }
     }
   }
@@ -2206,12 +2219,9 @@
   [feature = 'natural_beach'],
   [feature = 'natural_shoal'],
   [feature = 'natural_reef'],
-  [feature = 'leisure_fitness_centre'],
-  [feature = 'leisure_fitness_station'],
-  [feature = 'leisure_sports_centre'],
+  [feature = 'leisure_sports_centre'][sport != 'swimming'],
   [feature = 'leisure_stadium'],
   [feature = 'leisure_track'],
-  [feature = 'leisure_dog_park'],
   [feature = 'leisure_ice_rink'],
   [feature = 'leisure_pitch'] {
     [zoom >= 10][way_pixels > 3000][is_building = 'no'],
@@ -2274,7 +2284,6 @@
       [feature = 'landuse_farmyard'] {
         text-fill: darken(@farmyard, 50%);
       }
-      [feature = 'landuse_farm'],
       [feature = 'landuse_farmland'],
       [feature = 'landuse_greenhouse_horticulture'] {
         text-fill: darken(@farmland, 50%);
@@ -2330,19 +2339,6 @@
       [feature = 'leisure_stadium'] {
         text-fill: darken(@stadium, 70%);
       }
-      [feature = 'leisure_fitness_centre'],
-      [feature = 'leisure_fitness_station'] {
-        text-fill: @leisure-green;
-        [int_access = 'restricted'] {
-          text-opacity: @private-opacity;
-          text-halo-radius: 0;
-        }
-      }
-      [feature = 'leisure_dog_park'] {
-        text-fill: @leisure-green;
-        text-halo-radius: @standard-halo-radius * 1.5; /* Extra halo needed to stand out from paw pattern. */
-        text-halo-fill: @standard-halo-fill;
-      }
       [feature = 'leisure_track'] {
         text-fill: darken(@track, 40%);
       }
@@ -2365,7 +2361,6 @@
     text-dy: 7;
   }
 
-  [feature = 'amenity_atm'][zoom >= 19],
   [feature = 'amenity_vending_machine'][vending = 'public_transport_tickets'][zoom >= 19] {
     text-name: "[operator]";
     text-size: @standard-font-size;
@@ -2605,6 +2600,7 @@
       text-wrap-width: @standard-wrap-width;
       text-line-spacing: @standard-line-spacing-size;
       text-dy: 12;
+      [shop = 'other'] { text-dy: 8; }
       text-fill: @shop-text;
       text-face-name: @standard-font;
       text-halo-radius: @standard-halo-radius;
@@ -2617,57 +2613,6 @@
 
   [feature = 'office'] {
     [zoom >= 18] {
-      [office = 'accountant'],
-      [office = 'adoption_agency'],
-      [office = 'advertising_agency'],
-      [office = 'architect'],
-      [office = 'association'],
-      [office = 'charity'],
-      [office = 'company'],
-      [office = 'educational_institution'],
-      [office = 'diplomatic'],
-      [office = 'employment_agency'],
-      [office = 'energy_supplier'],
-      [office = 'estate_agent'],
-      [office = 'financial'],
-      [office = 'forestry'],
-      [office = 'foundation'],
-      [office = 'government'],
-      [office = 'guide'],
-      [office = 'insurance'],
-      [office = 'it'],
-      [office = 'lawyer'],
-      [office = 'logistics'],
-      [office = 'moving_company'],
-      [office = 'newspaper'],
-      [office = 'ngo'],
-      [office = 'notary'],
-      [office = 'political_party'],
-      [office = 'private_investigator'],
-      [office = 'property_management'],
-      [office = 'quango'],
-      [office = 'religion'],
-      [office = 'research'],
-      [office = 'surveyor'],
-      [office = 'tax'],
-      [office = 'tax_advisor'],
-      [office = 'telecommunication'],
-      [office = 'travel_agent'],
-      [office = 'water_utility'] {
-        text-name: "[name]";
-        text-size: @standard-font-size;
-        text-wrap-width: @standard-wrap-width;
-        text-line-spacing: @standard-line-spacing-size;
-        text-dy: 8;
-        text-fill: @office;
-        text-face-name: @standard-font;
-        text-halo-radius: @standard-halo-radius;
-        text-halo-fill: rgba(255, 255, 255, 0.6);
-      }
-    }
-
-    // all other offices
-    [zoom >= 19] {
       text-name: "[name]";
       text-size: @standard-font-size;
       text-wrap-width: @standard-wrap-width;
@@ -2867,10 +2812,10 @@
     text-halo-fill: @standard-halo-fill;
   }
 
-  [feature = 'aeroway_aerodrome']['int_access' = 'yes']['icao' != null]['iata' != null][zoom >= 11][zoom < 17],
-  [feature = 'aeroway_aerodrome']['int_access' = 'restricted'][zoom >= 13][zoom < 18],
-  [feature = 'aeroway_aerodrome']['icao' = null][zoom >= 13][zoom < 18],
-  [feature = 'aeroway_aerodrome']['iata' = null][zoom >= 13][zoom < 18] {
+  [feature = 'aeroway_aerodrome'][int_access = 'yes'][icao != null][iata != null][zoom >= 11][zoom < 17],
+  [feature = 'aeroway_aerodrome'][int_access = 'restricted'][zoom >= 13][zoom < 18],
+  [feature = 'aeroway_aerodrome'][icao = null][zoom >= 13][zoom < 18],
+  [feature = 'aeroway_aerodrome'][iata = null][zoom >= 13][zoom < 18] {
     [way_pixels <= 192000],
     [way_pixels = null] {
       text-name: "[name]";
@@ -3012,42 +2957,38 @@
     marker-file: url('symbols/leisure/slipway.svg');
     marker-fill: @transportation-icon;
   }
+}
 
-  [feature = 'leisure_track'] {
-    [zoom >= 16] {
-      [zoom >= 17] {
-        bridgecasing/line-color: saturate(darken(@pitch, 30%), 20%);
-        bridgecasing/line-join: round;
-        bridgecasing/line-width: 1.25;
-        [zoom >= 18] { bridgecasing/line-width: 2.5; }
-        [zoom >= 19] { bridgecasing/line-width: 5; }
-      }
-      line-color: @pitch;
-      line-join: round;
-      line-cap: round;
-      line-width: 1;
-      [zoom >= 18] { line-width: 2; }
-      [zoom >= 19] { line-width: 4; }
-    }
+#leisure-track {
+  [zoom >= 17] {
+	bridgecasing/line-color: saturate(darken(@pitch, 30%), 20%);
+	bridgecasing/line-join: round;
+	bridgecasing/line-width: 1.25;
+	[zoom >= 18] { bridgecasing/line-width: 2.5; }
+	[zoom >= 19] { bridgecasing/line-width: 5; }
   }
+  line-color: @pitch;
+  line-join: round;
+  line-cap: round;
+  line-width: 1;
+  [zoom >= 18] { line-width: 2; }
+  [zoom >= 19] { line-width: 4; }
+}
 
-  [feature = 'attraction_water_slide'] {
-    [zoom >= 16] {
-      [zoom >= 17] {
-        bridgecasing/line-color: black;
-        bridgecasing/line-join: round;
-        bridgecasing/line-width: 1.25;
-        [zoom >= 18] { bridgecasing/line-width: 2.5; }
-        [zoom >= 19] { bridgecasing/line-width: 5; }
-      }
-      line-color: @pitch;
-      line-join: round;
-      line-cap: round;
-      line-width: 1;
-      [zoom >= 18] { line-width: 2; }
-      [zoom >= 19] { line-width: 4; }
-    }
+#waterslide {
+  [zoom >= 17] {
+	bridgecasing/line-color: black;
+	bridgecasing/line-join: round;
+	bridgecasing/line-width: 1.25;
+	[zoom >= 18] { bridgecasing/line-width: 2.5; }
+	[zoom >= 19] { bridgecasing/line-width: 5; }
   }
+  line-color: @pitch;
+  line-join: round;
+  line-cap: round;
+  line-width: 1;
+  [zoom >= 18] { line-width: 2; }
+  [zoom >= 19] { line-width: 4; }
 }
 
 #text-line {

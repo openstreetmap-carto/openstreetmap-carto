@@ -1,6 +1,6 @@
 # OpenStreetMap Carto
 
-![screenshot](https://raw.github.com/gravitystorm/openstreetmap-carto/master/preview.png)
+![screenshot](https://raw.github.com/openstreetmap-carto/openstreetmap-carto/master/preview.png)
 
 These are the CartoCSS map stylesheets for the Standard map layer on [OpenStreetMap.org](https://www.openstreetmap.org/).
 
@@ -8,7 +8,7 @@ The general purpose, the cartographic design goals and guidelines for this style
 
 These stylesheets can be used in your own cartography projects, and are designed
 to be easily customised. They work with [Kosmtik](https://github.com/kosmtik/kosmtik)
- and also with the command-line [CartoCSS](https://github.com/mapbox/carto) processor.
+ and also with the command-line [CartoCSS](https://github.com/cartocss/carto) processor.
 
 Since August 2013 these stylesheets have been used on the [OSMF tileservers](https://operations.osmfoundation.org/policies/tiles/) (tile.openstreetmap.org), and
 are updated from each point release. They supersede the previous [XML-based stylesheets](https://github.com/openstreetmap/mapnik-stylesheets).
@@ -72,24 +72,30 @@ to reload their databases, v3.x compatibility is not maintained.
 
 The v5.x series updates Lua tag transforms, linestring and polygon decisions have changed.
 
-There are over [500 open requests](https://github.com/gravitystorm/openstreetmap-carto/issues), some that have been open for years.
-These need reviewing and dividing into obvious fixes, or additional new features
-that need some cartographic judgement.
+## Move to flex backend (v6.x)
+
+The v6.x series moves to using the osm2pgsql flex backend.  This is going to allow improving the database schema more
+easily and provides more flexibly to accomondate the needs of map design.
+
+To resolve the over [600 open requests](https://github.com/openstreetmap-carto/openstreetmap-carto/issues) [substantial
+changes](https://github.com/openstreetmap-carto/openstreetmap-carto/issues/4901) are going to be necessary that require
+larger investments of work and consensus building to reduce the substantial technical and design debt we have accumulated
+over the years.  In addition, there is also plenty of smaller maintainance work to be done to resolve inconsistencies,
+fix individual issues and to adjust to changing mapping practice.  How much of this will get done is going to depend on
+how much energy and time the OSM community is going to invest in the project.
 
 # Alternatives
 
 There are many open-source stylesheets written for creating OpenStreetMap-based
 maps using Mapnik, many based on this project. Some alternatives are:
 
-* [OSM Bright](https://github.com/mapbox/osm-bright)
+* [OSM Bright](https://github.com/geofabrik/osm-bright)
 * [XML-based stylesheets](https://github.com/openstreetmap/mapnik-stylesheets)
 * [OpenStreetMap "FR" Carto](https://github.com/cquest/osmfr-cartocss)
 * [OpenStreetMap Carto German](https://github.com/giggls/openstreetmap-carto-de)
 
 # Maintainers
 
-* Andy Allan [@gravitystorm](https://github.com/gravitystorm)
-* Paul Norman [@pnorman](https://github.com/pnorman)
 * Daniel Koć [@kocio-pl](https://github.com/kocio-pl)
 * Christoph Hormann [@imagico](https://github.com/imagico)
 * Lukas Sommer [@sommerluk](https://github.com/sommerluk)
@@ -97,6 +103,8 @@ maps using Mapnik, many based on this project. Some alternatives are:
 
 ## Previous maintainers
 
+* Andy Allan [@gravitystorm](https://github.com/gravitystorm)
+* Paul Norman [@pnorman](https://github.com/pnorman)
 * Michael Glanznig [@nebulon42](https://github.com/nebulon42)
 * Matthijs Melissen [@matthijsmelissen](https://github.com/matthijsmelissen)
 * Mateusz Konieczny [@matkoniecz](https://github.com/matkoniecz)

@@ -18,9 +18,11 @@ test $i -gt $MAXCOUNT && echo "Timeout while waiting for PostgreSQL to be runnin
 case "$1" in
 import)
   # Creating default database
-  psql -c "SELECT 1 FROM pg_database WHERE datname = 'gis';" | grep -q 1 || createdb gis && \
-  psql -d gis -c 'CREATE EXTENSION IF NOT EXISTS postgis;' && \
-  psql -d gis -c 'CREATE EXTENSION IF NOT EXISTS hstore;' && \
+  echo "Creating database"
+  psql -c "SELECT 1 FROM pg_database WHERE datname = 'gis';" | grep -q 1 || createdb gis
+  psql -d gis -c 'CREATE EXTENSION IF NOT EXISTS postgis;'
+  psql -d gis -c 'CREATE EXTENSION IF NOT EXISTS hstore;'
+  psql -d gis -c 'ALTER SYSTEM SET jit=off;' -c 'SELECT pg_reload_conf();'
 
   # Creating default import settings file editable by user and passing values for osm2pgsql
   if [ ! -e ".env" ]; then
@@ -40,23 +42,28 @@ EOF
   fi
 
   # Importing data to a database
+  echo "Importing data from $OSM2PGSQL_DATAFILE"
   osm2pgsql \
   --cache $OSM2PGSQL_CACHE \
   --number-processes $OSM2PGSQL_NUMPROC \
-  --hstore \
-  --multi-geometry \
   --database gis \
   --slim \
   --drop \
-  --style openstreetmap-carto.style \
-  --tag-transform-script openstreetmap-carto.lua \
+  --output flex \
+  --style openstreetmap-carto-flex.lua \
   $OSM2PGSQL_DATAFILE
+
+  # Setting up indexes and functions
+  echo "Setting up indexes and functions"
+  psql -d gis -f indexes.sql
+  psql -d gis -f functions.sql
+  psql -d gis -f common-values.sql
 
   # Downloading and importing needed shapefiles
   scripts/get-external-data.py $EXTERNAL_DATA_SCRIPT_FLAGS
 
   # Download fonts
-  scripts/get-fonts.sh
+  scripts/get-fonts.py
   ;;
 
 kosmtik)

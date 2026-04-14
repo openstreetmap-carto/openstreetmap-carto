@@ -31,9 +31,13 @@
   }
 }
 
+// Note that golf hole names (if set) are not used for labelling.
+// This is because replacing the ref with a name removes the order of the golf holes from the map.
+// Previously the name would replace the ref, which was causing mappers to incorrectly put the hole number into the name, e.g. "1 First Hole".
+// This is not a valid name, see https://wiki.openstreetmap.org/wiki/Tag:leisure%3Dgolf_course
+// See https://github.com/gravitystorm/openstreetmap-carto/pull/5133 for discussion on removal of name.
 #text-line[zoom >= 16] {
-  [feature = 'golf_hole'][ref != ''],
-  [feature = 'golf_hole'][name != ''] {
+  [feature = 'golf_hole'][ref != ''] {
     text-placement: line;
     text-size: 11;
     text-fill: @golf-color;
@@ -42,14 +46,11 @@
     text-halo-fill: @standard-halo-fill;
     text-name: "[ref]";
 
-    [name != ''] { text-name: "[name]"; }
-
     [zoom >= 17] { text-size: 13; }
   }
 }
 
 #amenity-points[zoom >= 16] {
-  [feature = 'golf_hole'],
   [feature = 'golf_pin'] {
     marker-file: url('symbols/leisure/golf_pin.svg');
     marker-fill: @golf-color;

@@ -10,7 +10,7 @@
       text-name: [ref];
       text-face-name: @book-fonts;
       text-size: 10;
-      text-fill: @transportation-icon;
+      text-fill: @transportation-text;
       text-dy: 10;
       text-halo-radius: @standard-halo-radius * 1.5;
       text-halo-fill: @standard-halo-fill;

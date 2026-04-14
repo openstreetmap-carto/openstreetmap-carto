@@ -1,7 +1,7 @@
 version: '2'
 services:
   kosmtik:
-    image: kosmtik:v1
+    image: openstreetmap-carto-kosmtik:v1
     platform: linux/amd64
     build:
       context: .
@@ -16,7 +16,7 @@ services:
       - PGHOST=db
       - PGUSER=postgres
   db:
-    image: db:v1
+    image: openstreetmap-carto-db:v1
     build:
       context: .
       dockerfile: Dockerfile.db
@@ -25,7 +25,7 @@ services:
       - PG_WORK_MEM
       - PG_MAINTENANCE_WORK_MEM
   import:
-    image: import:v1
+    image: openstreetmap-carto-import:v1
     build:
       context: .
       dockerfile: Dockerfile.import

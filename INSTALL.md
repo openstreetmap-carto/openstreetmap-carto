@@ -1,11 +1,11 @@
 # Installation
 
-This document describes how to manually configure your system for running OpenStreetMap Carto. If you prefer quick, platform independent setup for a development environment, without the need to install and configure tools by hand, follow a Docker installation guide in [DOCKER.md](DOCKER.md).
+This document describes how to manually configure your system for running OpenStreetMap Carto. If you prefer a quick, platform independent setup for a development environment, without the need to install and configure tools by hand, follow the Docker installation guide in [DOCKER.md](DOCKER.md).
 
 ## OpenStreetMap data
-You need OpenStreetMap data loaded into a PostGIS database (see below for [dependencies](#dependencies)). These stylesheets expect a database generated with osm2pgsql using the pgsql backend (table names of `planet_osm_point`, etc), the default database name (`gis`), and the [lua transforms](https://osm2pgsql.org/doc/manual.html#lua-tag-transformations) documented in the instructions below.
+You need OpenStreetMap data loaded into a PostGIS database (see below for [dependencies](#dependencies)). These stylesheets expect a database generated with osm2pgsql using the flex backend.
 
-Start by creating a database
+Start by creating a database, we are using the database name `gis` here:
 
 ```sh
 sudo -u postgres createuser -s $USER
@@ -18,17 +18,17 @@ Enable PostGIS and hstore extensions with
 psql -d gis -c 'CREATE EXTENSION postgis; CREATE EXTENSION hstore;'
 ```
 
-then grab some OSM data. It's probably easiest to grab an PBF of OSM data from [Geofabrik](https://download.geofabrik.de/). Once you've done that, import with osm2pgsql:
+Then, grab some OSM data; It's probably easiest to grab an PBF of OSM data from [Geofabrik](https://download.geofabrik.de/). Once you've done that, import with osm2pgsql:
 
 ```sh
-osm2pgsql -G --hstore --style openstreetmap-carto.style --tag-transform-script openstreetmap-carto.lua -d gis ~/path/to/data.osm.pbf
+osm2pgsql -O flex -S openstreetmap-carto-flex.lua -d gis ~/path/to/data.osm.pbf
 ```
 
 You can find a more detailed guide to setting up a database and loading data with osm2pgsql at [switch2osm.org](https://switch2osm.org/serving-tiles/manually-building-a-tile-server-16-04-2-lts/).
 
 ### Disable JIT
 
-We do not recommend [PostgreSQL JIT](https://www.postgresql.org/docs/current/jit-reason.html), which is on by default in PostgreSQL 12 and higher. JIT is benifitial for slow queries where executing the SQL takes substantial time and that time is not spent in function calls. This is not the case for rendering, where most time is spent either fetching from disk, in PostGIS functions, or the query is fast. In theory, the query planner will only use JIT on slower queries, but it is known to get the type of queries map rendering requires wrong.
+We do not recommend [PostgreSQL JIT](https://www.postgresql.org/docs/current/jit-reason.html), which is on by default in PostgreSQL 12 and higher. JIT is beneficial for slow queries where executing the SQL takes substantial time and that time is not spent in function calls. This is not the case for rendering, where most time is spent either fetching from disk, in PostGIS functions, or the query is fast. In theory, the query planner will only use JIT on slower queries, but it is known to get the type of queries map rendering requires wrong.
 
 Disabling JIT is **essential** for use with Kosmtik and other style development tools.
 
@@ -47,19 +47,34 @@ The indexes can be created in parallel with
 scripts/indexes.py -0 | xargs -0 -P0 -I{} psql -d gis -c "{}"
 ```
 
+### Database functions
+Some functions need to be loaded into the database for current versions (5.9.0 onwards). These can be added / re-loaded at any point using:
+
+```sh
+psql -d gis -f functions.sql
+```
+
+### Additional database tables
+Current versions (6.0.0 onwards) involve a database table of white-listed key/tag values which are updated with each release. This list be added / updated at any point using:
+
+```sh
+psql -d gis -f common-values.sql
+```
+Failure to create this table will result in errors such as `relation "carto_pois" does not exist"`.
+
 ## Scripted download
 Some features are rendered using preprocessed shapefiles.
 
-To download them and import them into the database you can run the following script
+To download them and import them into the database you can run the following script:
 
 ```sh
 scripts/get-external-data.py
 ```
 
-The script downloads shapefiles, loads them into the database and sets up the tables for rendering. Additional script option documentation can be seen with `scripts/get-external-data.py --help`.
+The script downloads shapefiles, loads them into the database, and sets up the tables for rendering. Additional script options and corresponding documentation is available by invoking `scripts/get-external-data.py --help`.
 
 ## Fonts
-The stylesheet uses Noto, an openly licensed font family from Google with support for multiple scripts. The stylesheet uses Noto's "Sans" style where available. If not available, this stylesheet uses another appropriate style of the Noto family. The "UI" version is used where available, with its vertical metrics which fit better with Latin text.
+The stylesheet uses Noto, an openly licensed font family from Google with support for multiple scripts. The stylesheet uses Noto's "Sans" style where available. If not available, this stylesheet uses another appropriate style from the Noto family. The "UI" version is used where available, as its vertical metrics fit better with Latin text.
 
 Hanazono is used a fallback for seldom used CJK characters that are not covered by Noto.
 
@@ -68,36 +83,60 @@ For more details, see the documentation at [fonts.mss](style/fonts.mss).
 To download the fonts, run the following script
 
 ```
-scripts/get-fonts.sh
+scripts/get-fonts.py
 ```
 
 ## Dependencies
 
-For development, a style design studio is needed.
-* [Kosmtik](https://github.com/kosmtik/kosmtik) - Kosmtik can be launched with `node index.js serve path/to/openstreetmap-carto/project.mml` The 0.0.17 release of Kosmtik is not enough because we need up-to-date CartoCSS and Mapnik versions. To install the current master branch of Kosmtik, you can clone the Kosmtik repository and execute `npm install` within it.
-
-[TileMill](https://tilemill-project.github.io/tilemill/) is not officially supported, but you may be able to use a recent TileMill version by copying or symlinking the project directly into your Mapbox/project directory.
-
-To display any map a database containing OpenStreetMap data and some utilities are required
-
+To display *any* map, a database containing OpenStreetMap data and some utilities are required:
 * [PostgreSQL](https://www.postgresql.org/)
 * [PostGIS](https://postgis.net/)
-* [osm2pgsql](https://github.com/openstreetmap/osm2pgsql#installing) to [import your data](https://switch2osm.org/serving-tiles/updating-as-people-edit/) into a PostGIS database
-* Python 3 with the psycopg2, yaml, and requests libraries (`python3-psycopg2`, `python3-yaml`, `python3-requests` packages on Debian-derived systems)
-* `ogr2ogr` for loading shapefiles into the database (`gdal-bin` on Debian-derived systems)
+* [`osm2pgsql`](https://github.com/openstreetmap/osm2pgsql#installing)>=`1.8.0` to [import your data](https://switch2osm.org/serving-tiles/updating-as-people-edit-osm2pgsql-replication/) into a PostGIS database
+* [Python 3](https://www.python.org/downloads/) with the `psycopg2`, `pyyaml`, and `requests` libraries (`python3-psycopg2`, `python3-pyyaml`, `python3-requests` packages on Debian-derived systems)
+  ```bash
+  python3 -m pip install --break-system-packages --user pyyaml requests psycopg2
+  ```
+* [`ogr2ogr`](https://gdal.org/en/latest/download.html) for loading shapefiles into the database (`gdal-bin` on Debian-derived systems)
 
-### Optional development dependencies
+### For development (style design studio)
 
-Some colours, SVGs and other files are generated with helper scripts. Not all users will need these dependencies
+* [Kosmtik](https://github.com/kosmtik/kosmtik)
+  * Install it:
+      ```bash
+      git clone https://github.com/kosmtik/kosmtik
+      cd kosmtik
+      npm install
+      ```
+    * _The 0.0.17 release of Kosmtik wouldn't be enough because we need up-to-date CartoCSS and Mapnik versions._
+  * Launch it:
+      ```bash
+      node index.js serve path/to/openstreetmap-carto/project.mml
+      ```
+* [TileMill](https://tilemill-project.github.io/tilemill/)
+  * Not officially supported, but you may be able to use a recent TileMill version by copying or symlinking the project directly into your Mapbox/project directory.
 
-* Python and Ruby to run helper scripts
-* [Color Math](https://github.com/gtaylor/python-colormath) and [numpy](https://numpy.org/) if running generate_road_colors.py helper script (may be obtained with `pip install colormath numpy`)
+#### Optional
 
-### Additional deployment dependencies
+Some colours, SVGs and other files are generated with helper scripts. Not all users will need these dependencies.
 
-For deployment, CartoCSS and Mapnik are required.
+* [Python](https://www.python.org/downloads/)
+* [`generate_road_colours.py`](./scripts/generate_road_colours.py) and [`generate_unpaved_patterns.py`](./scripts/generate_unpaved_patterns.py) depend on [Color Math](https://github.com/gtaylor/python-colormath) and [`numpy`](https://numpy.org/). To install these, run:
+    ```bash
+    python3 -m pip install --break-system-packages --user colormath numpy
+    ```
 
-* [CartoCSS](https://github.com/mapbox/carto) >= 1.2.0 *(we're using YAML)*
-* [Mapnik](https://github.com/mapnik/mapnik/wiki/Mapnik-Installation) >= 3.0.22
+### For deployment
 
-With CartoCSS you compile these sources into a Mapnik compatible XML file. When running CartoCSS, specify the Mapnik API version you are using (at least 3.0.22: `carto -a "3.0.22"`).
+CartoCSS and Mapnik are required for deployment.
+
+* [CartoCSS](https://github.com/cartocss/carto) >= `1.2.0` *(we're using YAML)*
+* [Mapnik](https://github.com/mapnik/mapnik/wiki/Mapnik-Installation) >= `3.0.22`
+
+With CartoCSS, these sources are compiled into a Mapnik compatible XML file. When running CartoCSS, specify the Mapnik API version you are using (at least 3.0.22: `carto -a "3.0.22"`).
+
+### Maintenance
+
+The compiled sylesheet (`project.xml`) associated with each release is fixed. The white-list of allowed shop / office values, however, can be updated between releases using current usage data from `taginfo` by:
+1. Regenerating `common-values.sql` using `scripts/get-common-values.py > common-values.sql` 
+2. Re-uploading the `carto_pois` database table using `psql -d gis -f common-values.sql`
+3. Flushing any tiles cached for zoom levels 17+.
