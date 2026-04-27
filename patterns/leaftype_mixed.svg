@@ -1,0 +1,71 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="256" height="256" viewBox="0 0 256 256">
+  <defs>
+    <path id="leaftype_mixed1" stroke-width="1" stroke="#6b8d5e" fill="none" d="m3.5,13 v-5.5 a3,3.5 0 0 1 0,-7 3,3.5 0 0 1 0,7"/>
+    <path id="leaftype_mixed2" stroke-width="1" stroke="#6b8d5e" fill="none" d="m3.5,13 v-4.5 m-3,0 v-.4093 l2.8465,-7.5907 h.307 l2.8465,7.5907 v.4093 z"/>
+  </defs>
+  <rect id="mapnik_workaround" width="256" height="256" fill="none"/>
+  <use x="112" y="194" xlink:href="#leaftype_mixed1"/>
+  <use x="46" y="196" xlink:href="#leaftype_mixed1"/>
+  <use x="9" y="201" xlink:href="#leaftype_mixed1"/>
+  <use x="72" y="209" xlink:href="#leaftype_mixed1"/>
+  <use x="152" y="234" xlink:href="#leaftype_mixed1"/>
+  <use x="70" y="238" xlink:href="#leaftype_mixed1"/>
+  <use x="6" y="239" xlink:href="#leaftype_mixed1"/>
+  <use x="178" y="243" xlink:href="#leaftype_mixed1"/>
+  <use x="31" y="2" xlink:href="#leaftype_mixed1"/>
+  <use x="97" y="3" xlink:href="#leaftype_mixed1"/>
+  <use x="203" y="9" xlink:href="#leaftype_mixed1"/>
+  <use x="160" y="13" xlink:href="#leaftype_mixed1"/>
+  <use x="70" y="16" xlink:href="#leaftype_mixed1"/>
+  <use x="44" y="35" xlink:href="#leaftype_mixed1"/>
+  <use x="142" y="84" xlink:href="#leaftype_mixed1"/>
+  <use x="205" y="108" xlink:href="#leaftype_mixed1"/>
+  <use x="83" y="109" xlink:href="#leaftype_mixed1"/>
+  <use x="142" y="119" xlink:href="#leaftype_mixed1"/>
+  <use x="230" y="139" xlink:href="#leaftype_mixed1"/>
+  <use x="41" y="154" xlink:href="#leaftype_mixed1"/>
+  <use x="103" y="168" xlink:href="#leaftype_mixed1"/>
+  <use x="244" y="178" xlink:href="#leaftype_mixed1"/>
+  <use x="186" y="180" xlink:href="#leaftype_mixed1"/>
+  <use x="150" y="182" xlink:href="#leaftype_mixed1"/>
+  <use x="211" y="202" xlink:href="#leaftype_mixed2"/>
+  <use x="174" y="208" xlink:href="#leaftype_mixed2"/>
+  <use x="133" y="212" xlink:href="#leaftype_mixed2"/>
+  <use x="237" y="218" xlink:href="#leaftype_mixed2"/>
+  <use x="41" y="229" xlink:href="#leaftype_mixed2"/>
+  <use x="109" y="231" xlink:href="#leaftype_mixed2"/>
+  <use x="216" y="236" xlink:href="#leaftype_mixed2"/>
+  <use x="130" y="5" xlink:href="#leaftype_mixed2"/>
+  <use x="233" y="19" xlink:href="#leaftype_mixed2"/>
+  <use x="7" y="20" xlink:href="#leaftype_mixed2"/>
+  <use x="182" y="34" xlink:href="#leaftype_mixed2"/>
+  <use x="106" y="35" xlink:href="#leaftype_mixed2"/>
+  <use x="142" y="41" xlink:href="#leaftype_mixed2"/>
+  <use x="212" y="44" xlink:href="#leaftype_mixed2"/>
+  <use x="78" y="45" xlink:href="#leaftype_mixed2"/>
+  <use x="14" y="47" xlink:href="#leaftype_mixed2"/>
+  <use x="241" y="57" xlink:href="#leaftype_mixed2"/>
+  <use x="164" y="59" xlink:href="#leaftype_mixed2"/>
+  <use x="110" y="66" xlink:href="#leaftype_mixed2"/>
+  <use x="35" y="67" xlink:href="#leaftype_mixed2"/>
+  <use x="198" y="73" xlink:href="#leaftype_mixed2"/>
+  <use x="78" y="79" xlink:href="#leaftype_mixed2"/>
+  <use x="224" y="83" xlink:href="#leaftype_mixed2"/>
+  <use x="7" y="84" xlink:href="#leaftype_mixed2"/>
+  <use x="50" y="90" xlink:href="#leaftype_mixed2"/>
+  <use x="172" y="94" xlink:href="#leaftype_mixed2"/>
+  <use x="113" y="98" xlink:href="#leaftype_mixed2"/>
+  <use x="22" y="110" xlink:href="#leaftype_mixed2"/>
+  <use x="247" y="114" xlink:href="#leaftype_mixed2"/>
+  <use x="173" y="123" xlink:href="#leaftype_mixed2"/>
+  <use x="53" y="128" xlink:href="#leaftype_mixed2"/>
+  <use x="109" y="130" xlink:href="#leaftype_mixed2"/>
+  <use x="11" y="141" xlink:href="#leaftype_mixed2"/>
+  <use x="199" y="142" xlink:href="#leaftype_mixed2"/>
+  <use x="75" y="145" xlink:href="#leaftype_mixed2"/>
+  <use x="135" y="148" xlink:href="#leaftype_mixed2"/>
+  <use x="165" y="157" xlink:href="#leaftype_mixed2"/>
+  <use x="214" y="172" xlink:href="#leaftype_mixed2"/>
+  <use x="18" y="174" xlink:href="#leaftype_mixed2"/>
+  <use x="77" y="176" xlink:href="#leaftype_mixed2"/>
+</svg>
