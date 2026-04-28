@@ -55,5 +55,6 @@
     marker-file: url('symbols/leisure/golf_pin.svg');
     marker-fill: @golf-color;
     marker-clip: false;
+	marker-transform: translate(0,-5);
   }
 }
