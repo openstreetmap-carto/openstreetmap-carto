@@ -1615,7 +1615,7 @@ Layer:
                                    THEN amenity END,
                 'tourism_' || CASE WHEN tourism IN ('viewpoint', 'attraction') THEN tourism END,
                 'place_' || CASE WHEN place IN ('locality') AND way_area IS NULL THEN place END,
-                'golf_' || CASE WHEN tags->'golf' IN ('pin') THEN tags->'golf' END
+                'golf_' || CASE WHEN tags->'golf' IN ('pin') AND way_area IS NULL THEN tags->'golf' END
               ) AS feature,
               CASE WHEN access IN ('private', 'no', 'customers', 'permit', 'delivery') THEN 'restricted' ELSE 'yes' END AS int_access,
               CASE
