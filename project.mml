@@ -1440,38 +1440,6 @@ Layer:
     properties:
       cache-features: true
       minzoom: 12
-  - id: junctions
-    geometry: point
-    <<: *extents
-    Datasource:
-      <<: *osm2pgsql
-      table: |-
-        (SELECT
-            way,
-            highway,
-            junction,
-            ref,
-            name,
-            NULL AS way_pixels
-          FROM planet_osm_point
-          WHERE way && !bbox!
-            AND (highway = 'motorway_junction' OR highway = 'traffic_signals' OR junction = 'yes')
-        UNION ALL
-          SELECT
-            ST_PointOnSurface(way) AS way,
-            highway,
-            junction,
-            ref,
-            name,
-            way_area/NULLIF(POW(!scale_denominator!*0.001*0.28,2),0) AS way_pixels
-          FROM planet_osm_polygon
-          WHERE way && !bbox! -- Not ST_PointOnSurface(way) because name might be NULL
-            AND junction = 'yes'
-            AND way_area < 768000*POW(!scale_denominator!*0.001*0.28,2)
-          ORDER BY way_pixels DESC NULLS LAST
-        ) AS junctions
-    properties:
-      minzoom: 12
   - id: bridge-text
     geometry: point
     <<: *extents
@@ -1877,6 +1845,38 @@ Layer:
         ) AS roads_text_ref
     properties:
       minzoom: 13
+  - id: junctions
+    geometry: point
+    <<: *extents
+    Datasource:
+      <<: *osm2pgsql
+      table: |-
+        (SELECT
+            way,
+            highway,
+            junction,
+            ref,
+            name,
+            NULL AS way_pixels
+          FROM planet_osm_point
+          WHERE way && !bbox!
+            AND (highway = 'motorway_junction' OR highway = 'traffic_signals' OR junction = 'yes')
+        UNION ALL
+          SELECT
+            ST_PointOnSurface(way) AS way,
+            highway,
+            junction,
+            ref,
+            name,
+            way_area/NULLIF(POW(!scale_denominator!*0.001*0.28,2),0) AS way_pixels
+          FROM planet_osm_polygon
+          WHERE way && !bbox! -- Not ST_PointOnSurface(way) because name might be NULL
+            AND junction = 'yes'
+            AND way_area < 768000*POW(!scale_denominator!*0.001*0.28,2)
+          ORDER BY way_pixels DESC NULLS LAST
+        ) AS junctions
+    properties:
+      minzoom: 12
   - id: roads-area-text-name
     geometry: point
     <<: *extents
