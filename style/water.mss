@@ -25,6 +25,8 @@
 @stream-width-z17:        3.5;
 @stream-width-z18:        4;
 
+@ditchdrain-width-z17:    3;
+
 @canal-scale-factor:      1.4;
 
 #water-areas {
@@ -72,31 +74,46 @@
   }
 }
 
-#water-lines::casing, 
-#waterway-bridges::casing {
-  // white glow used when water stroke width is less than 3 px and only at "mid zoom" (13 - 17)
+#water-lines::casing {
+  // white glow used when water stroke width is less than 3.5 px and only at "mid zoom" (13 - 17)
 
-  [waterway = 'canal'][int_tunnel = 'no'][zoom = 13][int_intermittent != 'yes'] {
+  [waterway = 'canal'][int_tunnel = 'no'][zoom >= 13][zoom < 15] {
     line-color: white;
-    line-opacity: 0.75;
-    line-width: (@stream-width-z13 * @canal-scale-factor) + 0.4;
+    line-join: round;
+    line-cap: round;
+    line-opacity: 0.85;
+    line-width: (@stream-width-z13 * @canal-scale-factor) + 0.6;
+    [zoom >= 14] { line-width: (@stream-width-z14 * @canal-scale-factor) + 0.6; }
+    [int_intermittent = 'yes'] {
+      line-dasharray: 4,3;
+      line-cap: butt;
+    }
   }
 
   [waterway = 'ditch'][zoom < 18],
   [waterway = 'drain'][zoom < 18],
-  [waterway = 'stream'][zoom < 16] {
+  [waterway = 'stream'][zoom < 18] {
     [int_tunnel = 'no'] {
       [zoom = 13][int_intermittent != 'yes'],
       [zoom >= 14] {
         line-color: white;
-        line-opacity: 0.75;
-        line-width: @stream-width-z13 + 0.5;
-        [zoom >= 14] { line-width: @stream-width-z14 + 0.4; }
-        [waterway = 'stream'][zoom >= 15] { line-width: @stream-width-z15 + 0.3; }
+        line-join: round;
+        line-cap: round;
+        line-opacity: 0.85;
+        [zoom >= 16] { line-opacity: 0.75; }
+        [zoom >= 17] { line-opacity: 0.6; }
+        line-width: @stream-width-z13 + 0.6;
+        [zoom >= 14] { line-width: @stream-width-z14 + 0.6; }
+        [waterway = 'stream'] {
+           [zoom >= 15] { line-width: @stream-width-z15 + 0.6; }
+           [zoom >= 16] { line-width: @stream-width-z16 + 0.6; }
+           [zoom >= 17] { line-width: @stream-width-z17 + 0.6; }
+        }
+        [waterway != 'stream'][zoom >= 17] { line-width: @ditchdrain-width-z17 + 0.6; }
+
         [int_intermittent = 'yes'] {
           line-dasharray: 4,3;
           line-cap: butt;
-          line-join: round;
         }
       }
     }
@@ -117,16 +134,11 @@
       [zoom >= 16] { background/line-width: @river-width-z16; }
       [zoom >= 17] { background/line-width: @river-width-z17; }
       [zoom >= 18] { background/line-width: @river-width-z18; }
-      background/line-cap: round;
       background/line-join: round;
-      // PROBLEM HERE. Initially round+round, then redefined as butt+miter
-      background/line-cap: butt;
-      background/line-join: miter;
     }
 
     [bridge = 'yes'][zoom >= 14] {
       bridgecasing/line-color: black;
-      bridgecasing/line-join: round;
       bridgecasing/line-width: @river-width-z14 + 1;
       [zoom >= 15] { bridgecasing/line-width: @river-width-z15 + 1; }
       [zoom >= 16] { bridgecasing/line-width: @river-width-z16 + 1; }
@@ -164,9 +176,9 @@
       // This provides the blue dashed casing of waterway tunnels
       water/line-dasharray: 4,2;
       water/line-cap: butt;
-      water/line-join: miter;
       tunnelfill/line-color: @water-tunnelfill-color;
       tunnelfill/line-width: @river-width-z12 - 1.5;
+      tunnelfill/line-join: round;
       [zoom >= 13] { tunnelfill/line-width: @river-width-z13 - 2; }
       [zoom >= 14] { tunnelfill/line-width: @river-width-z14 - 3; }
       [zoom >= 15] { tunnelfill/line-width: @river-width-z15 - 3; }
@@ -185,12 +197,11 @@
         // Background for dashed tunnel casings
         // The line widths are adjusted later - this just "books in" the background layer
         background/line-color: @water-tunnelfill-color;
-      // PROBLEM HERE: Join/cap style not specified?
+        background/line-join: round;
       }
 
       [bridge = 'yes'][zoom >= 14] {
         bridgecasing/line-color: black;
-        bridgecasing/line-join: round;
         bridgecasing/line-width: @stream-width-z14 + 1;
         [waterway = 'stream'] {
           [zoom >= 15] { bridgecasing/line-width: @stream-width-z15 + 1; }
@@ -198,14 +209,18 @@
           [zoom >= 17] { bridgecasing/line-width: @stream-width-z17 + 1; }
           [zoom >= 18] { bridgecasing/line-width: @stream-width-z18 + 1; }
         }
-        bridgefill/line-color: white;
-        bridgefill/line-join: round;
-        bridgefill/line-width: @stream-width-z14;
-        [waterway = 'stream'] {
-          [zoom >= 15] { bridgefill/line-width: @stream-width-z15; }
-          [zoom >= 16] { bridgefill/line-width: @stream-width-z16; }
-          [zoom >= 17] { bridgefill/line-width: @stream-width-z17; }
-          [zoom >= 18] { bridgefill/line-width: @stream-width-z18; }
+        [waterway != 'stream'][zoom >= 17] { bridgecasing/line-width: @ditchdrain-width-z17 + 1; }
+        [int_intermittent = 'yes'] {
+          bridgefill/line-color: white;
+          bridgefill/line-join: round;
+          bridgefill/line-width: @stream-width-z14;
+          [waterway = 'stream'] {
+            [zoom >= 15] { bridgefill/line-width: @stream-width-z15; }
+            [zoom >= 16] { bridgefill/line-width: @stream-width-z16; }
+            [zoom >= 17] { bridgefill/line-width: @stream-width-z17; }
+            [zoom >= 18] { bridgefill/line-width: @stream-width-z18; }
+          }
+          [waterway != 'stream'][zoom >= 17] { bridgefill/line-width: @ditchdrain-width-z17; }
         }
       }
 
@@ -218,21 +233,24 @@
         [zoom >= 17] { water/line-width: @stream-width-z17; }
         [zoom >= 18] { water/line-width: @stream-width-z18; }
       }
+      [waterway != 'stream'][zoom >= 17] { water/line-width: @ditchdrain-width-z17; }
       water/line-color: @water-color;
+      water/line-cap: round;
+      water/line-join: round;
 
       [int_intermittent = 'yes'] {
         water/line-dasharray: 4,3;
         water/line-cap: butt;
-        water/line-join: round;
       }
 
       [int_tunnel = 'yes'][zoom >= 14] {
         water/line-dasharray: 4,2;
-        // PROBLEM HERE: join/cap not set, differs from river/canal
+        water/line-cap: butt;
         background/line-width: @stream-width-z14 + 1;
         water/line-width: @stream-width-z14 + 1;
         tunnelfill/line-width: @stream-width-z14 - 0.5;
         tunnelfill/line-color: @water-tunnelfill-color;
+        tunnelfill/line-join: round;
         [waterway = 'stream'] {
           [zoom >= 15] { 
             background/line-width: @stream-width-z15 + 1.5;
@@ -255,6 +273,11 @@
             tunnelfill/line-width: @stream-width-z18 - 1.5;
           }
         }
+        [waterway != 'stream'][zoom >= 17] {
+          background/line-width: @ditchdrain-width-z17 + 1;
+          water/line-width: @ditchdrain-width-z17 + 1;
+          tunnelfill/line-width: @ditchdrain-width-z17 - 1.5;
+        }
       }
     }
   }
@@ -264,24 +287,25 @@
       // Background for dashed tunnel casings
       // The line widths are adjusted later - this just "books in" the background layer
       background/line-color: @water-tunnelfill-color;
-      // PROBLEM HERE: Join/cap style not specified?
+      background/line-join: round;
     }
 
     [bridge = 'yes'][zoom >= 14] {
       bridgecasing/line-color: black;
-      bridgecasing/line-join: round;
       bridgecasing/line-width: (@stream-width-z14 * @canal-scale-factor) + 1;
       [zoom >= 15] { bridgecasing/line-width: (@stream-width-z15 * @canal-scale-factor) + 1; }
       [zoom >= 16] { bridgecasing/line-width: (@stream-width-z16 * @canal-scale-factor) + 1; }
       [zoom >= 17] { bridgecasing/line-width: (@stream-width-z17 * @canal-scale-factor) + 1; }
       [zoom >= 18] { bridgecasing/line-width: (@stream-width-z18 * @canal-scale-factor) + 1; }
-      bridgefill/line-color: white;
-      bridgefill/line-join: round;
-      bridgefill/line-width: @stream-width-z14 * @canal-scale-factor;
-      [zoom >= 15] { bridgefill/line-width: @stream-width-z15 * @canal-scale-factor; }
-      [zoom >= 16] { bridgefill/line-width: @stream-width-z16 * @canal-scale-factor; }
-      [zoom >= 17] { bridgefill/line-width: @stream-width-z17 * @canal-scale-factor; }
-      [zoom >= 18] { bridgefill/line-width: @stream-width-z18 * @canal-scale-factor; }
+      [int_intermittent = 'yes'] {
+        bridgefill/line-color: white;
+        bridgefill/line-join: round;
+        bridgefill/line-width: @stream-width-z14 * @canal-scale-factor;
+        [zoom >= 15] { bridgefill/line-width: @stream-width-z15 * @canal-scale-factor; }
+        [zoom >= 16] { bridgefill/line-width: @stream-width-z16 * @canal-scale-factor; }
+        [zoom >= 17] { bridgefill/line-width: @stream-width-z17 * @canal-scale-factor; }
+        [zoom >= 18] { bridgefill/line-width: @stream-width-z18 * @canal-scale-factor; }
+      }
     }
 
     water/line-width: @stream-width-z12 * @canal-scale-factor;
@@ -292,20 +316,22 @@
     [zoom >= 17] { water/line-width: @stream-width-z17 * @canal-scale-factor; }
     [zoom >= 18] { water/line-width: @stream-width-z18 * @canal-scale-factor; }
     water/line-color: @water-color;
+    water/line-join: round;
+    water/line-cap: round;
 
     [int_intermittent = 'yes'] {
       water/line-dasharray: 4,3;
       water/line-cap: butt;
-      water/line-join: round;
     }
     
     [int_tunnel = 'yes'][zoom >= 13] {
       water/line-dasharray: 4,2;
-      // PROBLEM HERE: join/cap not set, differs from river/canal
+      water/line-cap: butt;
       background/line-width: (@stream-width-z13 * @canal-scale-factor) + 1;
       water/line-width: (@stream-width-z13 * @canal-scale-factor) + 1;
       tunnelfill/line-width: (@stream-width-z13 * @canal-scale-factor) - 1;
       tunnelfill/line-color: @water-tunnelfill-color;
+      tunnelfill/line-join: round;
       [zoom >= 14] { 
         background/line-width: (@stream-width-z14 * @canal-scale-factor) + 1;
         water/line-width: (@stream-width-z14 * @canal-scale-factor) + 1;
