@@ -1,7 +1,7 @@
 @water-text: #4d80b3;
 @glacier: #ddecec;
 @glacier-line: #9cf;
-@water-tunnelfill-color: lighten(@water-color, 20%);
+@water-tunnelfill-color: lighten(@water-color, 15%);
 @waterway-text-repeat-distance: 200;
 @waterway-text-spacing: 500;
 
@@ -90,31 +90,29 @@
     }
   }
 
-  [waterway = 'ditch'][zoom < 18],
-  [waterway = 'drain'][zoom < 18],
-  [waterway = 'stream'][zoom < 18] {
-    [int_tunnel = 'no'] {
-      [zoom = 13][int_intermittent != 'yes'],
-      [zoom >= 14] {
-        line-color: white;
-        line-join: round;
-        line-cap: round;
-        line-opacity: 0.85;
-        [zoom >= 16] { line-opacity: 0.75; }
-        [zoom >= 17] { line-opacity: 0.6; }
-        line-width: @stream-width-z13 + 0.6;
-        [zoom >= 14] { line-width: @stream-width-z14 + 0.6; }
-        [waterway = 'stream'] {
-           [zoom >= 15] { line-width: @stream-width-z15 + 0.6; }
-           [zoom >= 16] { line-width: @stream-width-z16 + 0.6; }
-           [zoom >= 17] { line-width: @stream-width-z17 + 0.6; }
-        }
-        [waterway != 'stream'][zoom >= 17] { line-width: @ditchdrain-width-z17 + 0.6; }
+  [waterway = 'ditch'],
+  [waterway = 'drain'],
+  [waterway = 'stream'] {
+    [int_tunnel = 'no'][zoom >= 13][zoom < 18] {
+      line-color: white;
+      line-join: round;
+      line-cap: round;
+      line-opacity: 0.7;      
+      [zoom >= 14] { line-opacity: 0.85; }
+      [zoom >= 16] { line-opacity: 0.75; }
+      [zoom >= 17] { line-opacity: 0.6; }
+      line-width: @stream-width-z13 + 0.6;
+      [zoom >= 14] { line-width: @stream-width-z14 + 0.6; }
+      [waterway = 'stream'] {
+         [zoom >= 15] { line-width: @stream-width-z15 + 0.6; }
+         [zoom >= 16] { line-width: @stream-width-z16 + 0.6; }
+         [zoom >= 17] { line-width: @stream-width-z17 + 0.6; }
+      }
+      [waterway != 'stream'][zoom >= 17] { line-width: @ditchdrain-width-z17 + 0.6; }
 
-        [int_intermittent = 'yes'] {
-          line-dasharray: 4,3;
-          line-cap: butt;
-        }
+      [int_intermittent = 'yes'] {
+        line-dasharray: 4,3;
+        line-cap: butt;
       }
     }
   }
