@@ -10,11 +10,11 @@ jobs:
     - uses: actions/setup-python@v6.2.0
       with:
         python-version: 3.7
+        pip-install: pyyaml colormath
+        cache: pip
     - uses: actions/setup-node@v6.4.0
       with:
         node-version: 16
-    - name: Install python dependencies
-      run: pip install pyyaml colormath
     - name: Set up xmllint
       run: sudo apt-get update -qq && sudo apt-get install -qq --no-install-recommends libxml2-utils
     - name: Set up CartoCSS
