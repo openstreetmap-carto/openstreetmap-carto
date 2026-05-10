@@ -16,7 +16,7 @@ jobs:
         python-version: 3.14
         pip-install: pyyaml colormath
     - name: Set up xmllint and CartoCSS
-      run: sudo apt-get update -qq && sudo apt-get install -qq --no-install-recommends libxml2-utils nodejs-carto
+      run: sudo apt-get update -qq && sudo apt-get install -qq --no-install-recommends libxml2-utils node-carto
     - name: Set up shell
       run: set -o pipefail
     - name: Validate YAML files
