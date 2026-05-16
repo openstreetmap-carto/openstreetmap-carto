@@ -1446,16 +1446,71 @@ Layer:
     Datasource:
       <<: *osm2pgsql
       table: |-
-        (SELECT
+        (WITH mj AS (
+            -- Take motorway_junction points in the bbox, but with ref stripped of letters
+            -- (e.g. "1A" -> "1", "Exit 14B" -> "14") so siblings can be matched.
+            SELECT
+                way,
+                highway,
+                junction,
+                ref,
+                name,
+                NULLIF(TRIM(regexp_replace(COALESCE(ref, ''), '[A-Za-z]', '', 'g')), '') AS stripped_ref
+              FROM planet_osm_point
+              WHERE way && !bbox!
+                AND highway = 'motorway_junction'
+          ),
+          mj_clustered AS (
+            -- Combine any pair of motorway_junctions of sharing the same stripped_ref within 40 px.
+            -- cid is the cluster id, or NULL if the point was alone.
+            SELECT
+                way, highway, junction, ref, name, stripped_ref,
+                CASE WHEN stripped_ref IS NOT NULL THEN
+                  ST_ClusterDBSCAN(
+                    way,
+                    eps := 40 * !scale_denominator! * 0.001 * 0.28, -- combine within 40px distance
+                    minpoints := 2 -- at least two points are needed to make a cluster
+                  ) OVER (PARTITION BY stripped_ref)
+                END AS cid
+              FROM mj
+          ),
+          mj_deduped AS (
+            -- For clustered points, move each row to the cluster's center and
+            -- relabel it with the stripped ref; standalone points are left unchanged.
+            SELECT
+                CASE WHEN cid IS NOT NULL
+                  THEN ST_Centroid(ST_Collect(way) OVER (PARTITION BY stripped_ref, cid))
+                  ELSE way
+                END AS way,
+                highway,
+                junction,
+                CASE WHEN cid IS NOT NULL THEN stripped_ref ELSE ref END AS ref,
+                name,
+                cid,
+                stripped_ref,
+                ROW_NUMBER() OVER (PARTITION BY stripped_ref, cid ORDER BY name NULLS LAST) AS rn
+              FROM mj_clustered
+          )
+          SELECT
+              way,
+              highway,
+              junction,
+              ref,
+              name,
+              NULL::float AS way_pixels
+            FROM mj_deduped
+            WHERE cid IS NULL OR rn = 1
+        UNION ALL
+          SELECT
             way,
             highway,
             junction,
             ref,
             name,
-            NULL AS way_pixels
+            NULL::float AS way_pixels
           FROM planet_osm_point
           WHERE way && !bbox!
-            AND (highway = 'motorway_junction' OR highway = 'traffic_signals' OR junction = 'yes')
+            AND (highway = 'traffic_signals' OR junction = 'yes')
         UNION ALL
           SELECT
             ST_PointOnSurface(way) AS way,
