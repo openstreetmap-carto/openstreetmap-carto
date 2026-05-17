@@ -1490,15 +1490,23 @@ Layer:
             FROM mj_clustered
             WHERE cid IS NULL
         UNION ALL
-          -- Clustered motorway_junctions: collapse each cluster to its centroid, show one of the real ref names (not stripped)
+          -- Clustered motorway_junctions: collapse each cluster to a single label
+          -- placed at the location of the node whose ref equals MIN(ref) in the
+          -- cluster -- so e.g. a "188" label sits on junction 188 itself rather
+          -- than between 188, 188A and 188B. When no plain stripped_ref node is
+          -- present in the cluster (e.g. {188A, 188B}) MIN(ref) falls back to
+          -- the alphabetically-smallest ref and the label is placed there.
           SELECT
-              ST_Centroid(ST_Collect(way)) AS way,
+              ST_Centroid(ST_Collect(way) FILTER (WHERE ref = cluster_min_ref)) AS way,
               MIN(highway) AS highway,
               MIN(junction) AS junction,
               MIN(ref) AS ref,
               MIN(name) AS name,
               NULL::float AS way_pixels
-            FROM mj_clustered
+            FROM (
+              SELECT *, MIN(ref) OVER (PARTITION BY stripped_ref, cid) AS cluster_min_ref
+                FROM mj_clustered
+            ) c
             WHERE cid IS NOT NULL
             GROUP BY stripped_ref, cid
         UNION ALL
