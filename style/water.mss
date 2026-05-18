@@ -1,7 +1,7 @@
 @water-text: #4d80b3;
 @glacier: #ddecec;
 @glacier-line: #9cf;
-@water-tunnelfill-color: lighten(@water-color, 15%);
+@water-tunnelfill-color: #f3f7f7;
 @waterway-text-repeat-distance: 200;
 @waterway-text-spacing: 500;
 
