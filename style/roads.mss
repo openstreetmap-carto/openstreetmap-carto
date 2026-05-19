@@ -3438,6 +3438,7 @@ tertiary is rendered from z10 and is not included in osm_planet_roads. */
   [man_made = 'bridge'] {
     [zoom >= 12][way_pixels > 125][way_pixels <= 768000] {
       text-name: "[name]";
+      text-avoid-edges: true;
       text-size: 10;
       text-wrap-width: 30; // 3 em
       text-line-spacing: -1.2; // -0.15 em
@@ -3713,6 +3714,7 @@ tertiary is rendered from z10 and is not included in osm_planet_roads. */
     shield-margin: @shield-margin;
     shield-face-name: @shield-font;
     shield-clip: @shield-clip;
+    shield-avoid-edges: true;
 
     [highway = 'motorway'] {
       shield-fill: @motorway-shield;
@@ -3762,6 +3764,7 @@ tertiary is rendered from z10 and is not included in osm_planet_roads. */
       shield-margin: @shield-margin;
       shield-face-name: @shield-font;
       shield-clip: @shield-clip;
+      shield-avoid-edges: true;
 
       [highway = 'motorway'] {
         shield-fill: @motorway-shield;
@@ -3824,6 +3827,7 @@ tertiary is rendered from z10 and is not included in osm_planet_roads. */
   [highway = 'taxiway'] {
     [zoom >= 15] {
       text-name: "[refs]";
+      text-avoid-edges: true;
       text-size: 10;
       text-fill: #333;
       text-spacing: 750;
@@ -3838,10 +3842,12 @@ tertiary is rendered from z10 and is not included in osm_planet_roads. */
 }
 
 #roads-text-ref-minor {
+  // Issue #951: see roads-text-name comment above
   [highway = 'unclassified'],
   [highway = 'residential'] {
     [zoom >= 15] {
       text-name: "[refs]";
+      text-avoid-edges: true;
       text-size: 8;
 
       [zoom >= 16] {
@@ -3865,6 +3871,7 @@ tertiary is rendered from z10 and is not included in osm_planet_roads. */
   [highway = 'track'] {
     [zoom >= 15] {
       text-name: "[refs]";
+      text-avoid-edges: true;
       text-size: 8;
       text-dy: 5;
 
@@ -3892,6 +3899,9 @@ tertiary is rendered from z10 and is not included in osm_planet_roads. */
 }
 
 #roads-text-name {
+  // Issue #951: this layer ships pre-merged geometries, so text-avoid-edges
+  // must be on every text symbolizer below to suppress duplicate labels at
+  // metatile seams.
   [highway = 'motorway'],
   [highway = 'trunk'],
   [highway = 'primary'],
@@ -3900,6 +3910,7 @@ tertiary is rendered from z10 and is not included in osm_planet_roads. */
   [highway = 'construction'][construction = 'primary'] {
     [zoom >= 13] {
       text-name: "[name]";
+      text-avoid-edges: true;
       text-size: 8;
       text-fill: black;
       text-spacing: 300;
@@ -3931,6 +3942,7 @@ tertiary is rendered from z10 and is not included in osm_planet_roads. */
   [highway = 'construction'][construction = 'secondary'] {
     [zoom >= 13] {
       text-name: "[name]";
+      text-avoid-edges: true;
       text-size: 8;
       text-fill: black;
       text-spacing: 300;
@@ -3958,6 +3970,7 @@ tertiary is rendered from z10 and is not included in osm_planet_roads. */
   [highway = 'construction'][construction = 'tertiary'] {
     [zoom >= 14] {
       text-name: "[name]";
+      text-avoid-edges: true;
       text-size: 9;
       text-fill: black;
       text-spacing: 300;
@@ -3977,6 +3990,7 @@ tertiary is rendered from z10 and is not included in osm_planet_roads. */
   }
   [highway = 'construction'][construction = null][zoom >= 16] {
     text-name: "[name]";
+    text-avoid-edges: true;
     text-size: 9;
     text-fill: black;
     text-spacing: 300;
@@ -4005,6 +4019,7 @@ tertiary is rendered from z10 and is not included in osm_planet_roads. */
   [highway = 'construction'][construction = 'road'] {
     [zoom >= 15] {
       text-name: "[name]";
+      text-avoid-edges: true;
       text-size: 8;
       text-fill: black;
       text-spacing: 300;
@@ -4035,6 +4050,7 @@ tertiary is rendered from z10 and is not included in osm_planet_roads. */
   [highway = 'construction'][construction = 'service'][zoom >= 17] {
     [zoom >= 16] {
       text-name: "[name]";
+      text-avoid-edges: true;
       text-size: 9;
       text-fill: black;
       text-spacing: 300;
@@ -4057,6 +4073,7 @@ tertiary is rendered from z10 and is not included in osm_planet_roads. */
   [highway = 'construction'][construction = 'pedestrian'][zoom >= 16] {
     [zoom >= 15] {
       text-name: "[name]";
+      text-avoid-edges: true;
       text-size: 8;
       text-fill: black;
       text-spacing: 300;
