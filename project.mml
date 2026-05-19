@@ -1848,7 +1848,6 @@ Layer:
                 ref
               FROM planet_osm_line
               WHERE way && !bbox!
-              --WHERE way && ST_Expand(!bbox!, 2000)
                 AND (highway IN ('motorway', 'trunk', 'primary', 'secondary', 'tertiary') OR aeroway IN ('runway', 'taxiway'))
                 AND ref IS NOT NULL
         ),
@@ -1952,7 +1951,6 @@ Layer:
                 name
               FROM planet_osm_line
               WHERE way && !bbox!
-              --WHERE way && ST_Expand(!bbox!, 2000)
                 AND highway IN ('motorway', 'motorway_link', 'trunk', 'trunk_link', 'primary', 'primary_link', 'secondary', 'secondary_link', 'tertiary',
                                 'tertiary_link', 'residential', 'unclassified', 'road', 'service', 'pedestrian', 'raceway', 'living_street', 'construction', 'bus_guideway')
                 AND name IS NOT NULL
@@ -2079,7 +2077,6 @@ Layer:
                 ref
               FROM planet_osm_line
               WHERE way && !bbox!
-              --WHERE way && ST_Expand(!bbox!, 2000)
                 AND highway IN ('unclassified', 'residential', 'track')
                 AND ref IS NOT NULL
         ),
