@@ -1469,7 +1469,7 @@ Layer:
                 ) AS grouping_key,
                 CONCAT(visible_name, ref) AS location_key
               FROM (
-                SELECT *,
+                SELECT way, highway, junction, ref, name,
                     CASE WHEN Z(!scale_denominator!) >= 14 THEN NULLIF(name, '') || ';' ELSE '' END AS visible_name
                   FROM planet_osm_point
                   WHERE way && ST_Expand(!bbox!, 40 * !scale_denominator! * 0.001 * 0.28)
