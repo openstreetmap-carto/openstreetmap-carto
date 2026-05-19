@@ -1455,7 +1455,7 @@ Layer:
             -- don't merge; at lower zooms it is NULL and only stripped_ref
             -- decides clustering.
             SELECT way, highway, junction, ref, name,
-                regexp_replace(ref, '^([0-9]+)[ -]?[A-Za-z]$', '\1') AS stripped_ref,
+                regexp_replace(ref, '^([0-9]+)[A-Za-z]$', '\1') AS stripped_ref,
                 CASE WHEN Z(!scale_denominator!) >= 14 THEN NULLIF(name, '') END AS visible_name
               FROM planet_osm_point
               WHERE way && ST_Expand(!bbox!, 40 * !scale_denominator! * 0.001 * 0.28)
@@ -1495,7 +1495,7 @@ Layer:
           -- nodes with no ref): cluster_min_ref is NULL and every row matches,
           -- so the centroid averages all node positions.
           SELECT
-              ST_Centroid(ST_Collect(way) FILTER (WHERE ref IS NOT DISTINCT FROM cluster_min_ref)) AS way,
+              ST_Centroid(ST_Collect(way) FILTER (WHERE COALESCE(ref, '') = cluster_min_ref)) AS way,
               MIN(highway) AS highway,
               MIN(junction) AS junction,
               MIN(ref) AS ref,
@@ -1503,7 +1503,7 @@ Layer:
               NULL::float AS way_pixels
             FROM (
               SELECT *,
-                  MIN(ref) OVER (PARTITION BY stripped_ref, visible_name, cid) AS cluster_min_ref
+                  COALESCE(MIN(ref) OVER (PARTITION BY stripped_ref, visible_name, cid), '') AS cluster_min_ref
                 FROM mj_clustered
                 WHERE cid IS NOT NULL
             ) c
