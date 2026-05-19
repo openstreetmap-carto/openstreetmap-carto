@@ -4153,7 +4153,10 @@ tertiary is rendered from z10 and is not included in osm_planet_roads. */
   }
 }
 
-#roads-text-name::directions,
+// Issue #951: directions for roads live in a dedicated, unmerged layer
+// (roads-direction-arrows) because ST_LineMerge does not preserve linestring
+// orientation. Paths still attach as a sub-symbolizer on paths-text-name.
+#roads-direction-arrows,
 #paths-text-name::directions {
   [zoom >= 16] {
     // intentionally omitting highway_platform, highway_construction

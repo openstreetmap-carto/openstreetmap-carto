@@ -1832,7 +1832,36 @@ Layer:
     Datasource:
       <<: *osm2pgsql
       table: |-
-        (SELECT
+        -- ST_LineMerge handles the per-connected-component grouping: ways that
+        -- share an endpoint fuse into one linestring; ways that merely cross
+        -- stay as separate parts of the resulting MultiLineString, which ST_Dump
+        -- then unnests so each disjoint piece gets its own label/shield.
+        (WITH raw AS (
+            SELECT
+                osm_id,
+                way,
+                COALESCE(layer, 0) AS layer,
+                COALESCE(
+                  CASE WHEN highway IN ('motorway', 'trunk', 'primary', 'secondary', 'tertiary') THEN highway END,
+                  CASE WHEN aeroway IN ('runway', 'taxiway') THEN aeroway END
+                ) AS highway,
+                ref
+              FROM planet_osm_line
+              WHERE way && !bbox!
+              --WHERE way && ST_Expand(!bbox!, 2000)
+                AND (highway IN ('motorway', 'trunk', 'primary', 'secondary', 'tertiary') OR aeroway IN ('runway', 'taxiway'))
+                AND ref IS NOT NULL
+        ),
+        merged AS (
+            SELECT
+                MIN(osm_id) AS osm_id,
+                (ST_Dump(ST_LineMerge(ST_Collect(way)))).geom AS way,
+                highway,
+                string_to_array(ref, ';') AS refs
+              FROM raw
+              GROUP BY highway, ref, layer
+        )
+        SELECT
             way,
             highway,
             height,
@@ -1846,19 +1875,8 @@ Layer:
                 array_length(refs,1) AS height,
                 (SELECT MAX(char_length(ref)) FROM unnest(refs) AS u(ref)) AS width,
                 array_to_string(refs, E'\n') AS refs
-              FROM (
-                SELECT
-                    osm_id,
-                    way,
-                    COALESCE(
-                      CASE WHEN highway IN ('motorway', 'trunk', 'primary', 'secondary', 'tertiary') THEN highway END,
-                      CASE WHEN aeroway IN ('runway', 'taxiway') THEN aeroway END
-                    ) AS highway,
-                    string_to_array(ref, ';') AS refs
-                  FROM planet_osm_line
-                  WHERE (highway IN ('motorway', 'trunk', 'primary', 'secondary', 'tertiary') OR aeroway IN ('runway', 'taxiway'))
-                    AND ref IS NOT NULL
-              ) AS p) AS q
+              FROM merged
+          ) AS q
           WHERE height <= 4 AND width <= 11
           ORDER BY
             CASE
@@ -1908,12 +1926,67 @@ Layer:
     Datasource:
       <<: *osm2pgsql
       table: |-
+        -- Merged-name layer for issue #951: ways sharing the rendering-relevant
+        -- 5-tuple (highway, tunnel, construction, name, layer) are collected
+        -- and merged via ST_LineMerge so that one label gets placed per logical
+        -- road, not per OSM way. _link is kept in the GROUP BY (as highway_raw)
+        -- to avoid pulling a motorway through its offramp at interchanges; it
+        -- is stripped only at SELECT time for the symbolizer. ST_Dump then
+        -- unnests the MultiLineString that LineMerge returns when the group
+        -- contains disjoint pieces (e.g. two same-named roads that happen to
+        -- cross but share no endpoint), so each piece keeps its own label.
+        --
+        -- The one-way arrows live in a separate, unmerged layer
+        -- (roads-direction-arrows) because ST_LineMerge does not preserve
+        -- linestring orientation.
+        (WITH raw AS (
+            SELECT
+                way,
+                osm_id,
+                z_order,
+                COALESCE(layer, 0) AS layer,
+                highway AS highway_raw,
+                CASE WHEN substr(highway, length(highway)-4, 5) = '_link' THEN substr(highway, 0, length(highway)-4) ELSE highway END AS highway,
+                CASE WHEN (tunnel IN ('yes', 'building_passage', 'avalanche_protector') OR covered = 'yes') THEN 'yes' ELSE 'no' END AS tunnel,
+                construction,
+                name
+              FROM planet_osm_line
+              WHERE way && !bbox!
+              --WHERE way && ST_Expand(!bbox!, 2000)
+                AND highway IN ('motorway', 'motorway_link', 'trunk', 'trunk_link', 'primary', 'primary_link', 'secondary', 'secondary_link', 'tertiary',
+                                'tertiary_link', 'residential', 'unclassified', 'road', 'service', 'pedestrian', 'raceway', 'living_street', 'construction', 'bus_guideway')
+                AND name IS NOT NULL
+        )
+        SELECT
+            (ST_Dump(ST_LineMerge(ST_Collect(way)))).geom AS way,
+            highway,
+            tunnel,
+            construction,
+            name
+          FROM raw
+          GROUP BY highway_raw, highway, tunnel, construction, name, layer
+          ORDER BY
+            MAX(z_order) DESC, -- put important roads first
+            layer, -- put top layered roads first
+            length(name) DESC, -- Try to fit big labels in first
+            name DESC, -- Force a consistent ordering between differently named streets
+            MIN(osm_id) DESC -- Force an ordering for streets of the same name, e.g. dualized roads
+        ) AS roads_text_name
+    properties:
+      cache-features: true
+      minzoom: 13
+  - id: roads-direction-arrows
+    geometry: linestring
+    <<: *extents
+    Datasource:
+      <<: *osm2pgsql
+      table: |-
+        -- One-way arrows must be rendered per original OSM way because
+        -- ST_LineMerge does not preserve direction. Kept separate from
+        -- roads-text-name so the name labels can use merged geometry.
         (SELECT
             way,
-            CASE WHEN substr(highway, length(highway)-4, 5) = '_link' THEN substr(highway, 0, length(highway)-4) ELSE highway END,
-            CASE WHEN (tunnel IN ('yes', 'building_passage', 'avalanche_protector') OR covered = 'yes') THEN 'yes' ELSE 'no' END AS tunnel,
-            construction,
-            name,
+            CASE WHEN substr(highway, length(highway)-4, 5) = '_link' THEN substr(highway, 0, length(highway)-4) ELSE highway END AS highway,
             CASE
               WHEN oneway IN ('yes', '-1') THEN oneway
               WHEN junction IN ('roundabout') AND (oneway IS NULL OR NOT oneway IN ('no', 'reversible')) THEN 'yes'
@@ -1921,19 +1994,15 @@ Layer:
           FROM planet_osm_line l
           WHERE highway IN ('motorway', 'motorway_link', 'trunk', 'trunk_link', 'primary', 'primary_link', 'secondary', 'secondary_link', 'tertiary',
                             'tertiary_link', 'residential', 'unclassified', 'road', 'service', 'pedestrian', 'raceway', 'living_street', 'construction', 'bus_guideway')
-            AND (name IS NOT NULL
-              OR oneway IN ('yes', '-1')
-              OR junction IN ('roundabout'))
+            AND (oneway IN ('yes', '-1') OR junction IN ('roundabout'))
           ORDER BY
             z_order DESC, -- put important roads first
             COALESCE(layer, 0), -- put top layered roads first
-            length(name) DESC, -- Try to fit big labels in first
-            name DESC, -- Force a consistent ordering between differently named streets
             l.osm_id DESC -- Force an ordering for streets of the same name, e.g. dualized roads
-        ) AS roads_text_name
+        ) AS roads_direction_arrows
     properties:
       cache-features: true
-      minzoom: 13
+      minzoom: 16
   - id: paths-text-name
     geometry: linestring
     <<: *extents
@@ -1999,7 +2068,31 @@ Layer:
     Datasource:
       <<: *osm2pgsql
       table: |-
-        (SELECT
+        -- Merged shield layer for issue #951; see roads-text-ref for the
+        -- same pattern.
+        (WITH raw AS (
+            SELECT
+                osm_id,
+                way,
+                COALESCE(layer, 0) AS layer,
+                CASE WHEN highway IN ('unclassified', 'residential', 'track') THEN highway END AS highway,
+                ref
+              FROM planet_osm_line
+              WHERE way && !bbox!
+              --WHERE way && ST_Expand(!bbox!, 2000)
+                AND highway IN ('unclassified', 'residential', 'track')
+                AND ref IS NOT NULL
+        ),
+        merged AS (
+            SELECT
+                MIN(osm_id) AS osm_id,
+                (ST_Dump(ST_LineMerge(ST_Collect(way)))).geom AS way,
+                highway,
+                string_to_array(ref, ';') AS refs
+              FROM raw
+              GROUP BY highway, ref, layer
+        )
+        SELECT
             way,
             highway,
             height,
@@ -2013,16 +2106,8 @@ Layer:
                 array_length(refs,1) AS height,
                 (SELECT MAX(char_length(ref)) FROM unnest(refs) AS u(ref)) AS width,
                 array_to_string(refs, E'\n') AS refs
-              FROM (
-                SELECT
-                    osm_id,
-                    way,
-                    CASE WHEN highway IN ('unclassified', 'residential', 'track') THEN highway END AS highway,
-                    string_to_array(ref, ';') AS refs
-                  FROM planet_osm_line
-                  WHERE highway IN ('unclassified', 'residential', 'track')
-                    AND ref IS NOT NULL
-              ) AS p) AS q
+              FROM merged
+          ) AS q
           WHERE height <= 4 AND width <= 11
           ORDER BY
             CASE
