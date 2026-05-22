@@ -1495,7 +1495,7 @@ Layer:
           -- nodes with no ref): cluster_min_ref is NULL and every row matches,
           -- so the centroid averages all node positions.
           SELECT
-              ST_Centroid(ST_Collect(way) FILTER (WHERE COALESCE(ref, '') = cluster_min_ref)) AS way,
+              ST_Centroid(ST_Collect(way) FILTER (WHERE ref IS NOT DISTINCT FROM cluster_min_ref)) AS way,
               MIN(highway) AS highway,
               MIN(junction) AS junction,
               MIN(ref) AS ref,
@@ -1503,7 +1503,7 @@ Layer:
               NULL::float AS way_pixels
             FROM (
               SELECT *,
-                  COALESCE(MIN(ref) OVER (PARTITION BY stripped_ref, visible_name, cid), '') AS cluster_min_ref
+                  MIN(ref) OVER (PARTITION BY stripped_ref, visible_name, cid) AS cluster_min_ref
                 FROM mj_clustered
                 WHERE cid IS NOT NULL
             ) c
