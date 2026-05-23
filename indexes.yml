@@ -14,7 +14,7 @@ line:
   river:
     where: waterway = 'river'
   waterway:
-    where: waterway IN ('river', 'canal', 'stream', 'drain', 'ditch')
+    where: waterway IN ('river', 'canal', 'stream', 'drain', 'ditch', 'fish_pass')
 polygon:
   # The polygon table is by far the largest, and generally the slowest
   name:

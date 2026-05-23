@@ -208,7 +208,8 @@ Layer:
                 THEN 'yes' ELSE 'no' END AS int_tunnel,
               COALESCE(layer,0) AS layernotnull
             FROM planet_osm_line
-            WHERE waterway IN ('river', 'canal', 'stream', 'drain', 'ditch')
+            WHERE waterway IN ('river', 'canal', 'stream', 'drain', 'ditch', 'fish_pass')
+              AND waterway != 'fish_pass'  -- search using waterway index for efficiency, but discard fish pass as not rendered here 
               AND (bridge IS NULL OR bridge NOT IN ('yes', 'aqueduct'))
           ) _
           ORDER BY
@@ -592,7 +593,7 @@ Layer:
               WHERE barrier IN ('chain', 'city_wall', 'ditch', 'fence', 'guard_rail',
                   'handrail', 'hedge', 'retaining_wall', 'wall', 'jersey_barrier')
               OR historic = 'citywalls'
-              AND (waterway IS NULL OR waterway NOT IN ('river', 'canal', 'stream', 'drain', 'ditch'))
+              AND (waterway IS NULL OR waterway NOT IN ('river', 'canal', 'stream', 'drain', 'ditch', 'fish_pass'))
           ) AS features
         ) AS line_barriers
     properties:
@@ -996,8 +997,8 @@ Layer:
               THEN 'yes' ELSE 'no' END AS int_tunnel,
             'yes' AS bridge
           FROM planet_osm_line
-          WHERE waterway IN ('river', 'canal', 'stream', 'drain', 'ditch')
-            AND bridge IN ('yes', 'aqueduct')
+          WHERE waterway IN ('river', 'canal', 'stream', 'drain', 'ditch', 'fish_pass')
+            AND (bridge IN ('yes', 'aqueduct') OR (waterway = 'fish_pass'))
           ORDER BY COALESCE(layer,0)
         ) AS waterway_bridges
     properties:
@@ -2209,7 +2210,7 @@ Layer:
               OR waterway = 'canal' AND tunnel = 'flooded'
               THEN 'yes' ELSE 'no' END AS int_tunnel
           FROM planet_osm_line
-          WHERE (waterway IN ('river', 'canal', 'stream', 'drain', 'ditch')
+          WHERE (waterway IN ('river', 'canal', 'stream', 'drain', 'ditch', 'fish_pass')
                  OR "natural" IN ('bay', 'strait'))
             AND (tunnel IS NULL OR tunnel != 'culvert')
             AND name IS NOT NULL

@@ -188,6 +188,7 @@
 
   [waterway = 'ditch'],
   [waterway = 'drain'],
+  [waterway = 'fish_pass'][zoom >= 15],
   [waterway = 'stream'] {
     [int_intermittent != 'yes'][zoom >= 12],
     [zoom >= 13] {
