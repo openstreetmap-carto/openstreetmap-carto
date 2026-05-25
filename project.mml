@@ -1428,7 +1428,7 @@ Layer:
               railway,
               aerialway,
               tags->'station' AS station,
-              NULL as way_area
+              NULL::float as way_area
             FROM planet_osm_point
             WHERE way && !bbox!
             ) _
@@ -1521,7 +1521,7 @@ Layer:
             junction,
             ref,
             name,
-            NULL AS way_pixels
+            NULL::float AS way_pixels
           FROM planet_osm_point
           WHERE way && !bbox!
             AND (highway = 'traffic_signals' OR junction = 'yes')
@@ -1798,7 +1798,7 @@ Layer:
                   tourism,
                   waterway,
                   tags,
-                  NULL AS way_area
+                  NULL::float AS way_area
                 FROM planet_osm_point
                 WHERE way && !bbox!
               ) _
@@ -2153,13 +2153,13 @@ Layer:
       table: |-
         (SELECT
           way,
-            NULL as way_pixels,
+            NULL::float as way_pixels,
             COALESCE('aerialway_' || aerialway, 'attraction_' || CASE WHEN tags @> 'attraction=>water_slide' THEN 'water_slide' END, 'leisure_' || leisure, 'man_made_' || man_made, 'waterway_' || waterway, 'natural_' || "natural", 'golf_' || (tags->'golf')) AS feature,
             access,
             name,
             tags->'operator' as operator,
             ref,
-            NULL AS way_area,
+            NULL::float AS way_area,
             CASE WHEN building = 'no' OR building IS NULL THEN 'no' ELSE 'yes' END AS is_building
           FROM planet_osm_line
           WHERE ((man_made IN ('pier', 'breakwater', 'groyne', 'embankment')
@@ -2244,7 +2244,7 @@ Layer:
             "addr:housename" AS addr_housename,
             tags->'addr:unit' AS addr_unit,
             tags->'addr:flats' AS addr_flats,
-            NULL AS way_pixels
+            NULL::float AS way_pixels
           FROM planet_osm_point
           WHERE way && !bbox!
             AND (("addr:housenumber" IS NOT NULL) OR ("addr:housename" IS NOT NULL) OR ((tags->'addr:unit') IS NOT NULL) OR ((tags->'addr:flats') IS NOT NULL))
@@ -2384,7 +2384,7 @@ Layer:
                   man_made,
                   railway,
                   tags,
-                  NULL AS way_area
+                  NULL::float AS way_area
                 FROM planet_osm_point
                 WHERE way && !bbox!
               ) _
