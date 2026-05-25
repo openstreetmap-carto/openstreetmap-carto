@@ -368,7 +368,8 @@ Layer:
               WHEN man_made = 'groyne' THEN 2
               WHEN man_made = 'breakwater' THEN 1
               ELSE 0
-            END ASC
+            END ASC,
+            osm_id
         ) AS piers_poly
     properties:
       minzoom: 12
@@ -521,7 +522,8 @@ Layer:
             CASE WHEN substring(feature for 8) = 'railway_' THEN 2 ELSE 1 END,
             CASE WHEN feature IN ('railway_INT-spur-siding-yard', 'railway_tram-service') THEN 0 ELSE 1 END,
             CASE int_access WHEN 'no' THEN 0 WHEN 'restricted' THEN 1 ELSE 2 END,
-            CASE WHEN int_surface IN ('unpaved') THEN 0 ELSE 1 END
+            CASE WHEN int_surface IN ('unpaved') THEN 0 ELSE 1 END,
+            osm_id
         ) AS tunnels
     properties:
       cache-features: true
@@ -858,7 +860,8 @@ Layer:
               AND (tags->'railway:preserved' IS NULL OR tags->'railway:preserved' != 'yes')
               AND (service IS NULL OR service NOT IN ('spur', 'siding', 'yard')))
           ORDER BY
-            z_order
+            z_order,
+            osm_id
         ) AS roads_low_zoom
     properties:
       cache-features: true
@@ -946,7 +949,8 @@ Layer:
             CASE WHEN substring(feature for 8) = 'railway_' THEN 2 ELSE 1 END,
             CASE WHEN feature IN ('railway_INT-spur-siding-yard', 'railway_tram-service') THEN 0 ELSE 1 END,
             CASE int_access WHEN 'no' THEN 0 WHEN 'restricted' THEN 1 ELSE 2 END,
-            CASE WHEN int_surface IN ('unpaved') THEN 0 ELSE 1 END
+            CASE WHEN int_surface IN ('unpaved') THEN 0 ELSE 1 END,
+            osm_id
         ) AS bridges
     properties:
       cache-features: true
@@ -974,7 +978,8 @@ Layer:
             bridge NULLS FIRST,
             CASE WHEN aeroway = 'runway' THEN 1 ELSE 0 END,
             CASE WHEN surface IN ('unpaved', 'compacted', 'dirt', 'earth', 'fine_gravel', 'grass', 'grass_paver', 'gravel', 'ground',
-                                  'mud', 'pebblestone', 'salt', 'sand', 'woodchips', 'clay', 'ice', 'snow') THEN 0 ELSE 1 END
+                                  'mud', 'pebblestone', 'salt', 'sand', 'woodchips', 'clay', 'ice', 'snow') THEN 0 ELSE 1 END,
+            osm_id
         ) AS aeroways
     properties:
       cache-features: true
@@ -1416,7 +1421,8 @@ Layer:
               railway,
               aerialway,
               tags->'station' AS station,
-              way_area
+              way_area,
+              osm_id
             FROM planet_osm_polygon
             WHERE way && !bbox! -- Not ST_PointOnSurface(way) because name might be NULL
               AND way_area < 768000*POW(!scale_denominator!*0.001*0.28,2)
@@ -1428,7 +1434,8 @@ Layer:
               railway,
               aerialway,
               tags->'station' AS station,
-              NULL as way_area
+              NULL as way_area,
+              osm_id
             FROM planet_osm_point
             WHERE way && !bbox!
             ) _
@@ -1441,7 +1448,8 @@ Layer:
               WHEN 'subway_entrance' THEN 3
               ELSE 2
             END,
-            way_area DESC NULLS LAST
+            way_area DESC NULLS LAST,
+            osm_id
         ) AS stations
     properties:
       cache-features: true
@@ -1743,7 +1751,8 @@ Layer:
               tags->'operator' AS operator,
               ref,
               way_area,
-              COALESCE(way_area/NULLIF(POW(!scale_denominator!*0.001*0.28,2),0), 0) AS way_pixels
+              COALESCE(way_area/NULLIF(POW(!scale_denominator!*0.001*0.28,2),0), 0) AS way_pixels,
+              osm_id
             FROM
               (SELECT
                   ST_PointOnSurface(way) AS way,
@@ -1769,7 +1778,8 @@ Layer:
                   tourism,
                   waterway,
                   tags,
-                  way_area
+                  way_area,
+                  osm_id
                 FROM planet_osm_polygon
                 WHERE way && !bbox! -- Not ST_PointOnSurface(way) because name might be NULL
                   AND way_area < 768000*POW(!scale_denominator!*0.001*0.28,2)
@@ -1798,14 +1808,16 @@ Layer:
                   tourism,
                   waterway,
                   tags,
-                  NULL AS way_area
+                  NULL AS way_area,
+                  osm_id
                 FROM planet_osm_point
                 WHERE way && !bbox!
               ) _
             ) AS features
           WHERE feature IS NOT NULL
           ORDER BY score DESC NULLS LAST,
-            way_pixels DESC NULLS LAST
+            way_pixels DESC NULLS LAST,
+            osm_id
           ) AS amenity_points
     properties:
       cache-features: true
