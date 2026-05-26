@@ -197,7 +197,7 @@ Layer:
             *,
             'no' AS bridge
           FROM
-          (SELECT -- This subselect allows sorting on the int_tunnel column
+          (SELECT -- This subselect allows sorting on the int_brunnel column
               way,
               waterway,
               CASE WHEN tags->'intermittent' IN ('yes')
@@ -205,16 +205,16 @@ Layer:
                 THEN 'yes' ELSE 'no' END AS int_intermittent,
               CASE WHEN tunnel IN ('yes', 'culvert') 
                 OR waterway = 'canal' AND tunnel = 'flooded'
-                THEN 'yes' ELSE 'no' END AS int_tunnel,
+                THEN 'tunnel' ELSE 'no' END AS int_brunnel,
               COALESCE(layer,0) AS layernotnull
             FROM planet_osm_line
             WHERE waterway IN ('river', 'canal', 'stream', 'drain', 'ditch', 'fish_pass')
-              AND waterway != 'fish_pass'  -- search using waterway index for efficiency, but discard fish pass as not rendered here 
+              AND waterway != 'fish_pass'  -- search using waterway index for efficiency, but discard fish pass as not rendered here
               AND (bridge IS NULL OR bridge NOT IN ('yes', 'aqueduct'))
           ) _
           ORDER BY
             layernotnull,
-            CASE WHEN int_tunnel = 'yes' THEN 1 ELSE 0 END  -- render tunnels after normal waterways (bridges are in later layer)
+            CASE WHEN int_brunnel = 'tunnel' THEN 1 ELSE 0 END  -- render tunnels after normal waterways (bridges are in later layer)
         ) AS water_lines
     properties:
       minzoom: 12
@@ -992,14 +992,12 @@ Layer:
             CASE WHEN tags->'intermittent' IN ('yes')
               OR tags->'seasonal' IN ('yes', 'spring', 'summer', 'autumn', 'winter', 'wet_season', 'dry_season')
               THEN 'yes' ELSE 'no' END AS int_intermittent,
-            CASE WHEN tunnel IN ('yes', 'culvert') 
-              OR waterway = 'canal' AND tunnel = 'flooded'
-              THEN 'yes' ELSE 'no' END AS int_tunnel,
-            'yes' AS bridge
+            'bridge' AS int_brunnel
           FROM planet_osm_line
           WHERE waterway IN ('river', 'canal', 'stream', 'drain', 'ditch', 'fish_pass')
             AND (bridge IN ('yes', 'aqueduct') OR (waterway = 'fish_pass'))
-          ORDER BY COALESCE(layer,0)
+            AND (tunnel IS NULL OR tunnel NOT IN ('yes', 'culvert', 'flooded'))
+            ORDER BY COALESCE(layer,0)
         ) AS waterway_bridges
     properties:
       minzoom: 12
@@ -2210,7 +2208,7 @@ Layer:
               OR waterway = 'canal' AND tunnel = 'flooded'
               THEN 'yes' ELSE 'no' END AS int_tunnel
           FROM planet_osm_line
-          WHERE (waterway IN ('river', 'canal', 'stream', 'drain', 'ditch', 'fish_pass')
+          WHERE (waterway IN ('river', 'canal', 'stream', 'drain', 'ditch', 'fish_pass') -- no render for fish_pass but using waterway index for efficiency
                  OR "natural" IN ('bay', 'strait'))
             AND (tunnel IS NULL OR tunnel != 'culvert')
             AND name IS NOT NULL

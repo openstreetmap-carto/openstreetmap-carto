@@ -77,7 +77,7 @@
 #water-lines::casing {
   // white glow used when water stroke width is less than 3.5 px and only at "mid zoom" (13 - 17)
 
-  [waterway = 'canal'][int_tunnel = 'no'][zoom >= 13][zoom < 15] {
+  [waterway = 'canal'][int_brunnel = 'no'][zoom >= 13][zoom < 15] {
     line-color: white;
     line-join: round;
     line-cap: round;
@@ -93,7 +93,7 @@
   [waterway = 'ditch'],
   [waterway = 'drain'],
   [waterway = 'stream'] {
-    [int_tunnel = 'no'][zoom >= 13][zoom < 18] {
+    [int_brunnel = 'no'][zoom >= 13][zoom < 18] {
       line-color: white;
       line-join: round;
       line-cap: round;
@@ -116,13 +116,12 @@
       }
     }
   }
-
 }
 
 #water-lines,
 #waterway-bridges {
   [waterway = 'river'][zoom >= 12] {
-    [int_tunnel = 'yes'] {
+    [int_brunnel = 'tunnel'] {
       // Background for dashed tunnel casings
       background/line-color: @water-tunnelfill-color;
       background/line-width: @river-width-z12;
@@ -135,7 +134,7 @@
       background/line-join: round;
     }
 
-    [bridge = 'yes'][zoom >= 14] {
+    [int_brunnel = 'bridge'][zoom >= 14] {
       bridgecasing/line-color: black;
       bridgecasing/line-width: @river-width-z14 + 1;
       [zoom >= 15] { bridgecasing/line-width: @river-width-z15 + 1; }
@@ -170,7 +169,7 @@
       water/line-cap: butt;
     }
 
-    [int_tunnel = 'yes'] {
+    [int_brunnel = 'tunnel'] {
       // This provides the blue dashed casing of waterway tunnels
       water/line-dasharray: 4,2;
       water/line-cap: butt;
@@ -192,14 +191,14 @@
   [waterway = 'stream'] {
     [int_intermittent != 'yes'][zoom >= 12],
     [zoom >= 13] {
-      [int_tunnel = 'yes'][zoom >= 14] {
+      [int_brunnel = 'tunnel'][zoom >= 14] {
         // Background for dashed tunnel casings
         // The line widths are adjusted later - this just "books in" the background layer
         background/line-color: @water-tunnelfill-color;
         background/line-join: round;
       }
 
-      [bridge = 'yes'][zoom >= 14] {
+      [int_brunnel = 'bridge'][zoom >= 14] {
         bridgecasing/line-color: black;
         bridgecasing/line-width: @stream-width-z14 + 1;
         [waterway = 'stream'] {
@@ -242,7 +241,7 @@
         water/line-cap: butt;
       }
 
-      [int_tunnel = 'yes'][zoom >= 14] {
+      [int_brunnel = 'tunnel'][zoom >= 14] {
         water/line-dasharray: 4,2;
         water/line-cap: butt;
         background/line-width: @stream-width-z14 + 1;
@@ -282,14 +281,14 @@
   }
 
   [waterway = 'canal'][zoom >= 12] {
-    [int_tunnel = 'yes'][zoom >= 13] {
+    [int_brunnel = 'tunnel'][zoom >= 13] {
       // Background for dashed tunnel casings
       // The line widths are adjusted later - this just "books in" the background layer
       background/line-color: @water-tunnelfill-color;
       background/line-join: round;
     }
 
-    [bridge = 'yes'][zoom >= 14] {
+    [int_brunnel = 'bridge'][zoom >= 14] {
       bridgecasing/line-color: black;
       bridgecasing/line-width: (@stream-width-z14 * @canal-scale-factor) + 1;
       [zoom >= 15] { bridgecasing/line-width: (@stream-width-z15 * @canal-scale-factor) + 1; }
@@ -323,7 +322,7 @@
       water/line-cap: butt;
     }
     
-    [int_tunnel = 'yes'][zoom >= 13] {
+    [int_brunnel = 'tunnel'][zoom >= 13] {
       water/line-dasharray: 4,2;
       water/line-cap: butt;
       background/line-width: (@stream-width-z13 * @canal-scale-factor) + 1;
@@ -358,7 +357,6 @@
       }
     }
   }
-
 }
 
 #water-lines-text {
