@@ -368,8 +368,7 @@ Layer:
               WHEN man_made = 'groyne' THEN 2
               WHEN man_made = 'breakwater' THEN 1
               ELSE 0
-            END ASC,
-            osm_id
+            END ASC
         ) AS piers_poly
     properties:
       minzoom: 12
