@@ -1648,7 +1648,7 @@ Layer:
                                                     'outdoor_seating', 'park', 'picnic_table', 'pitch', 'playground',
                                                     'sauna', 'slipway', 'sports_centre', 'stadium', 'swimming_area', 'swimming_pool', 'track', 'water_park') THEN leisure END,
                 'power_' || CASE WHEN power IN ('plant', 'generator', 'substation') THEN power END,
-                'man_made_' || CASE WHEN (man_made IN ('chimney', 'communications_tower', 'crane', 'lighthouse', 'mast', 'obelisk', 'silo', 'storage_tank',
+                'man_made_' || CASE WHEN (man_made IN ('ceremonial_gate', 'chimney', 'communications_tower', 'crane', 'lighthouse', 'mast', 'obelisk', 'silo', 'storage_tank',
                                                        'telescope', 'tower', 'wastewater_plant', 'water_tower', 'water_works', 'windmill', 'works')
                                             AND (tags->'location' NOT IN ('roof', 'rooftop') OR NOT (tags ? 'location'))) THEN man_made END,
                 'landuse_' || CASE WHEN landuse IN ('reservoir', 'basin', 'recreation_ground', 'village_green', 'quarry', 'vineyard', 'orchard', 'cemetery',
