@@ -1820,12 +1820,17 @@ Layer:
           way,
           COALESCE(
            'highway_' || CASE WHEN tags->'ford' IN ('yes', 'stepping_stones') THEN 'ford' END,
-           'leisure_' || CASE WHEN leisure = 'slipway' THEN leisure END
+           'leisure_' || CASE WHEN leisure = 'slipway' THEN leisure END,
+           'man_made_' || CASE WHEN man_made = 'ceremonial_gate'
+                                    AND (tags->'location' NOT IN ('roof', 'rooftop') OR NOT (tags ? 'location'))
+                               THEN man_made END
             ) AS feature
           FROM planet_osm_line
           -- The upcoming where clause is needed for performance only, as the CASE statements would end up doing the equivalent filtering
           WHERE tags->'ford' IN ('yes', 'stepping_stones')
             OR leisure = 'slipway'
+            OR (man_made = 'ceremonial_gate'
+                AND (tags->'location' NOT IN ('roof', 'rooftop') OR NOT (tags ? 'location')))
           ORDER BY COALESCE(layer,0)
         ) AS amenity_line
     properties:
@@ -2170,7 +2175,9 @@ Layer:
               OR aerialway IN ('cable_car', 'gondola', 'mixed_lift', 'goods', 'chair_lift', 'drag_lift', 't-bar', 'j-bar', 'platter', 'rope_tow', 'zip_line')
               OR leisure IN ('slipway', 'track')
               OR waterway IN ('dam', 'weir')
-              OR "natural" IN ('arete', 'cliff', 'ridge'))
+              OR "natural" IN ('arete', 'cliff', 'ridge')
+              OR (man_made = 'ceremonial_gate'
+                  AND (tags->'location' NOT IN ('roof', 'rooftop') OR NOT (tags ? 'location'))))
             AND name IS NOT NULL)
             OR (tags @> 'golf=>hole' AND ref IS NOT NULL)
         ) AS text_line

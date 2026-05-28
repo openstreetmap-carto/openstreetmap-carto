@@ -2957,6 +2957,11 @@
     marker-file: url('symbols/leisure/slipway.svg');
     marker-fill: @transportation-icon;
   }
+  [feature = 'man_made_ceremonial_gate'][zoom >= 17] {
+    marker-file: url('symbols/man_made/ceremonial_gate.svg');
+    marker-fill: @man-made-icon;
+    marker-clip: false;
+  }
 }
 
 #leisure-track {
@@ -3015,6 +3020,18 @@
     text-line-spacing: @standard-line-spacing-size;
     text-fill: @transportation-text;
     text-dy: 13;
+    text-face-name: @standard-font;
+    text-halo-radius: @standard-halo-radius;
+    text-halo-fill: @standard-halo-fill;
+  }
+
+  [feature = 'man_made_ceremonial_gate'][zoom >= 17] {
+    text-name: "[name]";
+    text-size: @standard-font-size;
+    text-wrap-width: @standard-wrap-width;
+    text-line-spacing: @standard-line-spacing-size;
+    text-fill: darken(@man-made-icon, 20%);
+    text-dy: 10;
     text-face-name: @standard-font;
     text-halo-radius: @standard-halo-radius;
     text-halo-fill: @standard-halo-fill;
