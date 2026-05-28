@@ -575,12 +575,6 @@
     marker-clip: false;
   }
 
-  [feature = 'man_made_ceremonial_gate'][zoom >= 17] {
-    marker-file: url('symbols/man_made/ceremonial_gate.svg');
-    marker-fill: @man-made-icon;
-    marker-clip: false;
-  }
-
   [feature = 'tourism_museum'][zoom >= 16] {
     marker-file: url('symbols/tourism/museum.svg');
     marker-fill: @culture;
@@ -1934,7 +1928,6 @@
   [feature = 'power_generator']["generator:source" = 'wind'][location = null][zoom >= 17],
   [feature = 'power_generator']["generator:source" = 'wind'][zoom >= 19],
   [feature = 'historic_city_gate'][zoom >= 17],
-  [feature = 'man_made_ceremonial_gate'][zoom >= 17],
   [feature = 'natural_cave_entrance'][zoom >= 15],
   [feature = 'man_made_mast'][zoom >= 18],
   [feature = 'man_made_tower'][zoom >= 17],
@@ -1954,7 +1947,6 @@
     text-fill: darken(@man-made-icon, 20%);
     [feature = 'power_generator']["generator:source" = 'wind'],
     [feature = 'historic_city_gate'],
-    [feature = 'man_made_ceremonial_gate'],
     [feature = 'man_made_mast'],
     [feature = 'man_made_tower'],
     [feature = 'man_made_communications_tower'],
@@ -2946,6 +2938,30 @@
   }
 }
 
+#amenity-points,
+#amenity-line {
+  [feature = 'man_made_ceremonial_gate'][zoom >= 17] {
+    marker-file: url('symbols/man_made/ceremonial_gate.svg');
+    marker-fill: @man-made-icon;
+    marker-clip: false;
+  }
+}
+
+#text-point,
+#text-line {
+  [feature = 'man_made_ceremonial_gate'][zoom >= 17] {
+    text-name: "[name]";
+    text-size: @standard-font-size;
+    text-wrap-width: @standard-wrap-width;
+    text-line-spacing: @standard-line-spacing-size;
+    text-fill: darken(@man-made-icon, 20%);
+    text-dy: 10;
+    text-face-name: @standard-font;
+    text-halo-radius: @standard-halo-radius;
+    text-halo-fill: @standard-halo-fill;
+  }
+}
+
 #amenity-line {
   // Ford tagging on ways
   [feature = 'highway_ford'][zoom >= 16] {
@@ -2956,11 +2972,6 @@
   [feature = 'leisure_slipway'][zoom >= 17] {
     marker-file: url('symbols/leisure/slipway.svg');
     marker-fill: @transportation-icon;
-  }
-  [feature = 'man_made_ceremonial_gate'][zoom >= 17] {
-    marker-file: url('symbols/man_made/ceremonial_gate.svg');
-    marker-fill: @man-made-icon;
-    marker-clip: false;
   }
 }
 
@@ -3020,18 +3031,6 @@
     text-line-spacing: @standard-line-spacing-size;
     text-fill: @transportation-text;
     text-dy: 13;
-    text-face-name: @standard-font;
-    text-halo-radius: @standard-halo-radius;
-    text-halo-fill: @standard-halo-fill;
-  }
-
-  [feature = 'man_made_ceremonial_gate'][zoom >= 17] {
-    text-name: "[name]";
-    text-size: @standard-font-size;
-    text-wrap-width: @standard-wrap-width;
-    text-line-spacing: @standard-line-spacing-size;
-    text-fill: darken(@man-made-icon, 20%);
-    text-dy: 10;
     text-face-name: @standard-font;
     text-halo-radius: @standard-halo-radius;
     text-halo-fill: @standard-halo-fill;
