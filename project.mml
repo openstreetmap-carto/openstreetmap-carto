@@ -194,8 +194,7 @@ Layer:
       <<: *osm2pgsql
       table: |-
         (SELECT
-            *,
-            'no' AS bridge
+            *
           FROM
           (SELECT -- This subselect allows sorting on the int_brunnel column
               way,
@@ -209,7 +208,6 @@ Layer:
               COALESCE(layer,0) AS layernotnull
             FROM planet_osm_line
             WHERE waterway IN ('river', 'canal', 'stream', 'drain', 'ditch', 'fish_pass')
-              AND waterway != 'fish_pass'  -- search using waterway index for efficiency, but discard fish pass as not rendered here
               AND (bridge IS NULL OR bridge NOT IN ('yes', 'aqueduct'))
           ) _
           ORDER BY
