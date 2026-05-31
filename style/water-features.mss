@@ -8,12 +8,11 @@
 #water-barriers-point, #water-barriers-line, #water-barriers-poly {
   [waterway = 'dam'] {
     #water-barriers-poly[zoom >= 13] {
-      line-width: 1;
+      line-width: 2;
       line-color: @dam-line;
       line-join: round;
       line-cap: round;
       polygon-fill: @dam;
-      [zoom >= 16] { line-width: 2; }
     }
     #water-barriers-line[zoom >= 13] {
       line-width: 1;
