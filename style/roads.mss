@@ -309,7 +309,7 @@
 @residential-oneway-arrow-color:  darken(@residential-casing, 40%);
 @living-street-oneway-arrow-color: darken(@residential-casing, 30%);
 @pedestrian-oneway-arrow-color:   darken(@pedestrian-casing, 25%);
-@bus-guideway-oneway-arrow-color: darken(@bus-guideway-fill, 25%);
+@bus-guideway-oneway-arrow-color: darken(@bus-guideway-fill, 30%);
 @raceway-oneway-arrow-color:      darken(@raceway-fill, 50%);
 @footway-oneway-arrow-color:      darken(@footway-fill, 35%);
 @steps-oneway-arrow-color:        darken(@steps-fill, 35%);
@@ -3384,7 +3384,7 @@ tertiary is rendered from z10 and is not included in osm_planet_roads. */
 
 #junctions {
   [highway = 'motorway_junction'] {
-    [zoom >= 11] {
+    [zoom >= 12] {
       text-name: "[ref]";
       text-size: 10;
       text-fill: @junction-text-color;
@@ -3394,7 +3394,7 @@ tertiary is rendered from z10 and is not included in osm_planet_roads. */
       text-wrap-character: ";";
       text-wrap-width: 2; // effectively break after every wrap character
       text-line-spacing: -1.5; // -0.15 em
-      [zoom >= 13] {
+      [zoom >= 14] {
         ["name" != null]["ref" = null] {
           text-name: "[name]";
         }
@@ -4212,7 +4212,6 @@ tertiary is rendered from z10 and is not included in osm_planet_roads. */
         }
         [highway = 'bus_guideway'] {
           marker-fill: @bus-guideway-oneway-arrow-color;
-          marker-offset: 7;
         }
         [highway = 'living_street'] {
           marker-fill: @living-street-oneway-arrow-color;

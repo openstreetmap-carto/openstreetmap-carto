@@ -55,19 +55,6 @@
     marker-file: url('symbols/leisure/golf_pin.svg');
     marker-fill: @golf-color;
     marker-clip: false;
-  }
-}
-
-#text-point[zoom >= 17] {
-  [feature = 'golf_pin'][ref != ''] {
-    text-name: "[ref]";
-    text-size: @standard-font-size;
-    text-fill: @golf-color;
-    text-face-name: @book-fonts;
-    text-halo-radius: @standard-halo-radius;
-    text-halo-fill: @standard-halo-fill;
-    text-horizontal-alignment: middle;
-    text-dx: 1;
-    text-dy: 6;
+	marker-transform: translate(0,-5);
   }
 }

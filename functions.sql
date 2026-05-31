@@ -73,3 +73,20 @@ SELECT
 		ELSE carto_int_access("access", TRUE)
 	END
 $$;
+
+/* Convert a Mapnik scale_denominator to an integer Web Mercator zoom level.
+   Adapted from https://github.com/mapbox/postgis-vt-util/blob/master/src/Z.sql
+   Intended usage:
+     WHERE Z(!scale_denominator!) < 17 */
+CREATE OR REPLACE FUNCTION Z(scale_denominator numeric)
+  RETURNS integer
+  LANGUAGE SQL
+  IMMUTABLE PARALLEL SAFE
+  RETURNS NULL ON NULL INPUT
+AS $$
+SELECT
+	CASE
+		WHEN scale_denominator <= 0 OR scale_denominator > 600000000 THEN NULL
+		ELSE CAST(ROUND(LOG(2, 559082264.028 / scale_denominator)) AS integer)
+	END
+$$;

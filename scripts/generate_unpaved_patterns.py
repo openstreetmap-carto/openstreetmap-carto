@@ -21,8 +21,8 @@
 # You can customize this script by changing the first variables of in the main()
 # function (color_names, file_names, darken, brighten_darken_ratio).
 
-from colormath.color_objects import LabColor, sRGBColor
-from colormath.color_conversions import convert_color
+from colormath2.color_objects import LabColor, sRGBColor
+from colormath2.color_conversions import convert_color
 
 # def get_color_value_by_name(variable_name, file_names):
 #
