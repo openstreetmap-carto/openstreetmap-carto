@@ -781,7 +781,7 @@ Layer:
         ) AS roads_sql
     properties:
       cache-features: true
-      minzoom: 10
+      minzoom: 12
   - id: highway-area-fill
     geometry: polygon
     <<: *extents
