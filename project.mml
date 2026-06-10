@@ -1655,7 +1655,7 @@ Layer:
                                                     'outdoor_seating', 'park', 'picnic_table', 'pitch', 'playground',
                                                     'sauna', 'slipway', 'sports_centre', 'stadium', 'swimming_area', 'swimming_pool', 'track', 'water_park') THEN leisure END,
                 'power_' || CASE WHEN power IN ('plant', 'generator', 'substation') THEN power END,
-                'man_made_' || CASE WHEN (man_made IN ('chimney', 'communications_tower', 'crane', 'lighthouse', 'mast', 'obelisk', 'silo', 'storage_tank',
+                'man_made_' || CASE WHEN (man_made IN ('ceremonial_gate', 'chimney', 'communications_tower', 'crane', 'lighthouse', 'mast', 'obelisk', 'silo', 'storage_tank',
                                                        'telescope', 'tower', 'wastewater_plant', 'water_tower', 'water_works', 'windmill', 'works')
                                             AND (tags->'location' NOT IN ('roof', 'rooftop') OR NOT (tags ? 'location'))) THEN man_made END,
                 'landuse_' || CASE WHEN landuse IN ('reservoir', 'basin', 'recreation_ground', 'village_green', 'quarry', 'vineyard', 'orchard', 'cemetery',
@@ -1831,12 +1831,14 @@ Layer:
           way,
           COALESCE(
            'highway_' || CASE WHEN tags->'ford' IN ('yes', 'stepping_stones') THEN 'ford' END,
-           'leisure_' || CASE WHEN leisure = 'slipway' THEN leisure END
+           'leisure_' || CASE WHEN leisure = 'slipway' THEN leisure END,
+           'man_made_' || CASE WHEN man_made = 'ceremonial_gate' THEN man_made END
             ) AS feature
           FROM planet_osm_line
           -- The upcoming where clause is needed for performance only, as the CASE statements would end up doing the equivalent filtering
           WHERE tags->'ford' IN ('yes', 'stepping_stones')
             OR leisure = 'slipway'
+            OR man_made = 'ceremonial_gate'
           ORDER BY COALESCE(layer,0)
         ) AS amenity_line
     properties:
@@ -2181,7 +2183,8 @@ Layer:
               OR aerialway IN ('cable_car', 'gondola', 'mixed_lift', 'goods', 'chair_lift', 'drag_lift', 't-bar', 'j-bar', 'platter', 'rope_tow', 'zip_line')
               OR leisure IN ('slipway', 'track')
               OR waterway IN ('dam', 'weir')
-              OR "natural" IN ('arete', 'cliff', 'ridge'))
+              OR "natural" IN ('arete', 'cliff', 'ridge')
+              OR man_made = 'ceremonial_gate')
             AND name IS NOT NULL)
             OR (tags @> 'golf=>hole' AND ref IS NOT NULL)
         ) AS text_line
