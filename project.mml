@@ -196,7 +196,7 @@ Layer:
         (SELECT
             *
           FROM
-          (SELECT -- This subselect allows sorting on the int_brunnel column
+          (SELECT -- This subselect allows sorting / filtering on the int_bridge_tunnel column
               way,
               waterway,
               CASE WHEN tags->'intermittent' IN ('yes')
@@ -204,15 +204,16 @@ Layer:
                 THEN 'yes' ELSE 'no' END AS int_intermittent,
               CASE WHEN tunnel IN ('yes', 'culvert') 
                 OR waterway = 'canal' AND tunnel = 'flooded'
-                THEN 'tunnel' ELSE 'no' END AS int_brunnel,
+                THEN 'tunnel' ELSE 'no' END AS int_bridge_tunnel,
               COALESCE(layer,0) AS layernotnull
             FROM planet_osm_line
             WHERE waterway IN ('river', 'canal', 'stream', 'drain', 'ditch', 'fish_pass')
               AND (bridge IS NULL OR bridge NOT IN ('yes', 'aqueduct'))
           ) _
+          WHERE (waterway != 'fish_pass') OR (int_bridge_tunnel = 'tunnel') -- only render fish_pass in tunnels with this select
           ORDER BY
             layernotnull,
-            CASE WHEN int_brunnel = 'tunnel' THEN 1 ELSE 0 END  -- render tunnels after normal waterways (bridges are in later layer)
+            CASE WHEN int_bridge_tunnel = 'tunnel' THEN 1 ELSE 0 END  -- render tunnels after normal waterways (bridges are in later layer)
         ) AS water_lines
     properties:
       minzoom: 12
@@ -990,7 +991,7 @@ Layer:
             CASE WHEN tags->'intermittent' IN ('yes')
               OR tags->'seasonal' IN ('yes', 'spring', 'summer', 'autumn', 'winter', 'wet_season', 'dry_season')
               THEN 'yes' ELSE 'no' END AS int_intermittent,
-            'bridge' AS int_brunnel
+            'bridge' AS int_bridge_tunnel
           FROM planet_osm_line
           WHERE waterway IN ('river', 'canal', 'stream', 'drain', 'ditch', 'fish_pass')
             AND (bridge IN ('yes', 'aqueduct') OR (waterway = 'fish_pass'))
