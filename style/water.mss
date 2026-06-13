@@ -121,148 +121,59 @@
 
 #water-lines,
 #waterway-bridges {
-  ::bridge_tunnel_casing {
-    [waterway = 'river'][zoom >= 12] {
-      [int_bridge_tunnel = 'tunnel'] {
-        // Background for dashed tunnel casings
-        line-color: @water-tunnelfill-color;
-        line-width: @river-width-z12;
-        [zoom >= 13] { line-width: @river-width-z13; }
-        [zoom >= 14] { line-width: @river-width-z14; }
-        [zoom >= 15] { line-width: @river-width-z15; }
-        [zoom >= 16] { line-width: @river-width-z16; }
-        [zoom >= 17] { line-width: @river-width-z17; }
-        [zoom >= 18] { line-width: @river-width-z18; }
-        line-join: round;
-      }
-
-      [int_bridge_tunnel = 'bridge'][zoom >= 14] {
-        line-color: black;
-        line-join: round;
-        line-width: @river-width-z14 + 1;
-        [zoom >= 15] { line-width: @river-width-z15 + 1; }
-        [zoom >= 16] { line-width: @river-width-z16 + 1; }
-        [zoom >= 17] { line-width: @river-width-z17 + 1; }
-        [zoom >= 18] { line-width: @river-width-z18 + 1; }
-
-        [int_intermittent = 'yes'] {
-          bridgefill/line-color: white;
-          bridgefill/line-join: round;
-          bridgefill/line-width: @river-width-z14;
-          [zoom >= 15] { bridgefill/line-width: @river-width-z15; }
-          [zoom >= 16] { bridgefill/line-width: @river-width-z16; }
-          [zoom >= 17] { bridgefill/line-width: @river-width-z17; }
-          [zoom >= 18] { bridgefill/line-width: @river-width-z18; }
-        }
-      }
-    }
-
-    [waterway = 'ditch'][zoom >= 14],
-    [waterway = 'drain'][zoom >= 14],
-    [waterway = 'fish_pass'][zoom >= 15],
-    [waterway = 'stream'][zoom >= 14] {
-      [int_bridge_tunnel = 'tunnel'] {
-        // Background for dashed tunnel casings
-        line-color: @water-tunnelfill-color;
-        line-join: round;
-        line-width: @stream-width-z14 + 1;
-        [waterway = 'stream'] {
-          [zoom >= 15] { line-width: @stream-width-z15 + 1.5; }
-          [zoom >= 16] { line-width: @stream-width-z16 + 1; }
-          [zoom >= 17] { line-width: @stream-width-z17 + 1; }
-          [zoom >= 18] { line-width: @stream-width-z18 + 1; }
-        }
-        [waterway != 'stream'][zoom >= 17] {
-          line-width: @ditchdrain-width-z17 + 1;
-        }
-      }
-
-      [int_bridge_tunnel = 'bridge'] {
-        line-color: black;
-        line-join: round;
-        line-width: @stream-width-z14 + 1;
-        [waterway = 'stream'] {
-          [zoom >= 15] { line-width: @stream-width-z15 + 1; }
-          [zoom >= 16] { line-width: @stream-width-z16 + 1; }
-          [zoom >= 17] { line-width: @stream-width-z17 + 1; }
-          [zoom >= 18] { line-width: @stream-width-z18 + 1; }
-        }
-        [waterway != 'stream'][zoom >= 17] { line-width: @ditchdrain-width-z17 + 1; }
-
-        [int_intermittent = 'yes'],
-        [waterway = 'fish_pass'] {
-          bridgefill/line-color: white;
-          bridgefill/line-join: round;
-          bridgefill/line-width: @stream-width-z14;
-          [waterway = 'stream'] {
-            [zoom >= 15] { bridgefill/line-width: @stream-width-z15; }
-            [zoom >= 16] { bridgefill/line-width: @stream-width-z16; }
-            [zoom >= 17] { bridgefill/line-width: @stream-width-z17; }
-            [zoom >= 18] { bridgefill/line-width: @stream-width-z18; }
-          }
-          [waterway != 'stream'][zoom >= 17] {
-            bridgefill/line-width: @ditchdrain-width-z17;
-            [waterway = 'fish_pass'] { bridgefill/line-color: @fishpass-fill-color; }
-          }
-        }
-      }
-    }
-
-    [waterway = 'canal'][zoom >= 13] {
-      [int_bridge_tunnel = 'tunnel'] {
-        // Background for dashed tunnel casings
-        line-color: @water-tunnelfill-color;
-        line-width: (@stream-width-z13 * @canal-scale-factor) + 1;
-        [zoom >= 14] { line-width: (@stream-width-z14 * @canal-scale-factor) + 1; }
-        [zoom >= 15] { line-width: (@stream-width-z15 * @canal-scale-factor) + 1; }
-        [zoom >= 16] { line-width: (@stream-width-z16 * @canal-scale-factor) + 1; }
-        [zoom >= 17] { line-width: (@stream-width-z17 * @canal-scale-factor) + 1; }
-        [zoom >= 18] { line-width: (@stream-width-z18 * @canal-scale-factor) + 1; }      
-        line-join: round;
-      }
-
-      [int_bridge_tunnel = 'bridge'][zoom >= 14] {
-        line-color: black;
-        line-width: (@stream-width-z14 * @canal-scale-factor) + 1;
-        [zoom >= 15] { line-width: (@stream-width-z15 * @canal-scale-factor) + 1; }
-        [zoom >= 16] { line-width: (@stream-width-z16 * @canal-scale-factor) + 1; }
-        [zoom >= 17] { line-width: (@stream-width-z17 * @canal-scale-factor) + 1; }
-        [zoom >= 18] { line-width: (@stream-width-z18 * @canal-scale-factor) + 1; }
-        [int_intermittent = 'yes'] {
-          bridgefill/line-color: white;
-          bridgefill/line-join: round;
-          bridgefill/line-width: @stream-width-z14 * @canal-scale-factor;
-          [zoom >= 15] { bridgefill/line-width: @stream-width-z15 * @canal-scale-factor; }
-          [zoom >= 16] { bridgefill/line-width: @stream-width-z16 * @canal-scale-factor; }
-          [zoom >= 17] { bridgefill/line-width: @stream-width-z17 * @canal-scale-factor; }
-          [zoom >= 18] { bridgefill/line-width: @stream-width-z18 * @canal-scale-factor; }
-        }
-      }
-    }
-
-  } // end ::bridge_tunnel_casing
-
   [waterway = 'river'][zoom >= 12] {
-    line-color: @water-color;
-    line-width: @river-width-z12;
-    [zoom >= 13] { line-width: @river-width-z13; }
-    [zoom >= 14] { line-width: @river-width-z14; }
-    [zoom >= 15] { line-width: @river-width-z15; }
-    [zoom >= 16] { line-width: @river-width-z16; }
-    [zoom >= 17] { line-width: @river-width-z17; }
-    [zoom >= 18] { line-width: @river-width-z18; }
-    line-cap: round;
-    line-join: round;
+    [int_bridge_tunnel = 'tunnel'] {
+      // Background for dashed tunnel casings
+      background/line-color: @water-tunnelfill-color;
+      background/line-width: @river-width-z12;
+      [zoom >= 13] { background/line-width: @river-width-z13; }
+      [zoom >= 14] { background/line-width: @river-width-z14; }
+      [zoom >= 15] { background/line-width: @river-width-z15; }
+      [zoom >= 16] { background/line-width: @river-width-z16; }
+      [zoom >= 17] { background/line-width: @river-width-z17; }
+      [zoom >= 18] { background/line-width: @river-width-z18; }
+      background/line-join: round;
+    }
+
+    [int_bridge_tunnel = 'bridge'][zoom >= 14] {
+      bridgecasing/line-color: black;
+      bridgecasing/line-width: @river-width-z14 + 1;
+      [zoom >= 15] { bridgecasing/line-width: @river-width-z15 + 1; }
+      [zoom >= 16] { bridgecasing/line-width: @river-width-z16 + 1; }
+      [zoom >= 17] { bridgecasing/line-width: @river-width-z17 + 1; }
+      [zoom >= 18] { bridgecasing/line-width: @river-width-z18 + 1; }
+
+      [int_intermittent = 'yes'] {
+        bridgefill/line-color: white;
+        bridgefill/line-join: round;
+        bridgefill/line-width: @river-width-z14;
+        [zoom >= 15] { bridgefill/line-width: @river-width-z15; }
+        [zoom >= 16] { bridgefill/line-width: @river-width-z16; }
+        [zoom >= 17] { bridgefill/line-width: @river-width-z17; }
+        [zoom >= 18] { bridgefill/line-width: @river-width-z18; }
+      }
+    }
+
+    water/line-color: @water-color;
+    water/line-width: @river-width-z12;
+    [zoom >= 13] { water/line-width: @river-width-z13; }
+    [zoom >= 14] { water/line-width: @river-width-z14; }
+    [zoom >= 15] { water/line-width: @river-width-z15; }
+    [zoom >= 16] { water/line-width: @river-width-z16; }
+    [zoom >= 17] { water/line-width: @river-width-z17; }
+    [zoom >= 18] { water/line-width: @river-width-z18; }
+    water/line-cap: round;
+    water/line-join: round;
 
     [int_intermittent = 'yes'] {
-      line-dasharray: 4,3;
-      line-cap: butt;
+      water/line-dasharray: 4,3;
+      water/line-cap: butt;
     }
 
     [int_bridge_tunnel = 'tunnel'] {
       // This provides the blue dashed casing of waterway tunnels
-      line-dasharray: 4,2;
-      line-cap: butt;
+      water/line-dasharray: 4,2;
+      water/line-cap: butt;
       tunnelfill/line-color: @water-tunnelfill-color;
       tunnelfill/line-width: @river-width-z12 - 1.5;
       tunnelfill/line-join: round;
@@ -281,56 +192,98 @@
   [waterway = 'stream'] {
     [int_intermittent != 'yes'][zoom >= 12],
     [zoom >= 13] {
-      line-width: @stream-width-z12;
-      [zoom >= 13] { line-width: @stream-width-z13; }
-      [zoom >= 14] { line-width: @stream-width-z14; }
-      [waterway = 'stream'] {
-        [zoom >= 15] { line-width: @stream-width-z15; }
-        [zoom >= 16] { line-width: @stream-width-z16; }
-        [zoom >= 17] { line-width: @stream-width-z17; }
-        [zoom >= 18] { line-width: @stream-width-z18; }
+      [int_bridge_tunnel = 'tunnel'][zoom >= 14] {
+        // Background for dashed tunnel casings
+        // The line widths are adjusted later - this just "books in" the background layer
+        background/line-color: @water-tunnelfill-color;
+        background/line-join: round;
       }
-      [waterway != 'stream'][zoom >= 17] { line-width: @ditchdrain-width-z17; }
-      line-color: @water-color;
-      line-cap: round;
-      line-join: round;
+
+      [int_bridge_tunnel = 'bridge'][zoom >= 14] {
+        bridgecasing/line-color: black;
+        bridgecasing/line-width: @stream-width-z14 + 1;
+        [waterway = 'stream'] {
+          [zoom >= 15] { bridgecasing/line-width: @stream-width-z15 + 1; }
+          [zoom >= 16] { bridgecasing/line-width: @stream-width-z16 + 1; }
+          [zoom >= 17] { bridgecasing/line-width: @stream-width-z17 + 1; }
+          [zoom >= 18] { bridgecasing/line-width: @stream-width-z18 + 1; }
+        }
+        [waterway != 'stream'][zoom >= 17] { bridgecasing/line-width: @ditchdrain-width-z17 + 1; }
+
+        [int_intermittent = 'yes'],
+        [waterway = 'fish_pass'] {
+          bridgefill/line-color: white;
+          bridgefill/line-join: round;
+          bridgefill/line-width: @stream-width-z14;
+          [waterway = 'stream'] {
+            [zoom >= 15] { bridgefill/line-width: @stream-width-z15; }
+            [zoom >= 16] { bridgefill/line-width: @stream-width-z16; }
+            [zoom >= 17] { bridgefill/line-width: @stream-width-z17; }
+            [zoom >= 18] { bridgefill/line-width: @stream-width-z18; }
+          }
+          [waterway != 'stream'][zoom >= 17] {
+            bridgefill/line-width: @ditchdrain-width-z17;
+            [waterway = 'fish_pass'] { bridgefill/line-color: @fishpass-fill-color; }
+          }
+        }
+      }
+
+      water/line-width: @stream-width-z12;
+      [zoom >= 13] { water/line-width: @stream-width-z13; }
+      [zoom >= 14] { water/line-width: @stream-width-z14; }
+      [waterway = 'stream'] {
+        [zoom >= 15] { water/line-width: @stream-width-z15; }
+        [zoom >= 16] { water/line-width: @stream-width-z16; }
+        [zoom >= 17] { water/line-width: @stream-width-z17; }
+        [zoom >= 18] { water/line-width: @stream-width-z18; }
+      }
+      [waterway != 'stream'][zoom >= 17] { water/line-width: @ditchdrain-width-z17; }
+      water/line-color: @water-color;
+      water/line-cap: round;
+      water/line-join: round;
 
       [int_intermittent = 'yes'] {
-        line-dasharray: 4,3;
-        line-cap: butt;
+        water/line-dasharray: 4,3;
+        water/line-cap: butt;
       }
       [waterway = 'fish_pass'][int_bridge_tunnel = 'bridge'][zoom >= 17] {
-        line-dasharray: 3,1.5;
-        line-cap: butt;
+        water/line-dasharray: 3,1.5;
+        water/line-cap: butt;
       }
       
       [int_bridge_tunnel = 'tunnel'][zoom >= 14] {
-        line-dasharray: 4,2;
-        line-cap: butt;
-        line-width: @stream-width-z14 + 1;
+        water/line-dasharray: 4,2;
+        water/line-cap: butt;
+        background/line-width: @stream-width-z14 + 1;
+        water/line-width: @stream-width-z14 + 1;
         tunnelfill/line-width: @stream-width-z14 - 0.5;
         tunnelfill/line-color: @water-tunnelfill-color;
         tunnelfill/line-join: round;
         [waterway = 'stream'] {
           [zoom >= 15] { 
-            line-width: @stream-width-z15 + 1.5;
+            background/line-width: @stream-width-z15 + 1.5;
+            water/line-width: @stream-width-z15 + 1.5;
             tunnelfill/line-width: @stream-width-z15 - 1;
           }
           [zoom >= 16] { 
-            line-width: @stream-width-z16 + 1;
+            background/line-width: @stream-width-z16 + 1;
+            water/line-width: @stream-width-z16 + 1;
             tunnelfill/line-width: @stream-width-z16 - 1.5;
           }
           [zoom >= 17] { 
-            line-width: @stream-width-z17 + 1;
+            background/line-width: @stream-width-z17 + 1;
+            water/line-width: @stream-width-z17 + 1;
             tunnelfill/line-width: @stream-width-z17 - 1.5;
           }
           [zoom >= 18] { 
-            line-width: @stream-width-z18 + 1;
+            background/line-width: @stream-width-z18 + 1;
+            water/line-width: @stream-width-z18 + 1;
             tunnelfill/line-width: @stream-width-z18 - 1.5;
           }
         }
         [waterway != 'stream'][zoom >= 17] {
-          line-width: @ditchdrain-width-z17 + 1;
+          background/line-width: @ditchdrain-width-z17 + 1;
+          water/line-width: @ditchdrain-width-z17 + 1;
           tunnelfill/line-width: @ditchdrain-width-z17 - 1.5;
         }
       }
@@ -338,47 +291,78 @@
   }
 
   [waterway = 'canal'][zoom >= 12] {
-    line-width: @stream-width-z12 * @canal-scale-factor;
-    [zoom >= 13] { line-width: @stream-width-z13 * @canal-scale-factor; }
-    [zoom >= 14] { line-width: @stream-width-z14 * @canal-scale-factor; }
-    [zoom >= 15] { line-width: @stream-width-z15 * @canal-scale-factor; }
-    [zoom >= 16] { line-width: @stream-width-z16 * @canal-scale-factor; }
-    [zoom >= 17] { line-width: @stream-width-z17 * @canal-scale-factor; }
-    [zoom >= 18] { line-width: @stream-width-z18 * @canal-scale-factor; }
-    line-color: @water-color;
-    line-join: round;
-    line-cap: round;
+    [int_bridge_tunnel = 'tunnel'][zoom >= 13] {
+      // Background for dashed tunnel casings
+      // The line widths are adjusted later - this just "books in" the background layer
+      background/line-color: @water-tunnelfill-color;
+      background/line-join: round;
+    }
+
+    [int_bridge_tunnel = 'bridge'][zoom >= 14] {
+      bridgecasing/line-color: black;
+      bridgecasing/line-width: (@stream-width-z14 * @canal-scale-factor) + 1;
+      [zoom >= 15] { bridgecasing/line-width: (@stream-width-z15 * @canal-scale-factor) + 1; }
+      [zoom >= 16] { bridgecasing/line-width: (@stream-width-z16 * @canal-scale-factor) + 1; }
+      [zoom >= 17] { bridgecasing/line-width: (@stream-width-z17 * @canal-scale-factor) + 1; }
+      [zoom >= 18] { bridgecasing/line-width: (@stream-width-z18 * @canal-scale-factor) + 1; }
+      [int_intermittent = 'yes'] {
+        bridgefill/line-color: white;
+        bridgefill/line-join: round;
+        bridgefill/line-width: @stream-width-z14 * @canal-scale-factor;
+        [zoom >= 15] { bridgefill/line-width: @stream-width-z15 * @canal-scale-factor; }
+        [zoom >= 16] { bridgefill/line-width: @stream-width-z16 * @canal-scale-factor; }
+        [zoom >= 17] { bridgefill/line-width: @stream-width-z17 * @canal-scale-factor; }
+        [zoom >= 18] { bridgefill/line-width: @stream-width-z18 * @canal-scale-factor; }
+      }
+    }
+
+    water/line-width: @stream-width-z12 * @canal-scale-factor;
+    [zoom >= 13] { water/line-width: @stream-width-z13 * @canal-scale-factor; }
+    [zoom >= 14] { water/line-width: @stream-width-z14 * @canal-scale-factor; }
+    [zoom >= 15] { water/line-width: @stream-width-z15 * @canal-scale-factor; }
+    [zoom >= 16] { water/line-width: @stream-width-z16 * @canal-scale-factor; }
+    [zoom >= 17] { water/line-width: @stream-width-z17 * @canal-scale-factor; }
+    [zoom >= 18] { water/line-width: @stream-width-z18 * @canal-scale-factor; }
+    water/line-color: @water-color;
+    water/line-join: round;
+    water/line-cap: round;
 
     [int_intermittent = 'yes'] {
-      line-dasharray: 4,3;
-      line-cap: butt;
+      water/line-dasharray: 4,3;
+      water/line-cap: butt;
     }
     
     [int_bridge_tunnel = 'tunnel'][zoom >= 13] {
-      line-dasharray: 4,2;
-      line-cap: butt;
-      line-width: (@stream-width-z13 * @canal-scale-factor) + 1;
+      water/line-dasharray: 4,2;
+      water/line-cap: butt;
+      background/line-width: (@stream-width-z13 * @canal-scale-factor) + 1;
+      water/line-width: (@stream-width-z13 * @canal-scale-factor) + 1;
       tunnelfill/line-width: (@stream-width-z13 * @canal-scale-factor) - 1;
       tunnelfill/line-color: @water-tunnelfill-color;
       tunnelfill/line-join: round;
       [zoom >= 14] { 
-        line-width: (@stream-width-z14 * @canal-scale-factor) + 1;
+        background/line-width: (@stream-width-z14 * @canal-scale-factor) + 1;
+        water/line-width: (@stream-width-z14 * @canal-scale-factor) + 1;
         tunnelfill/line-width: (@stream-width-z14 * @canal-scale-factor) - 1.5;
       }
       [zoom >= 15] { 
-        line-width: (@stream-width-z15 * @canal-scale-factor) + 1;
+        background/line-width: (@stream-width-z15 * @canal-scale-factor) + 1;
+        water/line-width: (@stream-width-z15 * @canal-scale-factor) + 1;
         tunnelfill/line-width: (@stream-width-z15 * @canal-scale-factor) - 1.5;
       }
       [zoom >= 16] { 
-        line-width: (@stream-width-z16 * @canal-scale-factor) + 1;
+        background/line-width: (@stream-width-z16 * @canal-scale-factor) + 1;
+        water/line-width: (@stream-width-z16 * @canal-scale-factor) + 1;
         tunnelfill/line-width: (@stream-width-z16 * @canal-scale-factor) - 1.5;
       }
       [zoom >= 17] { 
-        line-width: (@stream-width-z17 * @canal-scale-factor) + 1;
+        background/line-width: (@stream-width-z17 * @canal-scale-factor) + 1;
+        water/line-width: (@stream-width-z17 * @canal-scale-factor) + 1;
         tunnelfill/line-width: (@stream-width-z17 * @canal-scale-factor) - 1.5;
       }
       [zoom >= 18] { 
-        line-width: (@stream-width-z18 * @canal-scale-factor) + 1;
+        background/line-width: (@stream-width-z18 * @canal-scale-factor) + 1;
+        water/line-width: (@stream-width-z18 * @canal-scale-factor) + 1;
         tunnelfill/line-width: (@stream-width-z18 * @canal-scale-factor) - 1.5;
       }
     }
