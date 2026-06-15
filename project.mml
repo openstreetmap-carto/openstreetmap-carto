@@ -521,7 +521,8 @@ Layer:
             CASE WHEN substring(feature for 8) = 'railway_' THEN 2 ELSE 1 END,
             CASE WHEN feature IN ('railway_INT-spur-siding-yard', 'railway_tram-service') THEN 0 ELSE 1 END,
             CASE int_access WHEN 'no' THEN 0 WHEN 'restricted' THEN 1 ELSE 2 END,
-            CASE WHEN int_surface IN ('unpaved') THEN 0 ELSE 1 END
+            CASE WHEN int_surface IN ('unpaved') THEN 0 ELSE 1 END,
+            osm_id
         ) AS tunnels
     properties:
       cache-features: true
@@ -780,7 +781,7 @@ Layer:
         ) AS roads_sql
     properties:
       cache-features: true
-      minzoom: 10
+      minzoom: 12
   - id: highway-area-fill
     geometry: polygon
     <<: *extents
@@ -858,7 +859,8 @@ Layer:
               AND (tags->'railway:preserved' IS NULL OR tags->'railway:preserved' != 'yes')
               AND (service IS NULL OR service NOT IN ('spur', 'siding', 'yard')))
           ORDER BY
-            z_order
+            z_order,
+            osm_id
         ) AS roads_low_zoom
     properties:
       cache-features: true
@@ -946,7 +948,8 @@ Layer:
             CASE WHEN substring(feature for 8) = 'railway_' THEN 2 ELSE 1 END,
             CASE WHEN feature IN ('railway_INT-spur-siding-yard', 'railway_tram-service') THEN 0 ELSE 1 END,
             CASE int_access WHEN 'no' THEN 0 WHEN 'restricted' THEN 1 ELSE 2 END,
-            CASE WHEN int_surface IN ('unpaved') THEN 0 ELSE 1 END
+            CASE WHEN int_surface IN ('unpaved') THEN 0 ELSE 1 END,
+            osm_id
         ) AS bridges
     properties:
       cache-features: true
@@ -974,7 +977,8 @@ Layer:
             bridge NULLS FIRST,
             CASE WHEN aeroway = 'runway' THEN 1 ELSE 0 END,
             CASE WHEN surface IN ('unpaved', 'compacted', 'dirt', 'earth', 'fine_gravel', 'grass', 'grass_paver', 'gravel', 'ground',
-                                  'mud', 'pebblestone', 'salt', 'sand', 'woodchips', 'clay', 'ice', 'snow') THEN 0 ELSE 1 END
+                                  'mud', 'pebblestone', 'salt', 'sand', 'woodchips', 'clay', 'ice', 'snow') THEN 0 ELSE 1 END,
+            osm_id
         ) AS aeroways
     properties:
       cache-features: true
@@ -1417,7 +1421,8 @@ Layer:
               railway,
               aerialway,
               tags->'station' AS station,
-              way_area
+              way_area,
+              osm_id
             FROM planet_osm_polygon
             WHERE way && !bbox! -- Not ST_PointOnSurface(way) because name might be NULL
               AND way_area < 768000*POW(!scale_denominator!*0.001*0.28,2)
@@ -1429,7 +1434,8 @@ Layer:
               railway,
               aerialway,
               tags->'station' AS station,
-              NULL as way_area
+              NULL::float as way_area,
+              osm_id
             FROM planet_osm_point
             WHERE way && !bbox!
             ) _
@@ -1442,7 +1448,8 @@ Layer:
               WHEN 'subway_entrance' THEN 3
               ELSE 2
             END,
-            way_area DESC NULLS LAST
+            way_area DESC NULLS LAST,
+            osm_id
         ) AS stations
     properties:
       cache-features: true
@@ -1453,16 +1460,79 @@ Layer:
     Datasource:
       <<: *osm2pgsql
       table: |-
-        (SELECT
+        (WITH mj AS (
+            -- All motorway_junction points in the bbox (expanded by the clustering
+            -- eps so siblings just outside the tile still pull in, avoiding tile
+            -- boundary artifacts). stripped_ref drops the trailing letter so
+            -- "1A"/"1B" pair with each other and with "1". visible_name carries
+            -- the node's name from z14 onward so junctions with different names
+            -- don't merge; at lower zooms it is NULL and only stripped_ref
+            -- decides clustering.
+            SELECT way, highway, junction, ref, name,
+                regexp_replace(ref, '^([0-9]+)[A-Za-z]$', '\1') AS stripped_ref,
+                CASE WHEN Z(!scale_denominator!) >= 14 THEN NULLIF(name, '') END AS visible_name
+              FROM planet_osm_point
+              WHERE way && ST_Expand(!bbox!, 40 * !scale_denominator! * 0.001 * 0.28)
+                AND highway = 'motorway_junction'
+          ),
+          mj_clustered AS (
+            -- Combine any pair of motorway_junctions sharing the same
+            -- (stripped_ref, visible_name) within 40 px. cid is the cluster id,
+            -- or NULL if the point was alone.
+            SELECT *,
+                CASE WHEN Z(!scale_denominator!) < 17
+                  THEN ST_ClusterDBSCAN(
+                    way,
+                    eps => 40 * !scale_denominator! * 0.001 * 0.28, -- combine within 40px distance
+                    minpoints => 2 -- at least two points are needed to make a cluster
+                  ) OVER (PARTITION BY stripped_ref, visible_name)
+                END AS cid
+              FROM mj
+          )
+          -- Standalone motorway_junctions (no cluster peer): emit unchanged.
+          SELECT
+              way,
+              highway,
+              junction,
+              ref,
+              name,
+              NULL::float AS way_pixels
+            FROM mj_clustered
+            WHERE cid IS NULL
+        UNION ALL
+          -- Clustered motorway_junctions: collapse each cluster to a single label
+          -- placed at the location of the node with the smallest ref in the
+          -- cluster -- so e.g. a "188" label sits on junction 188 itself rather
+          -- than between 188, 188A and 188B. When no plain-ref node is present
+          -- (e.g. {188A, 188B}) the alphabetically-smallest ref wins. IS NOT
+          -- DISTINCT FROM handles the all-NULL-ref case (a cluster of named
+          -- nodes with no ref): cluster_min_ref is NULL and every row matches,
+          -- so the centroid averages all node positions.
+          SELECT
+              ST_Centroid(ST_Collect(way) FILTER (WHERE ref IS NOT DISTINCT FROM cluster_min_ref)) AS way,
+              MIN(highway) AS highway,
+              MIN(junction) AS junction,
+              MIN(ref) AS ref,
+              MIN(name) AS name,
+              NULL::float AS way_pixels
+            FROM (
+              SELECT *,
+                  MIN(ref) OVER (PARTITION BY stripped_ref, visible_name, cid) AS cluster_min_ref
+                FROM mj_clustered
+                WHERE cid IS NOT NULL
+            ) c
+            GROUP BY stripped_ref, visible_name, cid
+        UNION ALL
+          SELECT
             way,
             highway,
             junction,
             ref,
             name,
-            NULL AS way_pixels
+            NULL::float AS way_pixels
           FROM planet_osm_point
           WHERE way && !bbox!
-            AND (highway = 'motorway_junction' OR highway = 'traffic_signals' OR junction = 'yes')
+            AND (highway = 'traffic_signals' OR junction = 'yes')
         UNION ALL
           SELECT
             ST_PointOnSurface(way) AS way,
@@ -1586,7 +1656,7 @@ Layer:
                                                     'outdoor_seating', 'park', 'picnic_table', 'pitch', 'playground',
                                                     'sauna', 'slipway', 'sports_centre', 'stadium', 'swimming_area', 'swimming_pool', 'track', 'water_park') THEN leisure END,
                 'power_' || CASE WHEN power IN ('plant', 'generator', 'substation') THEN power END,
-                'man_made_' || CASE WHEN (man_made IN ('chimney', 'communications_tower', 'crane', 'lighthouse', 'mast', 'obelisk', 'silo', 'storage_tank',
+                'man_made_' || CASE WHEN (man_made IN ('ceremonial_gate', 'chimney', 'communications_tower', 'crane', 'lighthouse', 'mast', 'obelisk', 'silo', 'storage_tank',
                                                        'telescope', 'tower', 'wastewater_plant', 'water_tower', 'water_works', 'windmill', 'works')
                                             AND (tags->'location' NOT IN ('roof', 'rooftop') OR NOT (tags ? 'location'))) THEN man_made END,
                 'landuse_' || CASE WHEN landuse IN ('reservoir', 'basin', 'recreation_ground', 'village_green', 'quarry', 'vineyard', 'orchard', 'cemetery',
@@ -1681,7 +1751,8 @@ Layer:
               tags->'operator' AS operator,
               ref,
               way_area,
-              COALESCE(way_area/NULLIF(POW(!scale_denominator!*0.001*0.28,2),0), 0) AS way_pixels
+              COALESCE(way_area/NULLIF(POW(!scale_denominator!*0.001*0.28,2),0), 0) AS way_pixels,
+              osm_id
             FROM
               (SELECT
                   ST_PointOnSurface(way) AS way,
@@ -1707,7 +1778,8 @@ Layer:
                   tourism,
                   waterway,
                   tags,
-                  way_area
+                  way_area,
+                  osm_id
                 FROM planet_osm_polygon
                 WHERE way && !bbox! -- Not ST_PointOnSurface(way) because name might be NULL
                   AND way_area < 768000*POW(!scale_denominator!*0.001*0.28,2)
@@ -1736,14 +1808,16 @@ Layer:
                   tourism,
                   waterway,
                   tags,
-                  NULL AS way_area
+                  NULL::float AS way_area,
+                  osm_id
                 FROM planet_osm_point
                 WHERE way && !bbox!
               ) _
             ) AS features
           WHERE feature IS NOT NULL
           ORDER BY score DESC NULLS LAST,
-            way_pixels DESC NULLS LAST
+            way_pixels DESC NULLS LAST,
+            osm_id
           ) AS amenity_points
     properties:
       cache-features: true
@@ -1758,12 +1832,14 @@ Layer:
           way,
           COALESCE(
            'highway_' || CASE WHEN tags->'ford' IN ('yes', 'stepping_stones') THEN 'ford' END,
-           'leisure_' || CASE WHEN leisure = 'slipway' THEN leisure END
+           'leisure_' || CASE WHEN leisure = 'slipway' THEN leisure END,
+           'man_made_' || CASE WHEN man_made = 'ceremonial_gate' THEN man_made END
             ) AS feature
           FROM planet_osm_line
           -- The upcoming where clause is needed for performance only, as the CASE statements would end up doing the equivalent filtering
           WHERE tags->'ford' IN ('yes', 'stepping_stones')
             OR leisure = 'slipway'
+            OR man_made = 'ceremonial_gate'
           ORDER BY COALESCE(layer,0)
         ) AS amenity_line
     properties:
@@ -2091,13 +2167,13 @@ Layer:
       table: |-
         (SELECT
           way,
-            NULL as way_pixels,
+            NULL::float as way_pixels,
             COALESCE('aerialway_' || aerialway, 'attraction_' || CASE WHEN tags @> 'attraction=>water_slide' THEN 'water_slide' END, 'leisure_' || leisure, 'man_made_' || man_made, 'waterway_' || waterway, 'natural_' || "natural", 'golf_' || (tags->'golf')) AS feature,
             access,
             name,
             tags->'operator' as operator,
             ref,
-            NULL AS way_area,
+            NULL::float AS way_area,
             CASE WHEN building = 'no' OR building IS NULL THEN 'no' ELSE 'yes' END AS is_building
           FROM planet_osm_line
           WHERE ((man_made IN ('pier', 'breakwater', 'groyne', 'embankment')
@@ -2108,7 +2184,8 @@ Layer:
               OR aerialway IN ('cable_car', 'gondola', 'mixed_lift', 'goods', 'chair_lift', 'drag_lift', 't-bar', 'j-bar', 'platter', 'rope_tow', 'zip_line')
               OR leisure IN ('slipway', 'track')
               OR waterway IN ('dam', 'weir')
-              OR "natural" IN ('arete', 'cliff', 'ridge'))
+              OR "natural" IN ('arete', 'cliff', 'ridge')
+              OR man_made = 'ceremonial_gate')
             AND name IS NOT NULL)
             OR (tags @> 'golf=>hole' AND ref IS NOT NULL)
         ) AS text_line
@@ -2182,7 +2259,7 @@ Layer:
             "addr:housename" AS addr_housename,
             tags->'addr:unit' AS addr_unit,
             tags->'addr:flats' AS addr_flats,
-            NULL AS way_pixels
+            NULL::float AS way_pixels
           FROM planet_osm_point
           WHERE way && !bbox!
             AND (("addr:housenumber" IS NOT NULL) OR ("addr:housename" IS NOT NULL) OR ((tags->'addr:unit') IS NOT NULL) OR ((tags->'addr:flats') IS NOT NULL))
@@ -2322,7 +2399,7 @@ Layer:
                   man_made,
                   railway,
                   tags,
-                  NULL AS way_area
+                  NULL::float AS way_area
                 FROM planet_osm_point
                 WHERE way && !bbox!
               ) _
