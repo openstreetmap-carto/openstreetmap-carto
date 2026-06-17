@@ -128,16 +128,6 @@
     [zoom >= 16] { line-width: @river-width-z16 + 1; }
     [zoom >= 17] { line-width: @river-width-z17 + 1; }
     [zoom >= 18] { line-width: @river-width-z18 + 1; }
-
-    [int_intermittent = 'yes'] {
-      bridgefill/line-color: white;
-      bridgefill/line-join: round;
-      bridgefill/line-width: @river-width-z14;
-      [zoom >= 15] { bridgefill/line-width: @river-width-z15; }
-      [zoom >= 16] { bridgefill/line-width: @river-width-z16; }
-      [zoom >= 17] { bridgefill/line-width: @river-width-z17; }
-      [zoom >= 18] { bridgefill/line-width: @river-width-z18; }
-    }
   }
 
   [waterway = 'ditch'],
@@ -154,46 +144,21 @@
       [zoom >= 18] { line-width: @stream-width-z18 + 1; }
     }
     [waterway != 'stream'][zoom >= 17] { line-width: @ditchdrain-width-z17 + 1; }
-
-    [int_intermittent = 'yes'],
-    [waterway = 'fish_pass'] {
-      bridgefill/line-color: white;
-      bridgefill/line-join: round;
-      bridgefill/line-width: @stream-width-z14;
-      [waterway = 'stream'] {
-        [zoom >= 15] { bridgefill/line-width: @stream-width-z15; }
-        [zoom >= 16] { bridgefill/line-width: @stream-width-z16; }
-        [zoom >= 17] { bridgefill/line-width: @stream-width-z17; }
-        [zoom >= 18] { bridgefill/line-width: @stream-width-z18; }
-      }
-      [waterway != 'stream'][zoom >= 17] {
-        bridgefill/line-width: @ditchdrain-width-z17;
-        [waterway = 'fish_pass'] { bridgefill/line-color: @fishpass-fill-color; }
-      }
-    }
   }
   
   [waterway = 'canal'] {
     line-color: black;
+    line-join: round;
     line-width: (@stream-width-z14 * @canal-scale-factor) + 1;
     [zoom >= 15] { line-width: (@stream-width-z15 * @canal-scale-factor) + 1; }
     [zoom >= 16] { line-width: (@stream-width-z16 * @canal-scale-factor) + 1; }
     [zoom >= 17] { line-width: (@stream-width-z17 * @canal-scale-factor) + 1; }
     [zoom >= 18] { line-width: (@stream-width-z18 * @canal-scale-factor) + 1; }
-    [int_intermittent = 'yes'] {
-      bridgefill/line-color: white;
-      bridgefill/line-join: round;
-      bridgefill/line-width: @stream-width-z14 * @canal-scale-factor;
-      [zoom >= 15] { bridgefill/line-width: @stream-width-z15 * @canal-scale-factor; }
-      [zoom >= 16] { bridgefill/line-width: @stream-width-z16 * @canal-scale-factor; }
-      [zoom >= 17] { bridgefill/line-width: @stream-width-z17 * @canal-scale-factor; }
-      [zoom >= 18] { bridgefill/line-width: @stream-width-z18 * @canal-scale-factor; }
-    }
   }
 }
 
 #water-lines,
-#waterway-bridges {
+#waterway-bridges::fill {
   [waterway = 'river'][zoom >= 12] {
     [int_bridge_tunnel = 'tunnel'] {
       // Background for dashed tunnel casings
@@ -206,6 +171,15 @@
       [zoom >= 17] { background/line-width: @river-width-z17; }
       [zoom >= 18] { background/line-width: @river-width-z18; }
       background/line-join: round;
+    }
+    [int_bridge_tunnel = 'bridge'][int_intermittent = 'yes'][zoom >= 14] {
+      background/line-color: white;
+      background/line-join: round;
+      background/line-width: @river-width-z14;
+      [zoom >= 15] { background/line-width: @river-width-z15; }
+      [zoom >= 16] { background/line-width: @river-width-z16; }
+      [zoom >= 17] { background/line-width: @river-width-z17; }
+      [zoom >= 18] { background/line-width: @river-width-z18; }
     }
 
     water/line-color: @water-color;
@@ -252,7 +226,18 @@
         background/line-color: @water-tunnelfill-color;
         background/line-join: round;
       }
-
+      [int_bridge_tunnel = 'bridge'][int_intermittent = 'yes'][zoom >= 14] {
+        background/line-color: white;
+        background/line-join: round;
+        background/line-width: @stream-width-z14;
+        [waterway = 'stream'] {
+          [zoom >= 15] { background/line-width: @stream-width-z15; }
+          [zoom >= 16] { background/line-width: @stream-width-z16; }
+          [zoom >= 17] { background/line-width: @stream-width-z17; }
+          [zoom >= 18] { background/line-width: @stream-width-z18; }
+        }
+        [waterway != 'stream'][zoom >= 17] { background/line-width: @ditchdrain-width-z17; }
+      }
       water/line-width: @stream-width-z12;
       [zoom >= 13] { water/line-width: @stream-width-z13; }
       [zoom >= 14] { water/line-width: @stream-width-z14; }
@@ -266,16 +251,18 @@
       water/line-color: @water-color;
       water/line-cap: round;
       water/line-join: round;
-
-      [int_intermittent = 'yes'] {
+ 
+      [waterway != 'fish_pass'][int_intermittent = 'yes'] {
         water/line-dasharray: 4,3;
         water/line-cap: butt;
       }
-      [waterway = 'fish_pass'][int_bridge_tunnel = 'bridge'][zoom >= 17] {
-        water/line-dasharray: 3,1.5;
-        water/line-cap: butt;
+      [waterway = 'fish_pass'][int_bridge_tunnel != 'tunnel'][zoom >= 17] {
+        steps/line-dasharray: 1.5,3;
+        steps/line-color: @fishpass-fill-color; 
+        steps/line-width: @ditchdrain-width-z17; 
+        steps/line-join: round;
       }
-      
+
       [int_bridge_tunnel = 'tunnel'][zoom >= 14] {
         water/line-dasharray: 4,2;
         water/line-cap: butt;
@@ -322,7 +309,16 @@
       background/line-color: @water-tunnelfill-color;
       background/line-join: round;
     }
-
+    [int_bridge_tunnel = 'bridge'][int_intermittent = 'yes'][zoom >= 14] {
+      background/line-color: white;
+      background/line-join: round;
+      background/line-width: @stream-width-z14 * @canal-scale-factor;
+      [zoom >= 15] { background/line-width: @stream-width-z15 * @canal-scale-factor; }
+      [zoom >= 16] { background/line-width: @stream-width-z16 * @canal-scale-factor; }
+      [zoom >= 17] { background/line-width: @stream-width-z17 * @canal-scale-factor; }
+      [zoom >= 18] { background/line-width: @stream-width-z18 * @canal-scale-factor; }
+    }
+    
     water/line-width: @stream-width-z12 * @canal-scale-factor;
     [zoom >= 13] { water/line-width: @stream-width-z13 * @canal-scale-factor; }
     [zoom >= 14] { water/line-width: @stream-width-z14 * @canal-scale-factor; }

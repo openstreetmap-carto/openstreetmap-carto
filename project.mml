@@ -1001,7 +1001,9 @@ Layer:
           WHERE waterway IN ('river', 'canal', 'stream', 'drain', 'ditch', 'fish_pass')
             AND (bridge IN ('yes', 'aqueduct') OR (waterway = 'fish_pass'))
             AND (tunnel IS NULL OR tunnel NOT IN ('yes', 'culvert', 'flooded'))
-          ORDER BY layernotnull
+          ORDER BY
+            layernotnull,
+            osm_id
         ) AS waterway_bridges
     properties:
       minzoom: 12
