@@ -198,7 +198,7 @@ Layer:
           FROM
           (SELECT -- This subselect allows sorting / filtering on the int_bridge_tunnel column
               way,
-              waterway,
+              'waterway_' || waterway AS feature, 
               CASE WHEN tags->'intermittent' IN ('yes')
                 OR tags->'seasonal' IN ('yes', 'spring', 'summer', 'autumn', 'winter', 'wet_season', 'dry_season')
                 THEN 'yes' ELSE 'no' END AS int_intermittent,
@@ -210,7 +210,7 @@ Layer:
             WHERE waterway IN ('river', 'canal', 'stream', 'drain', 'ditch', 'fish_pass')
               AND (bridge IS NULL OR bridge NOT IN ('yes', 'aqueduct'))
           ) _
-          WHERE (waterway != 'fish_pass') OR (int_bridge_tunnel = 'tunnel') -- only render fish_pass in tunnels with this select
+          WHERE (feature != 'waterway_fish_pass') OR (int_bridge_tunnel = 'tunnel') -- only render fish_pass in tunnels with this select
           ORDER BY
             layernotnull,
             CASE WHEN int_bridge_tunnel = 'tunnel' THEN 1 ELSE 0 END  -- render tunnels after normal waterways (bridges are in later layer)
@@ -890,7 +890,9 @@ Layer:
             service,
             link,
             preserved,
-            layernotnull
+            int_intermittent,
+            'bridge' AS int_bridge_tunnel,
+            COALESCE(layer,0) AS layernotnull
           FROM ( -- subselect that contains both roads and rail/aero
             SELECT
                 way,
@@ -904,15 +906,16 @@ Layer:
                 carto_highway_int_access(highway, access, foot, bicycle, horse, tags->'motorcar', tags->'motor_vehicle', tags->'vehicle') AS int_access,
                 construction,
                 CASE
-                  WHEN service IN ('parking_aisle', 'drive-through', 'driveway') OR leisure IN ('slipway') THEN 'INT-minor'::text
-                  ELSE 'INT-normal'::text
+                  WHEN service IN ('parking_aisle', 'drive-through', 'driveway') OR leisure IN ('slipway') THEN 'INT-minor'
+                  ELSE 'INT-normal'
                 END AS service,
                 CASE
                   WHEN highway IN ('motorway_link', 'trunk_link', 'primary_link', 'secondary_link', 'tertiary_link') THEN 'yes'
                   ELSE 'no'
                 END AS link,
                 NULL AS preserved,
-                COALESCE(layer,0) AS layernotnull,
+                NULL AS int_intermittent,
+                layer,
                 osm_id,
                 z_order
               FROM planet_osm_line
@@ -925,7 +928,7 @@ Layer:
                                  WHEN (railway = 'rail' AND service IN ('spur', 'siding', 'yard')) THEN 'INT-spur-siding-yard'
                                  WHEN (railway = 'tram' AND service IN ('spur', 'siding', 'yard')) THEN 'tram-service'
                                  ELSE railway END) AS feature,
-                tracktype,
+                NULL AS tracktype,
                 NULL AS int_surface,
                 NULL AS int_access,
                 construction,
@@ -935,12 +938,35 @@ Layer:
                   WHEN tags->'railway:preserved' = 'yes' THEN 'yes'
                   ELSE 'no'
                 END AS preserved,
-                COALESCE(layer,0) AS layernotnull,
+                NULL AS int_intermittent,
+                layer,
                 osm_id,
                 z_order
               FROM planet_osm_line
               WHERE bridge IN ('yes', 'boardwalk', 'cantilever', 'covered', 'low_water_crossing', 'movable', 'trestle', 'viaduct')
                 AND railway IS NOT NULL -- end of rail select
+            UNION ALL
+            SELECT          
+                way,
+                'waterway_' || waterway AS feature,
+                NULL AS tracktype,
+                NULL AS int_surface,
+                NULL AS int_access,
+                NULL AS construction,
+                NULL AS service,
+                NULL AS link,
+                NULL AS preserved,
+                CASE WHEN tags->'intermittent' IN ('yes')
+                  OR tags->'seasonal' IN ('yes', 'spring', 'summer', 'autumn', 'winter', 'wet_season', 'dry_season')
+                  THEN 'yes' ELSE 'no' END AS int_intermittent,
+                layer,
+                osm_id,
+                NULL::INTEGER AS z_order
+              FROM planet_osm_line
+              WHERE Z(!scale_denominator!) >= 12  -- high zoom water lines start at Z12 rather than Z10
+                AND waterway IN ('river', 'canal', 'stream', 'drain', 'ditch', 'fish_pass')
+                AND (bridge IN ('yes', 'aqueduct') OR (waterway = 'fish_pass'))
+                AND (tunnel IS NULL OR tunnel NOT IN ('yes', 'culvert', 'flooded'))
             ) AS features
           ORDER BY
             layernotnull,
@@ -983,32 +1009,6 @@ Layer:
     properties:
       cache-features: true
       minzoom: 11
-  - id: waterway-bridges
-    geometry: linestring
-    <<: *extents
-    Datasource:
-      <<: *osm2pgsql
-      table: |-
-        (SELECT
-            way,
-            waterway,
-            CASE WHEN tags->'intermittent' IN ('yes')
-              OR tags->'seasonal' IN ('yes', 'spring', 'summer', 'autumn', 'winter', 'wet_season', 'dry_season')
-              THEN 'yes' ELSE 'no' END AS int_intermittent,
-            'bridge' AS int_bridge_tunnel,
-            COALESCE(layer,0) AS layernotnull
-          FROM planet_osm_line
-          WHERE waterway IN ('river', 'canal', 'stream', 'drain', 'ditch', 'fish_pass')
-            AND (bridge IN ('yes', 'aqueduct') OR (waterway = 'fish_pass'))
-            AND (tunnel IS NULL OR tunnel NOT IN ('yes', 'culvert', 'flooded'))
-          ORDER BY
-            layernotnull,
-            osm_id
-        ) AS waterway_bridges
-    properties:
-      minzoom: 12
-      cache-features: true
-      group-by: layernotnull
   - id: waterslide
     geometry: linestring
     <<: *extents
