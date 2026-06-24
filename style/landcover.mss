@@ -269,7 +269,7 @@
     }
   }
 
-  [feature = 'leisure_ice_rink'][is_building = 'no'] {
+  [feature = 'leisure_ice_rink'] {
     [zoom >= 10] {
       polygon-fill: @glacier;
       line-width: 0.5;

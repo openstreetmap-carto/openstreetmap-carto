@@ -92,7 +92,7 @@ Layer:
       <<: *osm2pgsql
       table: |-
         (SELECT
-            way, religion, way_pixels, is_building,
+            way, religion, way_pixels,
             COALESCE(aeroway, golf, amenity, wetland, power, landuse, leisure, man_made, "natural", shop, tourism, highway, railway) AS feature
           FROM (SELECT
               way,
@@ -120,7 +120,6 @@ Layer:
               ('railway_' || (CASE WHEN railway = 'station' THEN railway END)) AS railway,
               CASE WHEN religion IN ('christian', 'jewish', 'muslim') THEN religion ELSE 'INT-generic'::text END AS religion,
               way_area/NULLIF(POW(!scale_denominator!*0.001*0.28,2),0) AS way_pixels,
-              CASE WHEN building = 'no' OR building IS NULL THEN 'no' ELSE 'yes' END AS is_building,
               way_area
             FROM planet_osm_polygon
             WHERE (landuse IS NOT NULL
