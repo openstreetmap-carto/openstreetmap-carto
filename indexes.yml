@@ -31,7 +31,7 @@ polygon:
   military:
     where: (landuse = 'military' OR military = 'danger_area') AND building IS NULL
   water:
-    where: waterway IN ('dock', 'riverbank', 'canal') OR landuse IN ('reservoir', 'basin') OR "natural" IN ('water', 'glacier')
+    where: waterway IN ('dock', 'riverbank') OR landuse IN ('reservoir', 'basin') OR "natural" IN ('water', 'glacier')
   way_area_z6:
     where: way_area > 5980000
   way_area_z10:
