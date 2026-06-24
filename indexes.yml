@@ -8,7 +8,7 @@ point:
     where: place IS NOT NULL AND name IS NOT NULL
 line:
   label:
-    where: name IS NOT NULL OR ref IS NOT NULL
+    where: name IS NOT NULL OR (tags @> 'golf=>hole'::hstore AND ref IS NOT NULL)
   ferry:
     where: route = 'ferry' AND osm_id > 0
   river:
