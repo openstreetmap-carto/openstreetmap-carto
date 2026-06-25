@@ -463,7 +463,7 @@ Layer:
             service,
             link,
             preserved,
-            layernotnull
+            COALESCE(layer,0) AS layernotnull
           FROM ( -- subselect that contains both roads and rail
             SELECT
                 way,
@@ -477,15 +477,15 @@ Layer:
                 carto_highway_int_access(highway, access, foot, bicycle, horse, tags->'motorcar', tags->'motor_vehicle', tags->'vehicle') AS int_access,
                 construction,
                 CASE
-                  WHEN service IN ('parking_aisle', 'drive-through', 'driveway') OR leisure IN ('slipway') THEN 'INT-minor'::text
-                  ELSE 'INT-normal'::text
+                  WHEN service IN ('parking_aisle', 'drive-through', 'driveway') OR leisure IN ('slipway') THEN 'INT-minor'
+                  ELSE 'INT-normal'
                 END AS service,
                 CASE
                   WHEN highway IN ('motorway_link', 'trunk_link', 'primary_link', 'secondary_link', 'tertiary_link') THEN 'yes'
                   ELSE 'no'
                 END AS link,
                 NULL AS preserved,
-                COALESCE(layer,0) AS layernotnull,
+                layer,
                 osm_id,
                 z_order
               FROM planet_osm_line
@@ -498,7 +498,7 @@ Layer:
                                  WHEN (railway = 'rail' AND service IN ('spur', 'siding', 'yard')) THEN 'INT-spur-siding-yard'
                                  WHEN (railway = 'tram' AND service IN ('spur', 'siding', 'yard')) THEN 'tram-service'
                                  ELSE railway END) AS feature,
-                tracktype,
+                NULL AS tracktype,
                 NULL AS int_surface,
                 NULL AS int_access,
                 construction,
@@ -508,7 +508,7 @@ Layer:
                   WHEN tags->'railway:preserved' = 'yes' THEN 'yes'
                   ELSE 'no'
                 END AS preserved,
-                COALESCE(layer,0) AS layernotnull,
+                layer,
                 osm_id,
                 z_order
               FROM planet_osm_line
@@ -713,7 +713,7 @@ Layer:
             service,
             link,
             preserved,
-            layernotnull
+            COALESCE(layer,0) AS layernotnull
           FROM ( -- subselect that contains both roads and rail/aero
             SELECT
                 way,
@@ -727,15 +727,15 @@ Layer:
                 carto_highway_int_access(highway, access, foot, bicycle, horse, tags->'motorcar', tags->'motor_vehicle', tags->'vehicle') AS int_access,
                 construction,
                 CASE
-                  WHEN service IN ('parking_aisle', 'drive-through', 'driveway') OR leisure IN ('slipway') THEN 'INT-minor'::text
-                  ELSE 'INT-normal'::text
+                  WHEN service IN ('parking_aisle', 'drive-through', 'driveway') OR leisure IN ('slipway') THEN 'INT-minor'
+                  ELSE 'INT-normal'
                 END AS service,
                 CASE
                   WHEN highway IN ('motorway_link', 'trunk_link', 'primary_link', 'secondary_link', 'tertiary_link') THEN 'yes'
                   ELSE 'no'
                 END AS link,
                 NULL AS preserved,
-                COALESCE(layer,0) AS layernotnull,
+                layer,
                 osm_id,
                 z_order
               FROM planet_osm_line
@@ -750,7 +750,7 @@ Layer:
                                  WHEN (railway = 'rail' AND service IN ('spur', 'siding', 'yard')) THEN 'INT-spur-siding-yard'
                                  WHEN (railway = 'tram' AND service IN ('spur', 'siding', 'yard')) THEN 'tram-service'
                                  ELSE railway END) AS feature,
-                tracktype,
+                NULL AS tracktype,
                 NULL AS int_surface,
                 NULL AS int_access,
                 construction,
@@ -760,7 +760,7 @@ Layer:
                   WHEN tags->'railway:preserved' = 'yes' THEN 'yes'
                   ELSE 'no'
                 END AS preserved,
-                COALESCE(layer,0) AS layernotnull,
+                layer,
                 osm_id,
                 z_order
               FROM planet_osm_line
@@ -961,7 +961,7 @@ Layer:
                   THEN 'yes' ELSE 'no' END AS int_intermittent,
                 layer,
                 osm_id,
-                NULL::INTEGER AS z_order
+                0 AS z_order  -- consistent with waterways being rendered before roads/railways
               FROM planet_osm_line
               WHERE Z(!scale_denominator!) >= 12  -- high zoom water lines start at Z12 rather than Z10
                 AND waterway IN ('river', 'canal', 'stream', 'drain', 'ditch', 'fish_pass')

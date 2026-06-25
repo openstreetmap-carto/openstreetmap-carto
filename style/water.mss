@@ -119,7 +119,7 @@
   }
 }
 
-#bridges::waterway_bridge_casing[zoom >= 14] {
+#bridges::casing[zoom >= 14] {
   [feature = 'waterway_river'] {
     line-color: black;
     line-join: round;
@@ -158,7 +158,7 @@
 }
 
 #water-lines,
-#bridges::waterway_fill {
+#bridges::fill {
   [feature = 'waterway_river'][zoom >= 12] {
     [int_bridge_tunnel = 'tunnel'] {
       // Background for dashed tunnel casings
