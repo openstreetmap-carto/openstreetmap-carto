@@ -40,8 +40,8 @@ roads:
   # The roads table only has a subset of data, so it's just got some low-zoom
   # indexes and some fairly selective ones for high zoom
   admin_low:
-    where: boundary = 'administrative' AND admin_level IN ('0', '1', '2', '3', '4')
+    where: boundary = 'administrative' AND admin_level IN ('0', '1', '2', '3', '4') AND osm_id < 0
   admin:
-    where: boundary = 'administrative'
+    where: boundary = 'administrative' AND osm_id < 0
   roads_ref:
     where: highway IS NOT NULL AND ref IS NOT NULL
