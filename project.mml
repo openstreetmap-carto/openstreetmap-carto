@@ -1580,6 +1580,8 @@ Layer:
               CASE
                 WHEN amenity = 'parcel_locker'
                 THEN CONCAT_WS(E'\n', COALESCE(tags->'brand', tags->'operator', name), ref)
+                WHEN amenity = 'charging_station' -- brand, with capacity in parentheses; no label without a brand
+                THEN tags->'brand' || COALESCE(CASE WHEN tags->'capacity' ~ '^\d+$' THEN CONCAT(' (', tags->'capacity', ')') END, '')
                 ELSE
                 CONCAT(
                   name,
