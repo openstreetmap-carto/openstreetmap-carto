@@ -348,7 +348,7 @@ Layer:
             way,
             waterway
           FROM planet_osm_polygon
-          WHERE waterway IN ('dam', 'weir', 'lock_gate')
+          WHERE waterway IN ('dam')
         ) AS water_barriers_poly
     properties:
       minzoom: 13
@@ -1653,7 +1653,8 @@ Layer:
                 'tourism_' || CASE WHEN tourism IN ('information') AND tags->'information' IN ('audioguide', 'board', 'guidepost', 'office', 'map', 'tactile_map', 'terminal') THEN tourism END,
                 'office' || CASE WHEN (tags->'office') IS NOT NULL AND EXISTS (SELECT 1 FROM carto_pois WHERE key = 'office' AND value = tags->'office') THEN '' END,
                 'barrier_' || CASE WHEN barrier IN ('toll_booth') AND way_area IS NULL THEN barrier END,
-                'waterway_' || CASE WHEN waterway IN ('dam', 'weir', 'dock') THEN waterway END,
+                'waterway_' || CASE WHEN waterway IN ('dam', 'dock') THEN waterway END,
+                'waterway_' || CASE WHEN waterway IN ('weir') AND way_area IS NULL THEN waterway END,
                 'amenity_' || CASE WHEN amenity IN ('bicycle_parking', 'motorcycle_parking') THEN amenity END,
                 'amenity_' || CASE WHEN amenity IN ('parking') AND (tags->'parking' NOT IN ('underground') OR (tags->'parking') IS NULL) THEN amenity END,
                 'amenity_' || CASE WHEN amenity IN ('parking_entrance')
