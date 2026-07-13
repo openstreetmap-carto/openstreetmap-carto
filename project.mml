@@ -2137,15 +2137,10 @@ Layer:
       <<: *osm2pgsql
       table: |-
         (SELECT
-          way,
-            NULL::float as way_pixels,
+            way,
             COALESCE('aerialway_' || aerialway, 'attraction_' || CASE WHEN tags @> 'attraction=>water_slide' THEN 'water_slide' END, 'leisure_' || leisure, 'man_made_' || man_made, 'waterway_' || waterway, 'natural_' || "natural", 'golf_' || (tags->'golf')) AS feature,
-            access,
             name,
-            tags->'operator' as operator,
-            ref,
-            NULL::float AS way_area,
-            CASE WHEN building = 'no' OR building IS NULL THEN 'no' ELSE 'yes' END AS is_building
+            ref
           FROM planet_osm_line
           WHERE ((man_made IN ('pier', 'breakwater', 'groyne', 'embankment')
               OR (man_made = 'pipeline'
