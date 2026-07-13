@@ -2161,7 +2161,7 @@ Layer:
             OR (tags @> 'golf=>hole' AND ref IS NOT NULL)
         ) AS text_line
     properties:
-      minzoom: 10
+      minzoom: 15
   - id: text-point
     geometry: point
     <<: *extents
