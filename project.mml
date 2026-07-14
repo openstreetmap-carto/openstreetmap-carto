@@ -1066,10 +1066,12 @@ Layer:
             tags->'entrance' AS entrance,
             access
           FROM planet_osm_point
-          WHERE (tags->'entrance') IS NOT NULL AND
-            (tags->'indoor' = 'no'
-            OR (tags->'indoor') IS NULL))
-        AS entrances
+          WHERE tags ? 'entrance'
+            AND (
+              NOT tags ? 'indoor'
+              OR tags->'indoor' = 'no'
+            )
+        ) AS entrances
     properties:
       minzoom: 18
   - id: golf-line

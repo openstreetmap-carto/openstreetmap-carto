@@ -44,7 +44,7 @@
 }
 
 #entrances {
-  [zoom >= 18]["entrance" != null]  {
+  [zoom >= 18]  {
     marker-fill: @entrance-normal;
     marker-allow-overlap: true;
     marker-ignore-placement: true;
@@ -57,7 +57,7 @@
       marker-file: url('symbols/square.svg');
     }
   }
-  [zoom >= 19]["entrance" != null] {
+  [zoom >= 19] {
     ["entrance" = 'yes'],
     ["entrance" = 'main'],
     ["entrance" = 'home'],
@@ -80,7 +80,7 @@
       marker-file: url('symbols/rectdiag.svg');
     }
   }
-  [zoom >= 20]["entrance" != null] {
+  [zoom >= 20] {
     marker-width: 8.0;
     marker-height: 8.0;
   }
