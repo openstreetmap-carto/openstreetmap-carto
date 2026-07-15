@@ -324,20 +324,6 @@ Layer:
         ) AS marinas_area
     properties:
       minzoom: 14
-  - id: water-barriers-line
-    geometry: linestring
-    <<: *extents
-    Datasource:
-      <<: *osm2pgsql
-      table: |-
-        (SELECT
-            way,
-            waterway
-          FROM planet_osm_line
-          WHERE waterway IN ('dam', 'weir', 'lock_gate')
-        ) AS water_barriers_line
-    properties:
-      minzoom: 13
   - id: water-barriers-poly
     geometry: polygon
     <<: *extents
@@ -352,6 +338,33 @@ Layer:
         ) AS water_barriers_poly
     properties:
       minzoom: 13
+  - id: water-barriers-line
+    geometry: linestring
+    <<: *extents
+    Datasource:
+      <<: *osm2pgsql
+      table: |-
+        (SELECT
+            way,
+            waterway
+          FROM planet_osm_line
+          WHERE waterway IN ('dam', 'weir', 'lock_gate')
+        ) AS water_barriers_line
+    properties:
+      minzoom: 13
+  - id: water-barriers-point
+    geometry: point
+    <<: *extents
+    Datasource:
+      <<: *osm2pgsql
+      table: |-
+        (SELECT
+            way, waterway
+          FROM planet_osm_point
+          WHERE waterway IN ('dam', 'weir', 'lock_gate')
+        ) AS water_barriers_points
+    properties:
+      minzoom: 17
   - id: piers-poly
     geometry: polygon
     <<: *extents
@@ -390,19 +403,6 @@ Layer:
         ) AS piers_line
     properties:
       minzoom: 12
-  - id: water-barriers-point
-    geometry: point
-    <<: *extents
-    Datasource:
-      <<: *osm2pgsql
-      table: |-
-        (SELECT
-            way, waterway
-          FROM planet_osm_point
-          WHERE waterway IN ('dam', 'weir', 'lock_gate')
-        ) AS water_barriers_points
-    properties:
-      minzoom: 17
   - id: bridge
     geometry: polygon
     <<: *extents
