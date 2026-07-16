@@ -4,7 +4,7 @@
 
 The OSM Carto project is now very mature and many issue reports turn out to be
 duplicates of existing issues. Before reporting a potential issue, please do a
-quick search of the repository to check for related issues.
+quick search of the repository to check for related issues - including closed ones.
 If you do find a matching issue, please review the previous discussion and ensure
 that any additional comments are constructive. Unhelpful comments e.g. "Why hasn't
 this been fixed yet?" are not constructive and will be marked as off-topic.
@@ -14,6 +14,21 @@ contain a cropped screenshot of the problem, and a link to the area. Don't assum
 that we will see exactly what you see. If a particular OSM object is an issue,
 the issue should contain the tagging of the object.
 
+## Rendering samples to illustrate issues
+
+Samples from the map you include in an issue/comment to show a problem or support
+an argument in the discussion should always be provided as rendered.  Please avoid
+posting samples re-scaled to a different resolution after rendering.  You may add
+arrows or other markers if such are helpful to identify a specific location you
+want to point out, but you should not otherwise modify the map.
+
+In particular, you should never try to modify a map screenshot to disguise the
+geographic location the map sample is from.  This is almost never going to be
+successful and - if it is - it will render your sample pretty useless to the style
+developers because they are not going to be able to reproduce the problem.   If
+you don't want to disclose the location where you have found an issue you either
+need to find a different location where the problem occurrs as well or try to
+reproduce the issue in a style development environment using abstract test data.
 
 ## Workflow for making contributions
 
@@ -38,9 +53,10 @@ in Kosmtik or TileMill, but to provide an overview.
 ### Previews
 
 Some changes benefit from a review over a wider area and many zooms, where static
-images might not be sufficient and a demo layer is necessary. pnorman has a server
- which can host layers and has some data from parts of the world loaded. Before
- requesting this in a pull request, make sure that it is in a stable condition.
+images might not be sufficient and a demo layer is necessary. The OSM Carto project
+currently does not have the infrastructure for testing style changes in a live
+rendering environment, but you can ask if there are contributors willing and able
+to do more comprehensive testing.
 
 ## Easy pickings
 
