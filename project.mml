@@ -1811,7 +1811,6 @@ Layer:
           WHERE tags->'ford' IN ('yes', 'stepping_stones')
             OR leisure = 'slipway'
             OR man_made = 'ceremonial_gate'
-          ORDER BY COALESCE(layer,0)
         ) AS amenity_line
     properties:
       minzoom: 16
