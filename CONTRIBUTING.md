@@ -27,7 +27,7 @@ geographic location the map sample is from.  This is almost never going to be
 successful and - if it is - it will render your sample pretty useless to the style
 developers because they are not going to be able to reproduce the problem.   If
 you don't want to disclose the location where you have found an issue you either
-need to find a different location where the problem occurrs as well or try to
+need to find a different location where the problem occurs as well or try to
 reproduce the issue in a style development environment using abstract test data.
 
 ## Workflow for making contributions
