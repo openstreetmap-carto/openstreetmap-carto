@@ -103,3 +103,22 @@ SELECT
 		ELSE CAST(ROUND(LOG(2, 559082264.028 / scale_denominator)) AS integer)
 	END
 $$;
+
+-- Returns the original semicolon-separated list if it contains at most two items;
+-- otherwise returns the first and last items separated by a midline ellipsis (U+22EF).
+CREATE OR REPLACE FUNCTION carto_shorten_list(listtext text)
+  RETURNS text
+  LANGUAGE SQL
+  IMMUTABLE PARALLEL SAFE 
+AS $$
+SELECT
+  CASE
+    WHEN array_length(parts,1) > 2
+      THEN parts[1] || chr(x'2026'::int) || parts[array_length(parts,1)]
+    ELSE listtext
+  END
+  FROM (
+    SELECT string_to_array(listtext, ';') AS parts
+  ) _;
+$$;
+

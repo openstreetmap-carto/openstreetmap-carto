@@ -2209,10 +2209,10 @@ Layer:
       table: |-
         (SELECT
             ST_PointOnSurface(way) AS way,
-            "addr:housenumber" AS addr_housenumber,
+            carto_shorten_list("addr:housenumber") AS addr_housenumber,
             "addr:housename" AS addr_housename,
             tags->'addr:unit' AS addr_unit,
-            tags->'addr:flats' AS addr_flats,
+            carto_shorten_list(tags->'addr:flats') AS addr_flats,
             way_area/NULLIF(POW(!scale_denominator!*0.001*0.28,2),0) AS way_pixels
           FROM planet_osm_polygon
           WHERE way && !bbox! -- Not ST_PointOnSurface(way) because name might be NULL
@@ -2222,10 +2222,10 @@ Layer:
         UNION ALL
         SELECT
             way,
-            "addr:housenumber" AS addr_housenumber,
+            carto_shorten_list("addr:housenumber") AS addr_housenumber,
             "addr:housename" AS addr_housename,
             tags->'addr:unit' AS addr_unit,
-            tags->'addr:flats' AS addr_flats,
+            carto_shorten_list(tags->'addr:flats') AS addr_flats,
             NULL::float AS way_pixels
           FROM planet_osm_point
           WHERE way && !bbox!
