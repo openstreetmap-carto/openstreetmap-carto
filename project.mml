@@ -2216,7 +2216,7 @@ Layer:
             way_area/NULLIF(POW(!scale_denominator!*0.001*0.28,2),0) AS way_pixels
           FROM planet_osm_polygon
           WHERE way && !bbox! -- Not ST_PointOnSurface(way) because name might be NULL
-            AND (("addr:housenumber" IS NOT NULL) OR ("addr:housename" IS NOT NULL) OR ((tags->'addr:unit') IS NOT NULL) OR ((tags->'addr:flats') IS NOT NULL))
+            AND (("addr:housenumber" IS NOT NULL) OR ("addr:housename" IS NOT NULL) OR tags ? 'addr:unit' OR tags ? 'addr:flats')
             AND building IS NOT NULL
             AND way_area < 4000000*POW(!scale_denominator!*0.001*0.28,2)
         UNION ALL
@@ -2229,7 +2229,7 @@ Layer:
             NULL::float AS way_pixels
           FROM planet_osm_point
           WHERE way && !bbox!
-            AND (("addr:housenumber" IS NOT NULL) OR ("addr:housename" IS NOT NULL) OR ((tags->'addr:unit') IS NOT NULL) OR ((tags->'addr:flats') IS NOT NULL))
+            AND (("addr:housenumber" IS NOT NULL) OR ("addr:housename" IS NOT NULL) OR tags ? 'addr:unit' OR tags ? 'addr:flats')
           ORDER BY way_pixels DESC NULLS LAST
         ) AS addresses
     properties:

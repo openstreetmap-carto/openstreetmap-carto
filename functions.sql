@@ -104,21 +104,61 @@ SELECT
 	END
 $$;
 
--- Returns the original semicolon-separated list if it contains at most two items;
--- otherwise returns the first and last items separated by a midline ellipsis (U+22EF).
-CREATE OR REPLACE FUNCTION carto_shorten_list(listtext text)
+-- Tests whether substring a or b is present in argument, returning a or b
+-- as appropriate. Returns NULL if neither OR both present
+CREATE OR REPLACE FUNCTION carto_test_alternative_substrings(arg text, a text, b text)
   RETURNS text
   LANGUAGE SQL
   IMMUTABLE PARALLEL SAFE 
 AS $$
 SELECT
   CASE
-    WHEN array_length(parts,1) > 2
-      THEN parts[1] || chr(x'2026'::int) || parts[array_length(parts,1)]
-    ELSE listtext
+    WHEN position(a in arg) > 0
+      THEN CASE WHEN position(b in arg) = 0 THEN a END
+    WHEN position(b in arg) > 0
+      THEN b
   END
-  FROM (
-    SELECT string_to_array(listtext, ';') AS parts
-  ) _;
+$$;
+
+/* Try to shorten a list of entries if the length is more than maxlength characters
+   The list is partitioned using the given separator (if a single character) and
+   shortened if it contains more then two items, by returning the first and last
+   itens separated by a ellipsis (U+2026).
+   If the separator argument contains two alternative characters, both are tested, and
+   the shortening attempted if one, but not both, separators are found. */
+CREATE OR REPLACE FUNCTION carto_shorten_list(
+  listtext text, 
+  separator text,
+  maxlength int default 10
+  )
+  RETURNS text
+  LANGUAGE SQL
+  IMMUTABLE PARALLEL SAFE 
+AS $$
+SELECT
+  CASE
+    WHEN (separator IS NULL) OR (length(listtext) <= maxlength) -- also followed if input is NULL
+      THEN listtext
+
+    WHEN length(separator) = 1
+    THEN (
+      SELECT CASE
+        WHEN array_length(parts,1) > 2
+        THEN parts[1] || chr(x'2026'::int) || parts[array_length(parts,1)]
+        ELSE listtext
+      END
+      FROM (
+        SELECT string_to_array(listtext, separator) AS parts
+      ) _
+    )
+
+    WHEN length(separator) = 2
+    THEN
+      carto_shorten_list(
+        listtext,
+        carto_test_alternative_substrings(listtext, left(separator, 1), right(separator, 1)),
+        maxlength
+      )
+  END -- NULL returned if separator argument is invalid
 $$;
 
