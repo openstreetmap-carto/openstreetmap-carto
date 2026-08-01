@@ -131,10 +131,8 @@ BEGIN
   END IF;
 
   -- Find separator types present in the text
-  FOR sep IN
-    SELECT substr(separators, i, 1)
-      FROM generate_series(1, length(separators)) AS g(i)
-  LOOP
+  FOR i IN 1 .. length(separators) LOOP
+    sep := substr(separators, i, 1);
     IF position(sep IN listtext) > 0 THEN
       IF found_sep IS NOT NULL THEN
         -- Multiple separator types found: do not shorten
