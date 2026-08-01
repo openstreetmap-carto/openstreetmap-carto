@@ -104,61 +104,53 @@ SELECT
 	END
 $$;
 
--- Tests whether substring a or b is present in argument, returning a or b
--- as appropriate. Returns NULL if neither OR both present
-CREATE OR REPLACE FUNCTION carto_test_alternative_substrings(arg text, a text, b text)
-  RETURNS text
-  LANGUAGE SQL
-  IMMUTABLE PARALLEL SAFE 
-AS $$
-SELECT
-  CASE
-    WHEN position(a in arg) > 0
-      THEN CASE WHEN position(b in arg) = 0 THEN a END
-    WHEN position(b in arg) > 0
-      THEN b
-  END
-$$;
-
 /* Try to shorten a list of entries if the length is more than maxlength characters
-   The list is partitioned using the given separator (if a single character) and
-   shortened if it contains more then two items, by returning the first and last
-   itens separated by a ellipsis (U+2026).
-   If the separator argument contains two alternative characters, both are tested, and
-   the shortening attempted if one, but not both, separators are found. */
+   The list is partitioned using the given separator and shortened if it contains
+   more then two items, by returning the first and last items separated by a ellipsis (U+2026).
+   If the separator argument multiple characters, the shortening attempted if one, but not more,
+   separator types is found. */
+
 CREATE OR REPLACE FUNCTION carto_shorten_list(
-  listtext text, 
-  separator text,
-  maxlength int default 10
+    listtext text,
+    separators text,
+    maxlength integer DEFAULT 10
   )
   RETURNS text
-  LANGUAGE SQL
-  IMMUTABLE PARALLEL SAFE 
+  LANGUAGE plpgsql
+  IMMUTABLE PARALLEL SAFE
 AS $$
-SELECT
-  CASE
-    WHEN (separator IS NULL) OR (length(listtext) <= maxlength) -- also followed if input is NULL
-      THEN listtext
+DECLARE
+  found_sep   text;
+  sep         text;
+  parts       text[];
+BEGIN
+  IF listtext IS NULL
+    OR separators IS NULL
+    OR length(listtext) <= maxlength THEN
+      RETURN listtext;
+  END IF;
 
-    WHEN length(separator) = 1
-    THEN (
-      SELECT CASE
-        WHEN array_length(parts,1) > 2
-        THEN parts[1] || chr(x'2026'::int) || parts[array_length(parts,1)]
-        ELSE listtext
-      END
-      FROM (
-        SELECT string_to_array(listtext, separator) AS parts
-      ) _
-    )
+  -- Find separator types present in the text
+  FOR sep IN
+    SELECT substr(separators, i, 1)
+      FROM generate_series(1, length(separators)) AS g(i)
+  LOOP
+    IF position(sep IN listtext) > 0 THEN
+      IF found_sep IS NOT NULL THEN
+        -- Multiple separator types found: do not shorten
+        RETURN listtext;
+      END IF;
+      found_sep := sep;
+    END IF;
+  END LOOP;
 
-    WHEN length(separator) = 2
-    THEN
-      carto_shorten_list(
-        listtext,
-        carto_test_alternative_substrings(listtext, left(separator, 1), right(separator, 1)),
-        maxlength
-      )
-  END -- NULL returned if separator argument is invalid
+  IF found_sep IS NOT NULL THEN
+    parts := string_to_array(listtext, found_sep);
+    IF array_length(parts, 1) > 2 THEN
+      RETURN parts[1] || chr(x'2026'::int) || parts[array_length(parts, 1)];
+    END IF;
+  END IF;
+
+  RETURN listtext;
+END;
 $$;
-
