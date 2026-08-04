@@ -2458,8 +2458,8 @@
     }
   }
 
-  [feature = 'leisure_marina'][zoom >= 15] {
-    [zoom >= 10][way_pixels > 3000],
+  [feature = 'leisure_marina'] {
+    [zoom >= 15][way_pixels > 3000],
     [zoom >= 17] {
       text-name: "[name]";
       text-size: @landcover-font-size;
