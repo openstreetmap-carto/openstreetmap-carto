@@ -157,6 +157,13 @@
   }
 }
 
+// Dummy attachment so that waterway bridges has the same 3 attachments as bridges in roads.mss
+#bridges::bridges_and_tunnels_background {
+  [feature = null] {
+    line: none;
+  }
+}
+
 #water-lines,
 #bridges::fill {
   [feature = 'waterway_river'][zoom >= 12] {
