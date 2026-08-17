@@ -6,4 +6,4 @@ Generated SVG image is sanitized for use with Mapnik by the script svg_pattern.s
 
 The final file is scrub.svg
 
-Because of a [problem in the rendering stack](https://github.com/gravitystorm/openstreetmap-carto/issues/2750) we don’t use the SVG directly, but convert it to PNG: see symbols/scrub.png
+Because of a [problem in the rendering stack](https://github.com/openstreetmap-carto/openstreetmap-carto/issues/2750) we don’t use the SVG directly, but convert it to PNG: see symbols/scrub.png

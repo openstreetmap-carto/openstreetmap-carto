@@ -1,6 +1,6 @@
-## [Unreleased](https://github.com/gravitystorm/openstreetmap-carto/compare/v6.0.0...master)
+## [Unreleased](https://github.com/openstreetmap-carto/openstreetmap-carto/compare/v6.0.0...master)
 
-## [v6.0.0](https://github.com/gravitystorm/openstreetmap-carto/compare/v5.9.0...v6.0.0) - 2026-03-11
+## [v6.0.0](https://github.com/openstreetmap-carto/openstreetmap-carto/compare/v5.9.0...v6.0.0) - 2026-03-11
 ### Changes
 - Move to flex backend in osm2pgsql (#4978, #5077, #5079)
 - Replace current font download with Python script (#5052)
@@ -23,7 +23,7 @@
 - Simplify shop/office rendering logic, remove support for values that have gone out of use (#5186)
 - Tidy up leisure polygon labelling (#5179)
 
-## [v5.9.0](https://github.com/gravitystorm/openstreetmap-carto/compare/v5.8.0...v5.9.0) - 2024-10-17
+## [v5.9.0](https://github.com/openstreetmap-carto/openstreetmap-carto/compare/v5.8.0...v5.9.0) - 2024-10-17
 ### Changes
 - Adding rendering of shop=hearing_aids with a dedicated symbol (#4909)
 - Restoring rendering of name labels for natural=reef (#4918)
@@ -33,7 +33,7 @@
 - Adding rendering of leisure=dance with a point symbol and label (#4996)
 - Interpretation of transport mode specific access tags on roads/paths (#4952)
 
-## [v5.8.0](https://github.com/gravitystorm/openstreetmap-carto/compare/v5.7.0...v5.8.0) - 2023-11-26
+## [v5.8.0](https://github.com/openstreetmap-carto/openstreetmap-carto/compare/v5.7.0...v5.8.0) - 2023-11-26
 ### Changes
 - Changing color of leisure=pitch to be more distinct and less similar to the water color (#4480)
 - Fixing color of ref label for railway=subway_entrance (#4835)
@@ -44,7 +44,7 @@
 - Adding rendering of roller_coaster=track (#4666)
 - Adding rendering of landuse=flowerbed (#4889)
 
-## [v5.7.0](https://github.com/gravitystorm/openstreetmap-carto/compare/v5.6.2...v5.7.0) - 2023-01-11
+## [v5.7.0](https://github.com/openstreetmap-carto/openstreetmap-carto/compare/v5.6.2...v5.7.0) - 2023-01-11
 ### Changes
 - Unpaved roads are now indicated on the map (#3399)
 - Country label placement improved, particularly for countries in the north (#4616)
@@ -54,15 +54,15 @@
 - Ordering fixes for piers (#4703)
 - Numerous CI improvements
 
-## [v5.6.2](https://github.com/gravitystorm/openstreetmap-carto/compare/v5.6.1...v5.6.2) - 2022-11-10
+## [v5.6.2](https://github.com/openstreetmap-carto/openstreetmap-carto/compare/v5.6.1...v5.6.2) - 2022-11-10
 ### Changes
 - Locally installed fonts fixed (#4672)
 
-## [v5.6.1](https://github.com/gravitystorm/openstreetmap-carto/compare/v5.6.0...v5.6.1) - 2022-08-12
+## [v5.6.1](https://github.com/openstreetmap-carto/openstreetmap-carto/compare/v5.6.0...v5.6.1) - 2022-08-12
 ### Changes
 - Rendering of water areas on zooms 0 to 4 fixed (#4640)
 
-## [v5.6.0](https://github.com/gravitystorm/openstreetmap-carto/compare/v5.5.1...v5.6.0) - 2022-08-03
+## [v5.6.0](https://github.com/openstreetmap-carto/openstreetmap-carto/compare/v5.5.1...v5.6.0) - 2022-08-03
 ### Major Changes
 - The style now uses locally installed fonts, using `scripts/get-fonts.sh` to download the fonts.
 
@@ -75,11 +75,11 @@
 - Add parcel lockers (#4512)
 - Render name labels of bays and straights from z14 only, and lakes from z5 (#3750)
 
-## [v5.5.1](https://github.com/gravitystorm/openstreetmap-carto/compare/v5.5.0...v5.5.1) - 2022-07-13
+## [v5.5.1](https://github.com/openstreetmap-carto/openstreetmap-carto/compare/v5.5.0...v5.5.1) - 2022-07-13
 ### Changes
 - Fix unintentional colour change of gates
 
-## [v5.5.0](https://github.com/gravitystorm/openstreetmap-carto/compare/v5.4.0...v5.5.0) - 2022-07-09
+## [v5.5.0](https://github.com/openstreetmap-carto/openstreetmap-carto/compare/v5.4.0...v5.5.0) - 2022-07-09
 ### Changes
 - Fixed colour mismatch of car repair shop icon and text (#4535)
 - Cleaned up SVG files to better align with Mapnik requirements (#4457)
@@ -88,7 +88,7 @@
 - Render mountain passes (#4121)
 - Don't use a cross symbol for more Christian denominations that don't use a cross (#4587)
 
-## [v5.4.0](https://github.com/gravitystorm/openstreetmap-carto/compare/v5.3.1...v5.4.0) - 2021-09-22
+## [v5.4.0](https://github.com/openstreetmap-carto/openstreetmap-carto/compare/v5.3.1...v5.4.0) - 2021-09-22
 ### Changes
 - Added a new `planet_osm_line_label` index (#4381)
 - Updated Docker development setup to use offical PostGIS images (#4294)
@@ -102,12 +102,12 @@
 - Switched the Natural Earth URL to point at its new location (#4466)
 - Added more logging to the external data loading script (#4472)
 
-## [v5.3.1](https://github.com/gravitystorm/openstreetmap-carto/compare/v5.3.0...v5.3.1) - 2021-02-04
+## [v5.3.1](https://github.com/openstreetmap-carto/openstreetmap-carto/compare/v5.3.0...v5.3.1) - 2021-02-04
 ### Changes
 - Natural Earth URL changed to directly point at the NACIS CDN (#4306)
 - Added an option to the external data loader to grant SELECT permissions on the tables (#4307)
 
-## [v5.3.0](https://github.com/gravitystorm/openstreetmap-carto/compare/v5.2.0...v5.3.0) - 2021-01-28
+## [v5.3.0](https://github.com/openstreetmap-carto/openstreetmap-carto/compare/v5.2.0...v5.3.0) - 2021-01-28
 
 ### Major Changes
 - External shapefiles for coastline and other data are now loaded into the database with a provided script. (#4092)
@@ -118,7 +118,7 @@
 - Mini-roundabouts are rendered like a turning circle (#4218)
 - There is a new partial index for waterways
 
-## [v5.2.0](https://github.com/gravitystorm/openstreetmap-carto/compare/v5.1.0...v5.2.0) - 2020-05-8
+## [v5.2.0](https://github.com/openstreetmap-carto/openstreetmap-carto/compare/v5.1.0...v5.2.0) - 2020-05-8
 
 ### Changes
 - Add rendering for man_made=goods_conveyor (#4102)
@@ -132,7 +132,7 @@
 - Move aerialways and amenity-line layers text labels to text-line layer (#4107)
 - Fix python3 installation for Docker (#4125)
 
-## [v5.1.0](https://github.com/gravitystorm/openstreetmap-carto/compare/v5.0.0...v5.1.0) - 2020-04-10
+## [v5.1.0](https://github.com/openstreetmap-carto/openstreetmap-carto/compare/v5.0.0...v5.1.0) - 2020-04-10
 
 ### Changes
 - Remove way_area filtering for low zoom water (#4060)
@@ -152,7 +152,7 @@
 - Update Dockerfile keyserver URL for osmadmins PPA (#4079)
 - Code clean-ups (#4080, #4081, #4083, #4099)
 
-## [v5.0.0](https://github.com/gravitystorm/openstreetmap-carto/compare/v4.25.0...v5.0.0) - 2020-03-18
+## [v5.0.0](https://github.com/openstreetmap-carto/openstreetmap-carto/compare/v4.25.0...v5.0.0) - 2020-03-18
 
 ### Major changes
 - Update Lua tag transforms. (#4032)
@@ -167,7 +167,7 @@
 - Reduced landcover fading at mid-low zoom levels (#3952)
 - Update scripts to use Python3 (#4062, #4029, #4033)
 
-## [v4.25.0](https://github.com/gravitystorm/openstreetmap-carto/compare/v4.24.1...v4.25.0) - 2020-02-01
+## [v4.25.0](https://github.com/openstreetmap-carto/openstreetmap-carto/compare/v4.24.1...v4.25.0) - 2020-02-01
 ### Changes
 - Remove rendering of barrier=embankment (#4010)
 
@@ -202,11 +202,11 @@
 - Remove name from SQL select when unused (#3947)
 - Combine line-barriers and area-barriers layers into one
 
-## [v4.24.1](https://github.com/gravitystorm/openstreetmap-carto/compare/v4.24.0...v4.24.1) - 2019-10-28
+## [v4.24.1](https://github.com/openstreetmap-carto/openstreetmap-carto/compare/v4.24.0...v4.24.1) - 2019-10-28
 ### Changes
 - Revert PR #3930 which added river-color (#3955)
 
-## [v4.24.0](https://github.com/gravitystorm/openstreetmap-carto/compare/v4.23.0...v4.24.0) - 2019-10-25
+## [v4.24.0](https://github.com/openstreetmap-carto/openstreetmap-carto/compare/v4.23.0...v4.24.0) - 2019-10-25
 ### Changes
 - Create darker river-color for river & canal areas and waterway lines (#3930)
 
@@ -250,7 +250,7 @@
     Document inner line rendering, update docker documentation
     Clean-up text-placement / marker-placement, remove natural=marsh
 
-## [v4.23.0](https://github.com/gravitystorm/openstreetmap-carto/compare/v4.22.0...v4.23.0) - 2019-9-20
+## [v4.23.0](https://github.com/openstreetmap-carto/openstreetmap-carto/compare/v4.22.0...v4.23.0) - 2019-9-20
 ### Changes
 
 - Combine low priority layers using ST_PointOnSurface (#3874)
@@ -264,7 +264,7 @@
 - Add fill colors for `wetland=mangrove/saltmarsh/reedbed` (#3807)
     Also adds salt dots pattern for `wetland=saltmarsh`
 
-## [v4.22.0](https://github.com/gravitystorm/openstreetmap-carto/compare/v4.21.0...v4.22.0) - 2019-08-27
+## [v4.22.0](https://github.com/openstreetmap-carto/openstreetmap-carto/compare/v4.21.0...v4.22.0) - 2019-08-27
 ### Changes
 
 - Shop label fixes and use ST_PointOnSurface for building label placement (#3781)
@@ -304,7 +304,7 @@
 
 - Code cleanups to increase reuse and improve consistency (#3735, #3760, #3771, #3773, #3774)
 
-## [v4.21.0](https://github.com/gravitystorm/openstreetmap-carto/compare/v4.20.0...v4.21.0) - 2019-05-01
+## [v4.21.0](https://github.com/openstreetmap-carto/openstreetmap-carto/compare/v4.20.0...v4.21.0) - 2019-05-01
 ## Major changes
 - Removed unused `world_boundaries-spherical.tgz` file from scripts
 
@@ -345,7 +345,7 @@
 - Only render ferry lines from ways, not relations
 - Improved developer internal documentation
 
-## [v4.20.0](https://github.com/gravitystorm/openstreetmap-carto/compare/v4.19.0...v4.20.0) - 2019-02-15
+## [v4.20.0](https://github.com/openstreetmap-carto/openstreetmap-carto/compare/v4.19.0...v4.20.0) - 2019-02-15
 ## Changes
 - Progressive lightening major buildings fill and outline (#3659)
 - Adding rendering for aboriginal areas (#3521)
@@ -359,7 +359,7 @@
 - Reducing saturation of pitch outline color (#3658)
 - roads-text-ref-low-zoom: remove unused SQL CASE conditions in ORDER BY (#3680)
 
-## [v4.19.0](https://github.com/gravitystorm/openstreetmap-carto/compare/v4.18.0...v4.19.0) - 2019-01-18
+## [v4.19.0](https://github.com/openstreetmap-carto/openstreetmap-carto/compare/v4.18.0...v4.19.0) - 2019-01-18
 ## Changes
 - Adding rendering for boundary=protected_area (#3509)
 - Nature reserve boundaries revision (#3574)
@@ -388,7 +388,7 @@
 - Reverting lowzoom nobuilding test change (#3622)
 - Removing trailing whitespace (#3637)
 
-## [v4.18.0](https://github.com/gravitystorm/openstreetmap-carto/compare/v4.17.0...v4.18.0) - 2018-12-21
+## [v4.18.0](https://github.com/openstreetmap-carto/openstreetmap-carto/compare/v4.17.0...v4.18.0) - 2018-12-21
 ## Changes
 - Adding rendering for healthcare tag scheme
   - Changing hospital icon
@@ -411,7 +411,7 @@
 - Changing man_made gray and text color, making text-dy uniform
 - Small documentation and code fixes
 
-## [v4.17.0](https://github.com/gravitystorm/openstreetmap-carto/compare/v4.16.0...v4.17.0) - 2018-11-23
+## [v4.17.0](https://github.com/openstreetmap-carto/openstreetmap-carto/compare/v4.16.0...v4.17.0) - 2018-11-23
 ## Changes
 - Showing natural areas from z5
 - Cleaning up medium zoom rendering, including:
@@ -437,7 +437,7 @@
 - Moving danger_area into landuse-overlay
 - Buildings code rewrite
 
-## [v4.16.0](https://github.com/gravitystorm/openstreetmap-carto/compare/v4.15.0...v4.16.0) - 2018-10-19
+## [v4.16.0](https://github.com/openstreetmap-carto/openstreetmap-carto/compare/v4.15.0...v4.16.0) - 2018-10-19
 ## Changes
 - Changing societal amenities color to less intensive
 - Adding rendering for natural=strait
@@ -452,7 +452,7 @@
 - Ordering amenity_lines by layer
 - Small documentation and code fixes
 
-## [v4.15.0](https://github.com/gravitystorm/openstreetmap-carto/compare/v4.14.0...v4.15.0) - 2018-09-21
+## [v4.15.0](https://github.com/openstreetmap-carto/openstreetmap-carto/compare/v4.14.0...v4.15.0) - 2018-09-21
 ## Changes
 - Changing gastronomy objects color to orange (affects restaurant, fast_food, ice_cream, food_court, bar, cafe, nightclub, pub and biergarten)
 - Changing farmland and societal amenities (like school, hospital etc.) colors to fit better into the overall color systematic
@@ -468,7 +468,7 @@
 - Fixing missing country labels on z4 (affects Canada, Russia and Greenland)
 - Small code and icon fixes
 
-## [v4.14.0](https://github.com/gravitystorm/openstreetmap-carto/compare/v4.13.0...v4.14.0) - 2018-08-17
+## [v4.14.0](https://github.com/openstreetmap-carto/openstreetmap-carto/compare/v4.13.0...v4.14.0) - 2018-08-17
 ## Changes
 - Added text-repeat-distance for waterways
 - Added text-repeat-distance for railways
@@ -483,7 +483,7 @@
 - Updated Docker images definitions
 - Small documentation updates
 
-## [v4.13.0](https://github.com/gravitystorm/openstreetmap-carto/compare/v4.12.0...v4.13.0) - 2018-07-23
+## [v4.13.0](https://github.com/openstreetmap-carto/openstreetmap-carto/compare/v4.12.0...v4.13.0) - 2018-07-23
 ## Changes
 - Increased shield distances on roads
 - Added icon for shop=ticket
@@ -497,11 +497,11 @@
 - Updated shop=department_store icon
 - Small documentation and code fixes
 
-## [v4.12.1](https://github.com/gravitystorm/openstreetmap-carto/compare/v4.12.0...v4.12.1) - 2018-06-29
+## [v4.12.1](https://github.com/openstreetmap-carto/openstreetmap-carto/compare/v4.12.0...v4.12.1) - 2018-06-29
 ## Changes
 - Stop rendering "surface" tag, which was causing breaking performance issues
 
-## [v4.12.0](https://github.com/gravitystorm/openstreetmap-carto/compare/v4.11.0...v4.12.0) - 2018-06-22
+## [v4.12.0](https://github.com/openstreetmap-carto/openstreetmap-carto/compare/v4.11.0...v4.12.0) - 2018-06-22
 ### Major changes
 - Dropped subpixel accuracy for areas, which includes tuning some database indexes. When deployed, it might speed up reading data.
 
@@ -520,7 +520,7 @@
 - Added rendering of overground power=cable like power=line
 - Small documentation and code fixes
 
-## [v4.11.0](https://github.com/gravitystorm/openstreetmap-carto/compare/v4.10.0...v4.11.0) - 2018-05-11
+## [v4.11.0](https://github.com/openstreetmap-carto/openstreetmap-carto/compare/v4.10.0...v4.11.0) - 2018-05-11
 ### Changes
 - Fixed office/amenity conflict
 - Brightened built-up areas on z12
@@ -536,7 +536,7 @@
 - Hiding railway=platform with location=underground, tunnels and covered=yes
 - Small documentation and code fixes
 
-## [v4.10.0](https://github.com/gravitystorm/openstreetmap-carto/compare/v4.9.0...v4.10.0) - 2018-04-20
+## [v4.10.0](https://github.com/openstreetmap-carto/openstreetmap-carto/compare/v4.9.0...v4.10.0) - 2018-04-20
 ### Changes
 - Adding rendering for historic=castle and historic=manor
 - Adding rendering office=* as dots + names
@@ -554,7 +554,7 @@
 - Dropping waterway=derelict_canal rendering
 - Small documentation and code fixes
 
-## [v4.9.0](https://github.com/gravitystorm/openstreetmap-carto/compare/v4.8.0...v4.9.0) - 2018-03-23
+## [v4.9.0](https://github.com/openstreetmap-carto/openstreetmap-carto/compare/v4.8.0...v4.9.0) - 2018-03-23
 ### Major changes
 - A bug where closed ways with natural=cliff or natural=tree_row were not rendering has been fixed. This required fixing a transform bug. The fix will apply to all objects when they are created in OSM, but there is no migration for existing databases. Deployments will have to decide if the effects are serious enough to require them to reload the database.
 
@@ -576,7 +576,7 @@
 - Changing label colour of private parking
 - Small documentation and code fixes
 
-## [v4.8.0](https://github.com/gravitystorm/openstreetmap-carto/compare/v4.7.0...v4.8.0) - 2018-02-23
+## [v4.8.0](https://github.com/openstreetmap-carto/openstreetmap-carto/compare/v4.7.0...v4.8.0) - 2018-02-23
 ### Changes
 - Made military area rendering less prominent
 - Adding rendering for historic=wayside_shrine
@@ -591,11 +591,11 @@
 - Fix operator precedence for hstore queries
 - Small documentation fixes
 
-## [v4.7.1](https://github.com/gravitystorm/openstreetmap-carto/compare/v4.7.0...v4.7.1) - 2018-01-31
+## [v4.7.1](https://github.com/openstreetmap-carto/openstreetmap-carto/compare/v4.7.0...v4.7.1) - 2018-01-31
 ### Changes
 - Fix rendering bug (#3043) with access=yes|permissive tags
 
-## [v4.7.0](https://github.com/gravitystorm/openstreetmap-carto/compare/v4.6.0...v4.7.0) - 2018-01-26
+## [v4.7.0](https://github.com/openstreetmap-carto/openstreetmap-carto/compare/v4.6.0...v4.7.0) - 2018-01-26
 ### Changes
 - Adding icon for tourism=apartment
 - Adding icon for leisure=firepit
@@ -609,7 +609,7 @@
 - Fine-tuning of bridge labels
 - Documentation changes and updates
 
-## [v4.6.0](https://github.com/gravitystorm/openstreetmap-carto/compare/v4.5.0...v4.6.0) - 2017-12-17
+## [v4.6.0](https://github.com/openstreetmap-carto/openstreetmap-carto/compare/v4.5.0...v4.6.0) - 2017-12-17
 ### Changes
 - Change sports_centre and stadium color to light green
 - Change shades of green for landuse/leisure=recreation_ground and garden
@@ -622,7 +622,7 @@
 - Do not render bicycle/motorbike parking icons to z17
 - Render community_centre and social_facility areas in light yellow
 
-## [v4.5.0](https://github.com/gravitystorm/openstreetmap-carto/compare/v4.4.0...v4.5.0) - 2017-11-17
+## [v4.5.0](https://github.com/openstreetmap-carto/openstreetmap-carto/compare/v4.4.0...v4.5.0) - 2017-11-17
 ### Major changes
 - Cleaning up low zoom levels (z5-z7):
   - Rendering roads from z6 instead of z5
@@ -638,7 +638,7 @@
 - Changing windmill color from amenity brown to man_made gray
 - Some other documentation and code changes
 
-## [v4.4.0](https://github.com/gravitystorm/openstreetmap-carto/compare/v4.3.0...v4.4.0) - 2017-10-20
+## [v4.4.0](https://github.com/openstreetmap-carto/openstreetmap-carto/compare/v4.3.0...v4.4.0) - 2017-10-20
 ### Major changes
 - Rendering inland water areas and labels from z0
 - Rendering island and islet labels earlier
@@ -657,7 +657,7 @@
 - Creating amenity POI categories
 - Some other documentation and code cleaning
 
-## [v4.3.0](https://github.com/gravitystorm/openstreetmap-carto/compare/v4.2.0...v4.3.0) - 2017-09-16
+## [v4.3.0](https://github.com/openstreetmap-carto/openstreetmap-carto/compare/v4.2.0...v4.3.0) - 2017-09-16
 ### Changes
 - Moving ford and emergency phone to a new tagging scheme
 - Moving natural=tree to higher zoom level (z18+)
@@ -671,7 +671,7 @@
 - Hide small theme parks and zoos
 - Use solid lines for admin borders at low zooms
 
-## [v4.2.0](https://github.com/gravitystorm/openstreetmap-carto/compare/v4.1.0...v4.2.0) - 2017-08-25
+## [v4.2.0](https://github.com/openstreetmap-carto/openstreetmap-carto/compare/v4.1.0...v4.2.0) - 2017-08-25
 ### Major changes
 - Water color and default water text color are changed to be more visible
 - Medium zoom level (z8-z12) rework:
@@ -692,7 +692,7 @@
 - Different patterns and all remaining icons moved to SVG
 - Some documentation and code cleaning
 
-## [v4.1.0](https://github.com/gravitystorm/openstreetmap-carto/compare/v4.0.0...v4.1.0) - 2017-07-30
+## [v4.1.0](https://github.com/openstreetmap-carto/openstreetmap-carto/compare/v4.0.0...v4.1.0) - 2017-07-30
 ### Changes
 - Malls are no longer rendered as dots (bug fix)
 - Special icon for shop=tyres
@@ -702,7 +702,7 @@
 - New version of script get-shapefiles.py
 - Small code and documentation improvements
 
-## [v4.0.0](https://github.com/gravitystorm/openstreetmap-carto/compare/v3.3.0...v4.0.0) - 2017-05-22
+## [v4.0.0](https://github.com/openstreetmap-carto/openstreetmap-carto/compare/v3.3.0...v4.0.0) - 2017-05-22
 ### Major changes
 - The database schema has changed from the osm2pgsql default. This requires a database reload.
 - osm2pgsql Lua transforms are used for some preprocessing. This requires osm2pgsql built with lua support, which most versions will have.
@@ -713,18 +713,18 @@
 - Fixes to various problems determining if an object is an area or not
 - CartoCSS 0.18.0 is required
 
-## [v3.3.1](https://github.com/gravitystorm/openstreetmap-carto/compare/v3.3.0...v3.3.1) - 2017-05-22
+## [v3.3.1](https://github.com/openstreetmap-carto/openstreetmap-carto/compare/v3.3.0...v3.3.1) - 2017-05-22
 ### Changes
 - Fix a regression in intermittent waterways
 
-## [v3.3.0](https://github.com/gravitystorm/openstreetmap-carto/compare/v3.2.0...v3.3.0) - 2017-05-10
+## [v3.3.0](https://github.com/openstreetmap-carto/openstreetmap-carto/compare/v3.2.0...v3.3.0) - 2017-05-10
 ### Changes
 - Most shops are now rendered as dots z17 to deal with overcrowding
 - Font selection is moved to its own file to make customization easier, and to make it easier for other styles to reuse our font work
 - Rare CJK characters outside the BMP should now render better
 - Waterway tunnels in forests and lakes are clearer
 
-## [v3.2.0](https://github.com/gravitystorm/openstreetmap-carto/compare/v3.1.0...v3.2.0) - 2017-04-17
+## [v3.2.0](https://github.com/openstreetmap-carto/openstreetmap-carto/compare/v3.1.0...v3.2.0) - 2017-04-17
 ### Changes
 - Render aeroway terminal buildings like other buildings
 - Removed rendering of `landuse=farm`
@@ -734,7 +734,7 @@
 - Removed rendering of `waterway=canal` as an area
 - Take text properties of roads under construction from the type of road they will be
 
-## [v3.1.0](https://github.com/gravitystorm/openstreetmap-carto/compare/v3.0.1...v3.1.0) - 2017-01-28
+## [v3.1.0](https://github.com/openstreetmap-carto/openstreetmap-carto/compare/v3.0.1...v3.1.0) - 2017-01-28
 ### Changes
 - Added coffee shop rendering
 - Added health clinic rendering
@@ -742,11 +742,11 @@
 - Road shield rendering improvements
 - Internal code cleanups
 
-## [v3.0.1](https://github.com/gravitystorm/openstreetmap-carto/compare/v3.0.0...v3.0.1) - 2016-12-22
+## [v3.0.1](https://github.com/openstreetmap-carto/openstreetmap-carto/compare/v3.0.0...v3.0.1) - 2016-12-22
 ### Changes
 - Revert of junction area changes which were preventing index usage
 
-## [v3.0.0](https://github.com/gravitystorm/openstreetmap-carto/compare/v2.45.1...v3.0.0) - 2016-12-21
+## [v3.0.0](https://github.com/openstreetmap-carto/openstreetmap-carto/compare/v2.45.1...v3.0.0) - 2016-12-21
 ### Major Changes
 - Mapnik 3 is now required
 - CartoCSS 0.16.x is now required
@@ -759,11 +759,11 @@
 - Wilderness huts rendered
 - "ref" (reference) text of subway entrances rendered
 
-## [v2.45.1](https://github.com/gravitystorm/openstreetmap-carto/compare/v2.45.0...v2.45.1) - 2016-12-03
+## [v2.45.1](https://github.com/openstreetmap-carto/openstreetmap-carto/compare/v2.45.0...v2.45.1) - 2016-12-03
 ### Changes
 - Bug fix for tobacco shop and memorial icons
 
-## [v2.45.0](https://github.com/gravitystorm/openstreetmap-carto/compare/v2.44.1...v2.45.0) - 2016-11-28
+## [v2.45.0](https://github.com/openstreetmap-carto/openstreetmap-carto/compare/v2.44.1...v2.45.0) - 2016-11-28
 ### Changes
 - Render all shops without a specific icon as a dot, not just a whitelist
 - Scrub pattern change to random
@@ -774,12 +774,12 @@
 - Icons general code cleaning
 - Various bug fixes
 
-## [v2.44.1](https://github.com/gravitystorm/openstreetmap-carto/compare/v2.44.0...v2.44.1) - 2016-10-12
+## [v2.44.1](https://github.com/openstreetmap-carto/openstreetmap-carto/compare/v2.44.0...v2.44.1) - 2016-10-12
 ### Changes
 - Bug fixes to low zoom place rendering changes
 - Documentation improvements for fonts and non-latin rendering
 
-## [v2.44.0](https://github.com/gravitystorm/openstreetmap-carto/compare/v2.43.0...v2.44.0) - 2016-09-26
+## [v2.44.0](https://github.com/openstreetmap-carto/openstreetmap-carto/compare/v2.43.0...v2.44.0) - 2016-09-26
 ### Major Changes
 - Rendering of restricted access roads and paths significantly changed
 - Changed to use Noto fonts for all languages
@@ -794,7 +794,7 @@
 - Fixed oneway arrows on unnamed roads
 - Render both house name and number if address has both
 
-## [v2.43.0](https://github.com/gravitystorm/openstreetmap-carto/compare/v2.42.0...v2.43.0) - 2016-09-05
+## [v2.43.0](https://github.com/openstreetmap-carto/openstreetmap-carto/compare/v2.42.0...v2.43.0) - 2016-09-05
 ### Changes
 - Adjust alotments pattern
 - Whitespace cleanups of code
@@ -802,7 +802,7 @@
 - Increase font size of addresses
 - Fix combination of long names and oneway arrows
 
-## [v2.42.0](https://github.com/gravitystorm/openstreetmap-carto/compare/v2.41.0...v2.42.0) - 2016-08-03
+## [v2.42.0](https://github.com/openstreetmap-carto/openstreetmap-carto/compare/v2.41.0...v2.42.0) - 2016-08-03
 ### Changes
 - Add rendering of `amenity=charging_station` and `tourism=artwork`
 - Change icon of `shop=department_store`
@@ -810,7 +810,7 @@
 - Change playground color
 - Various bug fixes
 
-## [v2.41.0](https://github.com/gravitystorm/openstreetmap-carto/compare/v2.40.0...v2.41.0) - 2016-07-13
+## [v2.41.0](https://github.com/openstreetmap-carto/openstreetmap-carto/compare/v2.40.0...v2.41.0) - 2016-07-13
 ### Changes
 - More consistent fonts for POI labels
 - Less saturated stadiums
@@ -823,7 +823,7 @@
 ### New contributors
 - @jdhoek
 
-## [v2.40.0](https://github.com/gravitystorm/openstreetmap-carto/compare/v2.39.0...v2.40.0) - 2016-06-21
+## [v2.40.0](https://github.com/openstreetmap-carto/openstreetmap-carto/compare/v2.39.0...v2.40.0) - 2016-06-21
 ### Changes
 - More consistent size of icon labels (bigger labels in most cases).
 - Changed rendering of power lines on low zoom levels.
@@ -832,12 +832,12 @@
 - Larger labels for place names.
 - Various bug fixes.
 
-## [v2.39.0](https://github.com/gravitystorm/openstreetmap-carto/compare/v2.38.0...v2.39.0) - 2016-03-02
+## [v2.39.0](https://github.com/openstreetmap-carto/openstreetmap-carto/compare/v2.38.0...v2.39.0) - 2016-03-02
 ### Changes
 - Render swing gates
 - More SVG icons
 
-## [v2.38.0](https://github.com/gravitystorm/openstreetmap-carto/compare/v2.37.0...v2.38.0) - 2016-02-17
+## [v2.38.0](https://github.com/openstreetmap-carto/openstreetmap-carto/compare/v2.37.0...v2.38.0) - 2016-02-17
 ### Changes
 - Add rendering for natural=shoal, and natural=reef.
 - Change of rendering of linear barriers: keep rendering of barrier
@@ -852,7 +852,7 @@ all other barrier types.
 rendering for `surface=peeples`
 - Various other bug fixes and minor improvements.
 
-## [v2.37.0](https://github.com/gravitystorm/openstreetmap-carto/compare/v2.36.0...v2.37.0) - 2015-11-30
+## [v2.37.0](https://github.com/openstreetmap-carto/openstreetmap-carto/compare/v2.36.0...v2.37.0) - 2015-11-30
 ### Changes
 - Improved admin boundaries and labels on low zoom levels
 - New farmland colour, making farmland less prominent
@@ -862,7 +862,7 @@ received on this topic. In particular, roads are now rendered slightly
 narrower on z13, z18 and z19.
 - Various other bug fixes and minor improvements.
 
-## [v2.36.0](https://github.com/gravitystorm/openstreetmap-carto/compare/v2.35.0...v2.36.0) - 2015-10-30
+## [v2.36.0](https://github.com/openstreetmap-carto/openstreetmap-carto/compare/v2.35.0...v2.36.0) - 2015-10-30
 ### Major Changes
 Major rewrite of road and railway rendering, as part of Mateusz Konieczny's Google Summer of Code project. See https://blog.openstreetmap.org/2015/10/30/openstreetmap-org-map-changing/
 for more information.
@@ -897,14 +897,14 @@ on low zoomlevels)
   - `shop=bags` (use `shop=bag`)
 - Various other bug fixes and minor improvements.
 
-## [v2.35.0](https://github.com/gravitystorm/openstreetmap-carto/compare/v2.34.0...v2.35.0) - 2015-09-16
+## [v2.35.0](https://github.com/openstreetmap-carto/openstreetmap-carto/compare/v2.34.0...v2.35.0) - 2015-09-16
 ### Changes
 - Add new icon for ford
 - Stop rendering of `landuse=conservation`
 - Restore rendering of `amenity=kindergarten/school/college/university/grave_yard` names
 - Various other bug fixes.
 
-## [v2.34.0](https://github.com/gravitystorm/openstreetmap-carto/compare/v2.33.0...v2.34.0) - 2015-08-28
+## [v2.34.0](https://github.com/openstreetmap-carto/openstreetmap-carto/compare/v2.33.0...v2.34.0) - 2015-08-28
 ### Changes
 Changes include
 
@@ -929,7 +929,7 @@ and there are now three classes: paved, unpaved and unknown surface
 
 - Mapnik 3 preparations are now finished. The style now supports Mapnik 3. Most of the work was done on the Mapnik side.
 
-## [v2.33.0](https://github.com/gravitystorm/openstreetmap-carto/compare/v2.32.0...v2.33.0) - 2015-08-14
+## [v2.33.0](https://github.com/openstreetmap-carto/openstreetmap-carto/compare/v2.32.0...v2.33.0) - 2015-08-14
 ### Major changes
 - A randomized symbology for forests for `natural=wood` and `landuse=forest`
 
@@ -956,7 +956,7 @@ and there are now three classes: paved, unpaved and unknown surface
 
 - Power area colour adjusted
 
-## [v2.32.0](https://github.com/gravitystorm/openstreetmap-carto/compare/v2.31.0...v2.32.0) - 2015-07-31
+## [v2.32.0](https://github.com/openstreetmap-carto/openstreetmap-carto/compare/v2.31.0...v2.32.0) - 2015-07-31
 # New files
 
 Shapefiles are now used for Antartic ice sheets

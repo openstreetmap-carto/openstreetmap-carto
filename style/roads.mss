@@ -1185,7 +1185,7 @@ tertiary is rendered from z10 and is not included in osm_planet_roads. */
     /*
      * The highway_construction rules below are quite sensitive to re-ordering, since the instances end up swapping round
      * (and then the dashes appear below the fills). See:
-     * https://github.com/gravitystorm/openstreetmap-carto/issues/23
+     * https://github.com/openstreetmap-carto/openstreetmap-carto/issues/23
      * https://github.com/mapbox/carto/issues/235
      * https://github.com/mapbox/carto/issues/237
      */
@@ -4356,7 +4356,7 @@ tertiary is rendered from z10 and is not included in osm_planet_roads. */
 
   /*
   Other minor railway styles. For service rails, see:
-  https://github.com/gravitystorm/openstreetmap-carto/pull/2687
+  https://github.com/openstreetmap-carto/openstreetmap-carto/pull/2687
   */
   [railway = 'miniature'],
   [railway = 'disused'],

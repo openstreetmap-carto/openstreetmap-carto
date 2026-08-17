@@ -15,7 +15,7 @@ convert -depth 8 -size 512x512 xc:"$SYMBOL" \( pattern.png -negate \) -set color
 convert -depth 8 -size 512x512 xc:"$WETLAND" \( wetland_pattern_bkg.png -negate \) -set colorspace RGB -alpha Off -compose CopyOpacity -composite +compose pattern_col.png -compose Over -composite wetland_pattern.png
 ```
 
-In some cases, which has not been elucidated (https://github.com/gravitystorm/openstreetmap-carto/pull/3051), the SVG conversions produce files with erroneous sizes. In this case, the following command sequence may work, by using Inkscape to rasterize the SVGs:
+In some cases, which has not been elucidated (https://github.com/openstreetmap-carto/openstreetmap-carto/pull/3051), the SVG conversions produce files with erroneous sizes. In this case, the following command sequence may work, by using Inkscape to rasterize the SVGs:
 
 ```
 inkscape -z --export-png=swamp.png --export-dpi=96 --export-background=white swamp.svg
