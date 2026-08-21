@@ -336,6 +336,13 @@
 
 @railway-text-repeat-distance: 200;
 
+// Ensures that the 4 attachments in the tunnels layer are always correctly ordered 
+// (Equivalent for bridges layer is in water.mss)
+#tunnels[feature = null]::halo { line: none; }
+#tunnels[feature = null]::casing { line: none; }
+#tunnels[feature = null]::bridges_and_tunnels_background { line: none; }
+#tunnels[feature = null]::fill { line: none; }
+
 #roads-casing, #bridges, #tunnels {
   ::casing {
     [zoom >= 12] {

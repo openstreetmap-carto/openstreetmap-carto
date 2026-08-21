@@ -214,6 +214,7 @@ Layer:
             CASE WHEN int_bridge_tunnel = 'tunnel' THEN 1 ELSE 0 END  -- render tunnels after normal waterways (bridges are in later layer)
         ) AS water_lines
     properties:
+      cache-features: true
       minzoom: 12
   - id: water-areas
     geometry: polygon
