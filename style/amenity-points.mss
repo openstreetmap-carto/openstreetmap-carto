@@ -618,6 +618,18 @@
     marker-clip: false;
   }
 
+  [feature = 'healthcare_laboratory'][zoom >= 17] {
+    [zoom >= 17][zoom < 18] {
+      marker-width: 4;
+      marker-line-width: 0;
+    }
+    [zoom >= 18] {
+      marker-file: url('symbols/amenity/laboratory.svg');
+    }
+    marker-fill: @health-color;
+    marker-clip: false;
+  }
+
   [feature = 'amenity_place_of_worship'][zoom >= 16] {
     marker-file: url('symbols/amenity/place_of_worship.svg');
     marker-fill: @religious-icon;
