@@ -167,10 +167,21 @@
     }
   }
 
-  [feature = 'amenity_bus_station'][zoom >= 16] {
-    marker-file: url('symbols/amenity/bus_station.svg');
-    // use colors from SVG to allow for white background
-    marker-clip: false;
+  [feature = 'amenity_bus_station'] {
+    [zoom >= 16] {
+      marker-file: url('symbols/amenity/bus_station.svg');
+      // use colors from SVG to allow for white background
+      marker-clip: false;
+    }
+    [zoom < 16][zoom >=13] {
+      marker-file: url('symbols/square.svg');
+      marker-fill: @transportation-icon;
+      marker-clip: false;
+      marker-width: 4;
+      [zoom >= 15] {
+        marker-width: 6;
+      }
+    }
   }
 
   [feature = 'amenity_taxi'][zoom >= 17] {
