@@ -98,6 +98,7 @@
     [way_pixels >= 64] { polygon-gamma: 0.3;  }
   }
 
+  [feature = 'leisure_resort'],
   [feature = 'tourism_camp_site'],
   [feature = 'tourism_caravan_site'],
   [feature = 'tourism_picnic_site'] {
