@@ -159,6 +159,7 @@ instead of
 ```
 
 ## SQL style guidelines
+
 Because SQL within YAML will not generally be syntax highlighted, indentation and caps are particularly important.
 
 * SQL keywords in caps, as in PostgreSQL documentation
@@ -174,6 +175,22 @@ Because SQL within YAML will not generally be syntax highlighted, indentation an
 * When extracting tags from hstore, use `tags->'foo'`, not `tags -> 'foo'`, and only add parentheses if needed for order of operations
 * Hstore queries tested for NULL should be enclosed in parentheses, e.g. `(tags->'foo') IS NULL`.
 * To check if a tag is in the tags hstore, use `tags @> 'foo=>bar'`, relying on automatic conversion from `text` to `hstore`.
+
+Use a consistent column order in layer queries to avoid unnecessary work when
+PostgreSQL sorts the results:
+
+* Put columns used by `ORDER BY` at the beginning of the `SELECT` list.
+* Put the geometry (`way`) at the end of the `SELECT` list, including in queries without `ORDER BY`.
+* Select expressions used for sorting as named columns, and use those names in `ORDER BY`.
+
+Among the sort columns, prefer placing non-null, fixed-width columns before nullable
+or variable-width columns. Their order in `SELECT` need not match their order in
+`ORDER BY`; leave the intended sorting precedence unchanged.
+
+This lets PostgreSQL access sort keys without repeatedly stepping over the geometry.
+Mapnik selects only the columns needed by the style, so columns added solely for
+sorting are not sent to Mapnik. See [#5297](https://github.com/openstreetmap-carto/openstreetmap-carto/pull/5297)
+for the explanation and measurements.
 
 ## Map icon guidelines
 
