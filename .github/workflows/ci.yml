@@ -36,6 +36,11 @@ jobs:
         diff -qu temp symbols/unpaved
     - name: Check for unsupported class usage
       run: '! grep "class:" project.mml > /dev/null'
+    - name: Check landcover pattern generation
+      run: |
+        python3 -m pip install numpy 'shapely>=2.0' svgpathtools
+        python3 scripts/test_landcover_patterns.py
+        scripts/generate_landcover_patterns.py --check
     - name: Validate with CartoCSS
       run: 'carto project.mml --api 3.0.22 --quiet > /dev/null'
     - name: Check that index script works without errors
