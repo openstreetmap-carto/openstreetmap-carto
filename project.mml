@@ -706,6 +706,7 @@ Layer:
             service,
             link,
             preserved,
+            int_crossing_island,
             COALESCE(layer,0) AS layernotnull
           FROM ( -- subselect that contains both roads and rail/aero
             SELECT
@@ -724,11 +725,14 @@ Layer:
                   ELSE 'no'
                 END AS link,
                 NULL AS preserved,
+                NULL AS int_crossing_island,
                 layer,
                 osm_id,
                 z_order
               FROM planet_osm_line
-              WHERE (tunnel IS NULL OR NOT tunnel IN ('yes', 'building_passage', 'avalanche_protector'))
+              WHERE way && !bbox! -- necessary because the crossing select below uses !bbox!,
+                                  -- which stops mapnik adding the bounding box filter itself
+                AND (tunnel IS NULL OR NOT tunnel IN ('yes', 'building_passage', 'avalanche_protector'))
                 AND (covered IS NULL OR NOT covered = 'yes')
                 AND (bridge IS NULL OR NOT bridge IN ('yes', 'boardwalk', 'cantilever', 'covered', 'low_water_crossing', 'movable', 'trestle', 'viaduct'))
                 AND highway IS NOT NULL -- end of road select
@@ -750,19 +754,170 @@ Layer:
                   WHEN tags->'railway:preserved' = 'yes' THEN 'yes'
                   ELSE 'no'
                 END AS preserved,
+                NULL AS int_crossing_island,
                 layer,
                 osm_id,
                 z_order
               FROM planet_osm_line
-              WHERE (tunnel IS NULL OR NOT tunnel IN ('yes', 'building_passage', 'avalanche_protector'))
+              WHERE way && !bbox! -- see the road select above
+                AND (tunnel IS NULL OR NOT tunnel IN ('yes', 'building_passage', 'avalanche_protector'))
                 AND (covered IS NULL OR NOT covered = 'yes' OR railway IN ('platform'))
                 AND (bridge IS NULL OR NOT bridge IN ('yes', 'boardwalk', 'cantilever', 'covered', 'low_water_crossing', 'movable', 'trestle', 'viaduct'))
                 AND (railway NOT IN ('platform') OR (tags->'location' NOT IN ('underground')) OR (tags->'location') IS NULL)
                 AND railway IS NOT NULL -- end of rail select
+            UNION ALL
+            -- Marking areas for pedestrian crossings mapped as highway=crossing nodes.
+            --
+            -- Each row is a short segment of the road being crossed, centred on the
+            -- crossing node and running along the road, on which the bars are drawn.
+            -- The markings therefore follow the road without depending on the geometry
+            -- of any separately mapped crossing way.
+            --
+            -- The node is matched to the road by exact coordinate equality against the
+            -- road's vertices: a crossing node is a member node of the way, so both
+            -- geometries come from the same OSM node and are identical. That is both
+            -- stricter and much cheaper than a distance join, which cannot use an index
+            -- selectively because road bounding boxes are large compared to any
+            -- sensible search radius.
+            --
+            -- Where a node is the shared end node of two ways one segment is returned
+            -- for each; each is clipped at the node and together they cover the whole
+            -- marking area.
+            SELECT
+                part.way,
+                part.feature,
+                NULL AS tracktype,
+                NULL AS int_surface,
+                NULL AS int_access,
+                NULL AS construction,
+                NULL AS service,
+                'no' AS link,
+                NULL AS preserved,
+                crossings.int_crossing_island,
+                crossings.layernotnull AS layer,
+                crossings.osm_id,
+                crossings.z_order
+              FROM (
+                SELECT
+                    -- where the node is the end of two ways, the two clipped halves are
+                    -- merged into a single line so that the bars are offset around the
+                    -- corner continuously instead of as two pieces that do not meet
+                    ST_LineMerge(ST_Collect(kept.way)) AS way,
+                    ST_LineMerge(ST_Collect(kept.short_way)) AS short_way,
+                    (array_agg(kept.highway ORDER BY kept.z_order DESC, kept.road_id))[1] AS highway,
+                    (array_agg(kept.layernotnull ORDER BY kept.z_order DESC, kept.road_id))[1] AS layernotnull,
+                    max(kept.z_order) AS z_order,
+                    kept.osm_id,
+                    kept.int_crossing_island,
+                    kept.int_tactile_paving
+                  FROM (
+                    SELECT
+                        a.way, a.short_way, a.highway, a.road_id, a.layernotnull, a.z_order, a.osm_id,
+                        a.int_crossing_island, a.int_tactile_paving, a.x, a.y
+                      FROM (
+                        SELECT
+                            segments.*,
+                            -- every direction found at this node, to check them against each other below
+                            array_agg(segments.angle) OVER (PARTITION BY segments.x, segments.y) AS angles
+                          FROM (
+                            SELECT
+                                s.way,
+                                s.short_way,
+                                v.highway,
+                                v.road_id,
+                                c.int_crossing_island,
+                                c.int_tactile_paving,
+                                v.layernotnull,
+                                c.osm_id,
+                                v.z_order,
+                                v.x,
+                                v.y,
+                                (degrees(ST_Azimuth(ST_StartPoint(s.way), ST_EndPoint(s.way)))::numeric % 180.0) AS angle
+                              FROM (
+                                SELECT
+                                    osm_id,
+                                    way,
+                                    CASE WHEN tags->'crossing:island' = 'yes' THEN 'yes' ELSE 'no' END AS int_crossing_island,
+                                    CASE WHEN tags->'tactile_paving' = 'yes' THEN 'yes' ELSE 'no' END AS int_tactile_paving
+                                  FROM planet_osm_point
+                                  WHERE way && !bbox!
+                                    AND Z(!scale_denominator!) >= 18
+                                    AND highway = 'crossing'
+                                    -- marked, preferring crossing:markings over the crossing key
+                                    AND CASE
+                                          WHEN tags->'crossing:markings' IS NOT NULL THEN tags->'crossing:markings' <> 'no'
+                                          ELSE tags->'crossing' IN ('marked', 'zebra', 'uncontrolled', 'traffic_signals')
+                                        END
+                              ) AS c
+                              JOIN (
+                                SELECT r.way, r.highway, r.layernotnull, r.z_order, r.osm_id AS road_id,
+                                    ST_X(d.geom) AS x,
+                                    ST_Y(d.geom) AS y
+                                  FROM (
+                                    SELECT way, highway, COALESCE(layer,0) AS layernotnull, z_order, osm_id
+                                      FROM planet_osm_line
+                                      WHERE way && !bbox!
+                                        AND Z(!scale_denominator!) >= 18
+                                        AND highway IN ('motorway', 'trunk', 'primary', 'secondary', 'tertiary',
+                                                        'motorway_link', 'trunk_link', 'primary_link', 'secondary_link', 'tertiary_link',
+                                                        'unclassified', 'residential', 'living_street', 'road')
+                                        AND (tunnel IS NULL OR NOT tunnel IN ('yes', 'building_passage', 'avalanche_protector'))
+                                        AND (covered IS NULL OR NOT covered = 'yes')
+                                        AND (bridge IS NULL OR NOT bridge IN ('yes', 'boardwalk', 'cantilever', 'covered', 'low_water_crossing', 'movable', 'trestle', 'viaduct'))
+                                        AND ST_Length(way) > 0
+                                  ) AS r,
+                                  LATERAL ST_DumpPoints(r.way) AS d
+                              ) AS v
+                                ON v.x = ST_X(c.way) AND v.y = ST_Y(c.way)
+                              CROSS JOIN LATERAL (
+                                SELECT
+                                    ST_LineSubstring(v.way, GREATEST(0, m.position - m.half), LEAST(1, m.position + m.half)) AS way,
+                                    -- the refuge in the middle of the road and the tactile paving
+                                    -- at the kerbs are both features of the road rather than of the
+                                    -- markings, so they are drawn over the middle half of the marking
+                                    -- depth and read as patches rather than as full length stripes
+                                    CASE WHEN c.int_crossing_island = 'yes' OR c.int_tactile_paving = 'yes' THEN
+                                      ST_LineSubstring(v.way, GREATEST(0, m.position - m.half / 2), LEAST(1, m.position + m.half / 2))
+                                    END AS short_way
+                                  FROM (
+                                    SELECT
+                                        ST_LineLocatePoint(v.way, c.way) AS position,
+                                        (3.0 / ST_Length(v.way)) AS half
+                                  ) AS m
+                              ) AS s
+                              WHERE ST_NPoints(s.way) > 1
+                          ) AS segments
+                      ) AS a
+                      -- where the roads meeting at a crossing node disagree about the
+                      -- direction by more than 40 degrees it cannot be told which road is
+                      -- being crossed
+                      WHERE NOT EXISTS (
+                        SELECT 1
+                          FROM unnest(a.angles) AS p(angle_a), unnest(a.angles) AS q(angle_b)
+                          WHERE LEAST(abs(p.angle_a - q.angle_b), 180.0 - abs(p.angle_a - q.angle_b)) >= 40.0
+                      )
+                  ) AS kept
+                  GROUP BY kept.x, kept.y, kept.osm_id, kept.int_crossing_island, kept.int_tactile_paving
+              ) AS crossings
+              CROSS JOIN LATERAL (
+                SELECT ('crossing_' || crossings.highway) AS feature, crossings.way AS way
+                UNION ALL
+                SELECT ('crossing_island_' || crossings.highway), crossings.short_way
+                  WHERE crossings.int_crossing_island = 'yes'
+                UNION ALL
+                SELECT ('crossing_tactile_' || crossings.highway), crossings.short_way
+                  WHERE crossings.int_tactile_paving = 'yes'
+              ) AS part
+              -- three or more ways meeting at the node cannot be merged into a single
+              -- line, which is the same ambiguity the direction test above rejects
+              WHERE ST_GeometryType(crossings.way) = 'ST_LineString' -- end of crossing select
             ) AS features
           ORDER BY
             layernotnull,
             z_order,
+            -- crossing markings are drawn over the road they belong to, but under
+            -- any road drawn on top of it
+            CASE WHEN substring(feature for 9) = 'crossing_' THEN 1 ELSE 0 END,
             CASE WHEN substring(feature for 8) = 'railway_' THEN 2 ELSE 1 END,
             CASE WHEN feature IN ('railway_INT-rail-service', 'railway_INT-tram-service', 'railway_INT-light_rail-service', 'railway_INT-subway-service',
                                   'railway_INT-funicular-service', 'railway_INT-narrow_gauge-service', 'railway_INT-monorail-service') THEN 0 ELSE 1 END,
