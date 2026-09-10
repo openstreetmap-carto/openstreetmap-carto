@@ -18,6 +18,7 @@
 - Cleanup waterway barriers and tidy of layer ordering (#5264)
 - Shorten multi-component flat and housenumber lists (#5272)
 - Tuning rendering of man_made=dam at lower zoom levels (#5241)
+- Efficiency improvements of various queries (#5295, #5299)
 - Hide fake admin boundary segments on the 180 degree meridian (#5294)
 - Re-work railway=crossing rendering (starting zoom level, prioritization (#5285)
 - Lighten design and increase starting zoom level for minor service=* variants of some railways (#5290)
