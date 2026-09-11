@@ -20,10 +20,16 @@ services:
     build:
       context: .
       dockerfile: Dockerfile.db
+    shm_size: 1g
+    command: postgres -c max_connections=200
     environment:
       - POSTGRES_HOST_AUTH_METHOD=trust
       - PG_WORK_MEM
       - PG_MAINTENANCE_WORK_MEM
+      - PG_MAX_WORKER_PROCESSES
+      - PG_MAX_PARALLEL_WORKERS
+      - PG_MAX_PARALLEL_WORKERS_PER_GATHER
+      - PG_JIT
   import:
     image: openstreetmap-carto-import:v1
     build:

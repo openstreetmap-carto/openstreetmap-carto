@@ -1,4 +1,4 @@
-FROM ubuntu:noble
+FROM ubuntu:26.04
 
 # https://serverfault.com/questions/949991/how-to-install-tzdata-on-a-ubuntu-docker-image
 ARG DEBIAN_FRONTEND=noninteractive
@@ -12,8 +12,12 @@ RUN apt-get update && apt-get install --no-install-recommends -y \
 # Kosmtik with plugins, forcing prefix to /usr because Ubuntu sets
 # npm prefix to /usr/local, which breaks the install
 # We install kosmtik not from release channel, but directly from a specific commit on github.
-# 5dbde8db6b5e22073951066b0646a91c10bb81a5 is master's tip as of 2024-11-17.
-RUN npm set prefix /usr && npm install -g --unsafe-perm "git+https://git@github.com/kosmtik/kosmtik.git#5dbde8db6b5e22073951066b0646a91c10bb81a5"
+# Upstream kosmtik/kosmtik is unmaintained, so this uses a fork that bumps
+# @mapnik/mapnik to 4.8.0 (Mapnik 4.3.0, which adds the !unbuffered_bbox! SQL
+# token) and carries assorted rendering/UI fixes on top of upstream master.
+RUN npm set prefix /usr \
+    && npm install -g @mapnik/core-linux-x64@4.3.0 \
+    && npm install -g --unsafe-perm "git+https://git@github.com/leijurv/kosmtik.git#716d585c18c48903ff891bfd342101bc6e9a0c3f"
 
 WORKDIR /usr/lib/node_modules/kosmtik/
 RUN kosmtik plugins --install kosmtik-overpass-layer \
