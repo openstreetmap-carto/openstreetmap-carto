@@ -138,7 +138,8 @@
 #text-line {
   [feature = 'waterway_dam'],
   [feature = 'waterway_weir'] {
-    #text-point[zoom >= 15],
+    #text-point[zoom >= 15][way_area != null],
+    #text-point[zoom >= 17],
     #text-line[zoom >= 15] {
       text-name: "[name]";
       text-halo-radius: @standard-halo-radius;
@@ -153,7 +154,7 @@
       }
       #text-point {
         text-placement: point;
-        text-dy: 8;
+        [way_area = null] { text-dy: 8; }
       }
     }
   }
