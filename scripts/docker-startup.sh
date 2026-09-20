@@ -73,6 +73,10 @@ kosmtik)
   fi
   export KOSMTIK_CONFIGPATH=".kosmtik-config.yml"
 
+  # Loading the SQL functions again, so that a change to them, such as to the
+  # road widths in carto_line_widths(), takes effect on a restart of kosmtik
+  psql -d gis -f functions.sql
+
   # Starting Kosmtik
   kosmtik serve project.mml --host 0.0.0.0
   # It needs Ctrl+C to be interrupted

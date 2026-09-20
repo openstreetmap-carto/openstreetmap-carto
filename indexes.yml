@@ -6,6 +6,8 @@ point:
   # The point table is small, but so are the partial indexes
   place:
     where: place IS NOT NULL AND name IS NOT NULL
+  crossing:
+    where: highway = 'crossing'
 line:
   label:
     where: name IS NOT NULL OR (tags @> 'golf=>hole'::hstore AND ref IS NOT NULL)

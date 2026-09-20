@@ -5,6 +5,7 @@ CREATE INDEX planet_osm_line_label ON planet_osm_line USING GIST (way) WHERE nam
 CREATE INDEX planet_osm_line_railway ON planet_osm_line USING GIST (way) WHERE railway IS NOT NULL;
 CREATE INDEX planet_osm_line_river ON planet_osm_line USING GIST (way) WHERE waterway = 'river';
 CREATE INDEX planet_osm_line_waterway ON planet_osm_line USING GIST (way) WHERE waterway IN ('river', 'canal', 'stream', 'drain', 'ditch', 'fish_pass');
+CREATE INDEX planet_osm_point_crossing ON planet_osm_point USING GIST (way) WHERE highway = 'crossing';
 CREATE INDEX planet_osm_point_place ON planet_osm_point USING GIST (way) WHERE place IS NOT NULL AND name IS NOT NULL;
 CREATE INDEX planet_osm_polygon_admin ON planet_osm_polygon USING GIST (ST_PointOnSurface(way)) WHERE name IS NOT NULL AND boundary = 'administrative' AND admin_level IN ('0', '1', '2', '3', '4');
 CREATE INDEX planet_osm_polygon_military ON planet_osm_polygon USING GIST (way) WHERE (landuse = 'military' OR military = 'danger_area') AND building IS NULL;

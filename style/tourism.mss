@@ -12,21 +12,21 @@
 
 #roller-coaster, #roller-coaster-gap-fill {
   [zoom >= 15] {
+    /* The widths come from the roller_coaster class of carto_line_widths() in
+       functions.sql: the casing is drawn at [line_width], the fill at half of it. */
     ::bridges[bridge = 'yes'][zoom >= 16] {
-      line-width: 2.5 + @bridge-casing-width-z16;
+      line-width: [line_width] + [bridge_casing_width];
       line-color: #000;
       line-join: round;
       
       [tunnel = 'yes'] { line-color: lighten(#000, 20%); }
 
-      [zoom >= 17] { line-width: 4 + @bridge-casing-width-z17; }
-      [zoom >= 18] { line-width: 6 + 1.5 * @bridge-casing-width-z18; }
-      [zoom >= 19] { line-width: 8 + 2 * @bridge-casing-width-z19; }
-      [zoom >= 20] { line-width: 12 + 2 * @bridge-casing-width-z20; }
+      [zoom >= 18] { line-width: [line_width] + 1.5 * [bridge_casing_width]; }
+      [zoom >= 19] { line-width: [line_width] + 2 * [bridge_casing_width]; }
     }
 
     ::casing {
-      line-width: 1;
+      line-width: [line_width];
       line-color: mix(@roller-coaster-casing, @roller-coaster-fill, 50%);
       line-join: round;
 
@@ -35,26 +35,17 @@
       }
       [zoom >= 16] { 
         line-color: @roller-coaster-casing;
-        line-width: 2.5;
       }
-      [zoom >= 17] { line-width: 4; }
-      [zoom >= 18] { line-width: 6; }
-      [zoom >= 19] { line-width: 8; }
-      [zoom >= 20] { line-width: 12; }
     }
 
     ::fill[zoom >= 16] {
-      line-width: 1.25;
+      line-width: [line_width] / 2;
       line-color: @roller-coaster-fill;
       line-join: round;
 
       [tunnel = 'yes'] {
         line-color: lighten(@roller-coaster-fill, 5%);
       }
-      [zoom >= 17] { line-width: 2; }
-      [zoom >= 18] { line-width: 3; }
-      [zoom >= 19] { line-width: 4; }
-      [zoom >= 20] { line-width: 6; }
     }
   }
 }
