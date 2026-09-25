@@ -1376,8 +1376,7 @@
   [feature = 'aeroway_aerodrome'][int_access = 'restricted'][zoom >= 12][zoom < 18],
   [feature = 'aeroway_aerodrome'][icao = null][zoom >= 12][zoom < 18],
   [feature = 'aeroway_aerodrome'][iata = null][zoom >= 12][zoom < 18] {
-    [way_pixels <= 192000],
-    [way_pixels = null] {
+    [way_pixels <= 192000] {
       marker-file: url('symbols/amenity/aerodrome.svg');
       marker-clip: false;
       marker-fill: @airtransport;
@@ -2817,8 +2816,7 @@
   [feature = 'aeroway_aerodrome'][int_access = 'restricted'][zoom >= 13][zoom < 18],
   [feature = 'aeroway_aerodrome'][icao = null][zoom >= 13][zoom < 18],
   [feature = 'aeroway_aerodrome'][iata = null][zoom >= 13][zoom < 18] {
-    [way_pixels <= 192000],
-    [way_pixels = null] {
+    [way_pixels <= 192000] {
       text-name: "[name]";
       text-size: @standard-font-size;
       text-wrap-width: @standard-wrap-width;

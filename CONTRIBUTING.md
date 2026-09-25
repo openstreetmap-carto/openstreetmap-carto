@@ -159,6 +159,7 @@ instead of
 ```
 
 ## SQL style guidelines
+
 Because SQL within YAML will not generally be syntax highlighted, indentation and caps are particularly important.
 
 * SQL keywords in caps, as in PostgreSQL documentation
@@ -174,6 +175,41 @@ Because SQL within YAML will not generally be syntax highlighted, indentation an
 * When extracting tags from hstore, use `tags->'foo'`, not `tags -> 'foo'`, and only add parentheses if needed for order of operations
 * Hstore queries tested for NULL should be enclosed in parentheses, e.g. `(tags->'foo') IS NULL`.
 * To check if a tag is in the tags hstore, use `tags @> 'foo=>bar'`, relying on automatic conversion from `text` to `hstore`.
+
+Put frequently used sort keys before other attributes, and geometry last.
+Use this column order in layer queries:
+
+1. Common columns, when present: `layernotnull`, `way_area`, `way_pixels`, `osm_id`, in that order.
+2. Other non-null, fixed-width sorting columns.
+3. Remaining sorting columns, including nullable columns and variable-width types such as `text` and `numeric`.
+4. Other attributes.
+5. The geometry (`way`), including in queries without `ORDER BY`.
+
+Follow the same order in explicit subquery `SELECT` lists, with matching positions
+in all `UNION` branches. Include only columns needed for sorting or styling.
+The column order in `SELECT` need not match the priority order in `ORDER BY`.
+
+Keep the common columns non-null in the sorted output where possible, using
+defaults that preserve the intended order. Examples include
+`COALESCE(layer, 0) AS layernotnull` and `0::real AS way_area` for points in
+polygon/point unions. Internal POI queries retain NULL areas for point/polygon
+tests; their sorted output uses non-null `way_pixels` instead.
+
+Name a dedicated rank derived from one classification column `sort_<column>`
+and use that name in `ORDER BY`. Prefer combining several small categorical
+ranks that are consecutive in `ORDER BY` into one integer `sort_score`.
+Keep common sort keys separate. Include an explicit `ELSE` in ranking `CASE`
+expressions, and document the priorities and weights so lower priorities
+cannot outweigh a higher one. Preserve the intended NULL ordering and ties.
+
+Define classifications once and derive sorting ranks from the classified
+values. Do not duplicate tag-value lists between classification and sorting;
+use an additional subquery if needed.
+
+PostgreSQL can access leading fixed-width values faster when preceding values
+are not NULL. Mapnik requests only attributes needed by the style, so dedicated
+sort columns are not sent to it. See [#5297](https://github.com/openstreetmap-carto/openstreetmap-carto/pull/5297)
+for the explanation and measurements.
 
 ## Map icon guidelines
 
