@@ -824,6 +824,9 @@
       }
     }
 
+    /* Minor trackage bridges follow the track width (see the fill rules
+    below): white fill = track + 1px each side, casing 0.75px beyond that,
+    the same margins the other railway classes use. */
     [feature = 'railway_INT-tram-service'][zoom >= 15],
     [feature = 'railway_INT-light_rail-service'],
     [feature = 'railway_INT-funicular-service'],
@@ -833,9 +836,10 @@
       #bridges {
         [zoom >= 14] {
           line-width: 4;
-          [zoom >= 15] {
-            line-width: 5;
-          }
+          [feature = 'railway_INT-subway-service'][zoom < 17] { line-width: 4.25; }
+          [zoom >= 17] { line-width: 4.5; }
+          [zoom >= 18] { line-width: 5; }
+          [zoom >= 19] { line-width: 5.5; }
           line-color: @bridge-casing;
           line-join: round;
         }
@@ -1115,10 +1119,11 @@
     [feature = 'railway_INT-subway-service'] {
       #bridges {
         [zoom >= 14] {
-          line-width: 3;
-          [zoom >= 15] {
-            line-width: 4;
-          }
+          line-width: 2.5;
+          [feature = 'railway_INT-subway-service'][zoom < 17] { line-width: 2.75; }
+          [zoom >= 17] { line-width: 3; }
+          [zoom >= 18] { line-width: 3.5; }
+          [zoom >= 19] { line-width: 4; }
           line-color: white;
         }
       }
