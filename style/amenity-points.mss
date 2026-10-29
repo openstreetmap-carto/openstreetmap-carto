@@ -1366,6 +1366,15 @@
     marker-clip: false;
   }
 
+  [feature = 'amenity_table'][zoom >= 17] {
+    marker-file: url('symbols/amenity/table.svg');
+    marker-fill: @man-made-icon;
+    marker-clip: false;
+    [int_access = 'restricted'] {
+      marker-opacity: @private-opacity;
+    }
+  }
+
   [feature = 'aeroway_helipad'][zoom >= 16] {
     marker-file: url('symbols/amenity/helipad.svg');
     marker-clip: false;
