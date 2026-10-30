@@ -239,6 +239,12 @@
     marker-clip: false;
   }
 
+  [feature = 'leisure_resort'][zoom >= 16] {
+    marker-file: url('symbols/leisure/resort.svg');
+    marker-fill: @accommodation-icon;
+    marker-clip: false;
+  }
+  
   // Ford tagging on points - ford on lines is defined later
   [feature = 'highway_ford'][zoom >= 16] {
     marker-file: url('symbols/highway/ford.svg');
@@ -2393,6 +2399,7 @@
   [feature = 'tourism_alpine_hut'][zoom >= 14],
   [feature = 'amenity_shelter'][zoom >= 17],
   [feature = 'leisure_picnic_table'][zoom >= 17],
+  [feature = 'leisure_resort'][zoom >= 17],
   [feature = 'tourism_hotel'][zoom >= 17],
   [feature = 'tourism_motel'][zoom >= 17],
   [feature = 'tourism_hostel'][zoom >= 17],
@@ -2415,6 +2422,7 @@
       text-dy: 13;
     }
     [feature = 'tourism_camp_site'],
+    [feature = 'leisure_resort'],
     [feature = 'tourism_caravan_site'] {
       text-dy: 15;
     }
