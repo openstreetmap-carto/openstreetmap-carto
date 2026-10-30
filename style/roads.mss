@@ -3497,46 +3497,44 @@ tertiary is rendered from z10 and is not included in osm_planet_roads. */
 }
 
 #bridge-text  {
-  [man_made = 'bridge'] {
-    [zoom >= 12][way_pixels > 125][way_pixels <= 768000] {
-      text-name: "[name]";
-      text-size: 10;
-      text-wrap-width: 30; // 3 em
-      text-line-spacing: -1.2; // -0.15 em
-      text-fill: black;
-      text-face-name: @book-fonts;
-      text-halo-radius: @standard-halo-radius;
-      text-halo-fill: @standard-halo-fill;
-      text-margin: 3; // 0.3 em
-      text-wrap-width: 30;
-      [way_pixels > 250] {
-        text-size: 11;
-        text-margin: 3.3; // 0.3 em
-        text-wrap-width: 33; // 3 em
-        text-line-spacing: -1.35; // -0.15 em
-        text-halo-radius: @standard-halo-radius * 1.1;
-      }
-      [way_pixels > 1000] {
-        text-size: 12;
-        text-margin: 3.6; // 0.3 em
-        text-wrap-width: 36; // 3 em
-        text-line-spacing: -1.65; // -0.15 em
-        text-halo-radius: @standard-halo-radius * 1.2;
-      }
-      [way_pixels > 4000] {
-        text-size: 13;
-        text-margin: 3.9; // 0.3 em
-        text-wrap-width: 39; // 3 em
-        text-line-spacing: -1.80; // -0.15 em
-        text-halo-radius: @standard-halo-radius * 1.3;
-      }
-      [way_pixels > 16000] {
-        text-size: 14;
-        text-margin: 4.2; // 0.3 em
-        text-wrap-width: 42; // 3 em
-        text-line-spacing: -1.95; // -0.15 em
-        text-halo-radius: @standard-halo-radius * 1.4;
-      }
+  [zoom >= 12][way_pixels > 125][way_pixels <= 768000] {
+    text-name: "[name]";
+    text-size: 10;
+    text-wrap-width: 30; // 3 em
+    text-line-spacing: -1.2; // -0.15 em
+    text-fill: black;
+    text-face-name: @book-fonts;
+    text-halo-radius: @standard-halo-radius;
+    text-halo-fill: @standard-halo-fill;
+    text-margin: 3; // 0.3 em
+    text-wrap-width: 30;
+    [way_pixels > 250] {
+      text-size: 11;
+      text-margin: 3.3; // 0.3 em
+      text-wrap-width: 33; // 3 em
+      text-line-spacing: -1.35; // -0.15 em
+      text-halo-radius: @standard-halo-radius * 1.1;
+    }
+    [way_pixels > 1000] {
+      text-size: 12;
+      text-margin: 3.6; // 0.3 em
+      text-wrap-width: 36; // 3 em
+      text-line-spacing: -1.65; // -0.15 em
+      text-halo-radius: @standard-halo-radius * 1.2;
+    }
+    [way_pixels > 4000] {
+      text-size: 13;
+      text-margin: 3.9; // 0.3 em
+      text-wrap-width: 39; // 3 em
+      text-line-spacing: -1.80; // -0.15 em
+      text-halo-radius: @standard-halo-radius * 1.3;
+    }
+    [way_pixels > 16000] {
+      text-size: 14;
+      text-margin: 4.2; // 0.3 em
+      text-wrap-width: 42; // 3 em
+      text-line-spacing: -1.95; // -0.15 em
+      text-halo-radius: @standard-halo-radius * 1.4;
     }
   }
 }
