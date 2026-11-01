@@ -138,7 +138,7 @@
 #text-line {
   [feature = 'waterway_dam'],
   [feature = 'waterway_weir'] {
-    #text-point[zoom >= 15][way_area != null],
+    #text-point[zoom >= 15][way_pixels > 0],
     #text-point[zoom >= 17],
     #text-line[zoom >= 15] {
       text-name: "[name]";
@@ -154,7 +154,7 @@
       }
       #text-point {
         text-placement: point;
-        [way_area = null] { text-dy: 8; }
+        [way_pixels = 0] { text-dy: 8; }
       }
     }
   }
