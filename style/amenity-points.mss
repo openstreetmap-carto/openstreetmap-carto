@@ -196,16 +196,10 @@
     marker-clip: false;
   }
 
-  [feature = 'amenity_parcel_locker'][zoom >= 17] {
+  [feature = 'amenity_parcel_locker'][zoom >= 18] {
     marker-fill: @amenity-brown;
-    [zoom >= 17][zoom < 18] {
-      marker-width: 4;
-      marker-line-width: 0;
-    }
-    [zoom >= 18] {
-      marker-file: url('symbols/amenity/parcel_locker.svg');
-      marker-clip: false;
-    }
+    marker-file: url('symbols/amenity/parcel_locker.svg');
+    marker-clip: false;
   }
 
   [feature = 'highway_traffic_signals'][zoom >= 17] {
@@ -592,13 +586,7 @@
   }
 
   [feature = 'amenity_dentist'][zoom >= 17] {
-    [zoom >= 17][zoom < 18] {
-      marker-width: 4;
-      marker-line-width: 0;
-    }
-    [zoom >= 18] {
-      marker-file: url('symbols/amenity/dentist.svg');
-    }
+    marker-file: url('symbols/amenity/dentist.svg');
     marker-fill: @health-color;
     marker-clip: false;
   }
@@ -2915,7 +2903,7 @@
     }
   }
 
-  [feature = 'amenity_parcel_locker'][zoom >= 18] {
+  [feature = 'amenity_parcel_locker'][zoom >= 19] {
     text-name: "[name]";
     text-dy: 10;
     text-size: @standard-font-size;
