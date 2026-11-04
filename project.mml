@@ -104,7 +104,7 @@ Layer:
                                                     'hospital', 'kindergarten', 'grave_yard', 'prison', 'place_of_worship', 'clinic', 'ferry_terminal',
                                                     'marketplace', 'community_centre', 'social_facility', 'arts_centre', 'parking_space', 'bus_station',
                                                     'fire_station', 'police')
-                              OR amenity IN ('parking') AND (tags->'parking' NOT IN ('underground') OR (tags->'parking') IS NULL) THEN amenity END)) AS amenity,
+                              OR amenity IN ('parking') AND (tags->'parking' NOT IN ('underground') OR tags->'parking' IS NULL) THEN amenity END)) AS amenity,
               ('landuse_' || (CASE WHEN landuse IN ('quarry', 'vineyard', 'orchard', 'cemetery', 'residential', 'garages', 'meadow', 'grass',
                                                     'allotments', 'forest', 'farmyard', 'farmland', 'greenhouse_horticulture',
                                                     'recreation_ground', 'village_green', 'retail', 'industrial', 'railway', 'commercial',
@@ -1716,7 +1716,8 @@ Layer:
                     )
                   )
                 END AS name,
-              tags->'parking' as "parking",
+              tags->'parking' AS parking,
+              CASE WHEN tags->'parking' IN ('surface', 'multi-storey', 'rooftop') THEN 'yes' ELSE 'no' END as int_largeparking,
               COALESCE(
                 'aeroway_' || CASE WHEN aeroway IN ('gate', 'apron', 'helipad', 'aerodrome') THEN aeroway END,
                 'tourism_' || CASE WHEN tourism IN ('alpine_hut', 'apartment', 'artwork', 'camp_site', 'caravan_site', 'chalet', 'gallery', 'guest_house',
