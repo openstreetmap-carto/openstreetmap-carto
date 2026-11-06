@@ -124,9 +124,9 @@ Some colours, SVGs and other files are generated with helper scripts. Not all us
     ```bash
     python3 -m pip install --break-system-packages --user colormath2 numpy
     ```
-* [`generate_landcover_patterns.py`](./scripts/generate_landcover_patterns.py) depends on [`numpy`](https://numpy.org/), [Shapely](https://shapely.readthedocs.io/) >= 2.0 and [svgpathtools](https://github.com/mathandy/svgpathtools). To install these, run:
+* [`generate_patterns.py`](./scripts/generate_patterns.py) depends on [skia-pathops](https://github.com/fonttools/skia-pathops), [fontTools](https://github.com/fonttools/fonttools) and [PyYAML](https://pyyaml.org/). To install these, run:
     ```bash
-    python3 -m pip install --break-system-packages --user numpy shapely svgpathtools
+    python3 -m pip install --break-system-packages --user skia-pathops fonttools pyyaml
     ```
 
 ### For deployment

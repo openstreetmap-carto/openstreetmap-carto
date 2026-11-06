@@ -1,43 +1,67 @@
-# Generating landcover patterns
+# Area fill patterns
 
-`scripts/generate_landcover_patterns.py` converts the sources in this directory
-into the 14 landcover SVGs listed in its `PATTERNS` table. That table specifies
-the source, color, opacity and composition mode. Other existing SVG patterns
-are maintained separately.
+The area fill patterns listed in [`patterns.yaml`](../../patterns.yaml) are
+generated: `scripts/generate_patterns.py` turns the pattern sources in this
+directory into the pattern files `symbols/<name>.svg` that the style uses.
+`patterns.yaml` defines for each pattern its source(s), color and opacity
+and, where needed, how layers are combined.  Other patterns (the forest,
+flowerbed, quarry and unpaved road patterns and hand made ones in `symbols/`)
+are not generated this way yet.
 
-Run from the repository root; dependencies are listed in `INSTALL.md`:
+The generator needs Python 3 with skia-pathops, fonttools and PyYAML (see
+[`INSTALL.md`](../../INSTALL.md)).  Run it from the repository root:
 
 ```sh
-scripts/generate_landcover_patterns.py -h
-scripts/generate_landcover_patterns.py            # regenerate all 14
-scripts/generate_landcover_patterns.py scrub reef # regenerate selected patterns
-scripts/generate_landcover_patterns.py --check    # compare without changing files
-python3 scripts/test_landcover_patterns.py        # geometry checks
+scripts/generate_patterns.py               # all patterns
+scripts/generate_patterns.py scrub reef    # selected patterns
+scripts/generate_patterns.py --check       # check that the pattern files are up to date
 ```
 
-Edit the source SVG to change symbols or their placements; edit the generator's
-color settings to recolor them. Keep periodic copies of symbols crossing the
-repeat boundary. Do not manually edit generated SVGs. Each pattern family's
-Markdown file describes its sources and composition. In particular, `scrub.md`
-records the fixed-seed recipe used to regenerate the pixel-aligned scrub pattern.
-It reproduces the former PNG's symbol positions without a raster recovery step.
+The generated files must not be edited by hand.  The CI checks that they are
+up to date with the sources and `patterns.yaml`.
 
-## Mapnik compatibility
+## Changing the color of a pattern
 
-Mapnik 4.3 supports SVG definitions and `<use>` references, but does not implement
-SVG clip paths. The generator expands references so it can clip geometry to the
-repeat boundary and subtract transparent rock casings. It emits filled paths and
-an invisible rectangle that fixes the geometry bounding box to the repeat size.
-The rectangle matters because Mapnik uses geometry bounds when sizing a pattern.
+Change the color in `patterns.yaml` and run the generator for the pattern.
 
-This is a converter for the closed, filled paths in these pattern sources, not a
-general SVG renderer. Rock strokes represent casings to subtract, rather than
-ordinary painted outlines. Shapes wholly inside the repeat preserve their curves;
-geometry operations flatten curves and simplify the result at 0.1 logical pixels.
-Wetland dash removal deliberately preserves the former pixel-aligned composition.
+## Making a new pattern or changing a design
 
-SVG pattern dimensions scale with Mapnik's rendering scale factor; PNG patterns
-retain their native pixel dimensions. A 256-pixel SVG repeat therefore becomes
-512 device pixels at scale factor 2, preserving its apparent size. The conversion
-closely preserves the appearance at scale factor 1, but rasterizer and casing
-differences mean it does not promise pixel-identical output to the former PNGs.
+1. Draw the pattern source: an SVG file whose `width` and `height` are the
+   size of the repeating tile in pixels at scale factor 1.  Shapes crossing an
+   edge of the tile need a copy at the opposite edge, so the pattern repeats
+   without seams.  [jsdotpattern](https://www.imagico.de/map/jsdotpattern.php)
+   produces such sources - save the SVG it generates ("get pattern SVG data")
+   as it is, no further processing is needed.  Drawing in Inkscape or by hand
+   works as well.  The colors in the source do not matter, the generator
+   draws the pattern in the color from `patterns.yaml`.
+2. Save the source in this directory and document how it was made in a
+   Markdown file next to it - for jsdotpattern the link with the recorded
+   command sequence, so the pattern can be reproduced and modified.
+3. Add the pattern to `patterns.yaml` and run the generator for it.
+4. Use `symbols/<name>.svg` as `polygon-pattern-file` in the style and commit
+   the source, the documentation, `patterns.yaml` and the generated file.
+
+The sources can use paths and the basic shapes (`rect`, `circle`,
+`ellipse`, `polygon`, `polyline`, `line`), groups, `<use>`, transforms,
+fills and strokes.  Strokes are drawn as the area they cover.  Not
+supported are text, images, gradients and masks; clip paths are ignored, as
+everything is clipped to the tile anyway.
+
+Patterns can be combined from several layers, for example symbols on top of a
+base pattern kept free around the symbols (`casing`) - see the wetland
+patterns in `patterns.yaml` and [`wetland.md`](wetland.md).  A source can also
+draw gaps in a dedicated color (`erase`), for example to separate overlapping
+symbols - see the rock pattern and [`bare_ground.md`](bare_ground.md).
+
+## Why the pattern files are generated
+
+Mapnik renders SVG pattern files with the rendering scale factor, so they
+stay sharp at high resolution, but it supports only part of SVG in them: it
+does not support clip paths, and it takes the size of the repeating tile from
+the bounding box of all path points (including the control points of curves)
+rather than from the SVG size.  The generator therefore resolves the sources
+into plain filled paths, one per layer, clips them exactly to the tile, keeps
+all points within the tile and adds an invisible rectangle spanning the whole
+tile.  Curves stay curves - where a shape crosses the tile edge it is cut
+exactly, not approximated - so the patterns can be rendered at any
+resolution.

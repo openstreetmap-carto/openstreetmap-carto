@@ -11,11 +11,11 @@ inlines symbols in the exported source. Save the SVG export as `scrub.svg` in
 this directory, then run from the repository root:
 
 ```sh
-scripts/generate_landcover_patterns.py scrub
+scripts/generate_patterns.py scrub
 ```
 
-The converter sets the pattern color and clips the periodic copies at the
-repeat boundary. Do not edit the generated `symbols/scrub.svg` by hand.
+The pattern color is set in [`patterns.yaml`](../../patterns.yaml). Do not
+edit the generated `symbols/scrub.svg` by hand.
 
 This source was regenerated with jsdotpattern revision
 [`d20f66f86fc36f7d6b16d892633fa98ed3b3b151`](https://github.com/imagico/jsdotpattern/tree/d20f66f86fc36f7d6b16d892633fa98ed3b3b151).
