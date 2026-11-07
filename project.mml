@@ -507,12 +507,11 @@ Layer:
                   ELSE 'no'
                 END AS link,
                 NULL AS preserved,
-                -- the class in line-widths.yaml the road takes its widths from: a minor
-                -- service road has widths of its own, a path those of the class it is
-                -- promoted to, and a road under construction those of the road it is to
-                -- become, a residential road if that is not tagged and highway=road for a
-                -- raceway
-                CASE
+                -- the class in line-widths.yaml the road takes its widths from: its feature,
+                -- except that a minor service road has widths of its own and a road under
+                -- construction those of the road it is to become, a residential road if that
+                -- is not tagged and highway=road for a raceway
+                'highway_' || CASE
                   WHEN (highway = 'service' OR (highway = 'construction' AND construction = 'service'))
                        AND (service IN ('parking_aisle', 'drive-through', 'driveway') OR leisure IN ('slipway')) THEN 'service_minor'
                   WHEN highway = 'construction' THEN CASE construction WHEN 'raceway' THEN 'road' ELSE COALESCE(construction, 'residential') END
@@ -701,7 +700,7 @@ Layer:
               ) _
               -- the widths of the road the circle is on, see line-widths.yaml
               LEFT JOIN carto_line_widths(Z(!scale_denominator!)) AS widths
-                ON widths.class = CASE WHEN int_tc_type = 'service' AND int_tc_service = 'INT-minor' THEN 'service_minor' ELSE int_tc_type END
+                ON widths.class = 'highway_' || CASE WHEN int_tc_type = 'service' AND int_tc_service = 'INT-minor' THEN 'service_minor' ELSE int_tc_type END
           ORDER BY
             way,
             z_order DESC,
@@ -788,12 +787,11 @@ Layer:
                   ELSE 'no'
                 END AS link,
                 NULL AS preserved,
-                -- the class in line-widths.yaml the road takes its widths from: a minor
-                -- service road has widths of its own, a path those of the class it is
-                -- promoted to, and a road under construction those of the road it is to
-                -- become, a residential road if that is not tagged and highway=road for a
-                -- raceway
-                CASE
+                -- the class in line-widths.yaml the road takes its widths from: its feature,
+                -- except that a minor service road has widths of its own and a road under
+                -- construction those of the road it is to become, a residential road if that
+                -- is not tagged and highway=road for a raceway
+                'highway_' || CASE
                   WHEN (highway = 'service' OR (highway = 'construction' AND construction = 'service'))
                        AND (service IN ('parking_aisle', 'drive-through', 'driveway') OR leisure IN ('slipway')) THEN 'service_minor'
                   WHEN highway = 'construction' THEN CASE construction WHEN 'raceway' THEN 'road' ELSE COALESCE(construction, 'residential') END
@@ -916,7 +914,7 @@ Layer:
             way
           FROM planet_osm_roads
             -- the widths of the road at this zoom level, see line-widths.yaml
-            LEFT JOIN carto_line_widths(Z(!scale_denominator!)) AS widths ON widths.class = highway
+            LEFT JOIN carto_line_widths(Z(!scale_denominator!)) AS widths ON widths.class = 'highway_' || highway
           WHERE highway IS NOT NULL
             OR (railway IN ('rail', 'light_rail', 'funicular', 'narrow_gauge')
               AND (tags->'railway:preserved' IS NULL OR tags->'railway:preserved' != 'yes')
@@ -984,12 +982,11 @@ Layer:
                   ELSE 'no'
                 END AS link,
                 NULL AS preserved,
-                -- the class in line-widths.yaml the road takes its widths from: a minor
-                -- service road has widths of its own, a path those of the class it is
-                -- promoted to, and a road under construction those of the road it is to
-                -- become, a residential road if that is not tagged and highway=road for a
-                -- raceway
-                CASE
+                -- the class in line-widths.yaml the road takes its widths from: its feature,
+                -- except that a minor service road has widths of its own and a road under
+                -- construction those of the road it is to become, a residential road if that
+                -- is not tagged and highway=road for a raceway
+                'highway_' || CASE
                   WHEN (highway = 'service' OR (highway = 'construction' AND construction = 'service'))
                        AND (service IN ('parking_aisle', 'drive-through', 'driveway') OR leisure IN ('slipway')) THEN 'service_minor'
                   WHEN highway = 'construction' THEN CASE construction WHEN 'raceway' THEN 'road' ELSE COALESCE(construction, 'residential') END
@@ -1078,7 +1075,7 @@ Layer:
             aeroway,
             int_surface,
             widths.line_width,
-            widths.casing_width,
+            widths.bridge_casing_width,
             way
           FROM
             (SELECT
@@ -1091,7 +1088,7 @@ Layer:
               WHERE aeroway IN ('runway', 'taxiway')
             ) AS features
             -- the widths of runways and taxiways, see line-widths.yaml
-            LEFT JOIN carto_line_widths(Z(!scale_denominator!)) AS widths ON widths.class = aeroway
+            LEFT JOIN carto_line_widths(Z(!scale_denominator!)) AS widths ON widths.class = 'aeroway_' || aeroway
           ORDER BY
             sort_score,
             osm_id
@@ -1128,7 +1125,7 @@ Layer:
             way
           FROM planet_osm_line
             -- the widths of the track, see line-widths.yaml
-            LEFT JOIN carto_line_widths(Z(!scale_denominator!)) AS widths ON widths.class = 'roller_coaster'
+            LEFT JOIN carto_line_widths(Z(!scale_denominator!)) AS widths ON widths.class = 'railway_roller_coaster'
           WHERE tags @> 'roller_coaster=>track' AND railway IS NULL
         ) AS roller_coaster
     properties:
@@ -1148,7 +1145,7 @@ Layer:
             way
           FROM planet_osm_line
             -- the widths of the track, see line-widths.yaml
-            LEFT JOIN carto_line_widths(Z(!scale_denominator!)) AS widths ON widths.class = 'roller_coaster'
+            LEFT JOIN carto_line_widths(Z(!scale_denominator!)) AS widths ON widths.class = 'railway_roller_coaster'
           WHERE tags @> 'roller_coaster=>track' AND railway IS NULL
           ORDER BY
             layernotnull -- put bottom layered track first

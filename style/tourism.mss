@@ -12,8 +12,8 @@
 
 #roller-coaster, #roller-coaster-gap-fill {
   [zoom >= 15] {
-    /* The widths come from the roller_coaster class in line-widths.yaml: the
-       casing is drawn at [line_width], the fill at half of it. */
+    /* The widths come from the railway_roller_coaster class in line-widths.yaml:
+       the casing is drawn at [line_width], the fill at half of it. */
     ::bridges[bridge = 'yes'][zoom >= 16] {
       line-width: [line_width] + [bridge_casing_width];
       line-color: #000;
