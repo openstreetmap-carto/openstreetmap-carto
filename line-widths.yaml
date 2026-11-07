@@ -1,0 +1,128 @@
+# Line widths of the roads, paths and aeroways, in pixels.
+#
+# A width is given at the zoom level where it changes and applies up to the next zoom level
+# listed, the last one to all zoom levels above. The first zoom level listed is the first one
+# at which the line is drawn.
+#
+# For a road, `width` is the full width including the casing, which is drawn `casing` wide on
+# either side, or `bridge-casing` wide on a bridge. A casing is either the name of one of the
+# casings defined below, shared by several classes, or a list of widths of its own.
+# For the paths, `width` is the width of the line itself; the style draws the background around
+# it. A class can also be given as the name of another class it is drawn like.
+#
+# After editing, run
+#   scripts/generate_line_widths.py > line-widths.sql
+# and load the result with psql -d gis -f line-widths.sql (kosmtik in Docker does this when it
+# starts). line-widths.sql begins with a table of all widths by zoom level for checking.
+#
+# How a width is used (fill = width minus the casings, dashes, access markings, crossings,
+# turning circles) is decided in the CartoCSS, which reads the widths as [line_width],
+# [casing_width] and [bridge_casing_width].
+
+casings:
+  major:     {12: 0.5, 15: 0.7, 17: 1}               # z14 is 0.5 because the z13 casing stayed in use
+  secondary: {12: 0.3, 13: 0.35, 15: 0.7, 17: 1}
+  link:      {12: 0.3, 13: 0.5, 15: 0.6, 17: 0.8}     # z14 likewise
+  minor:     {12: 0.3, 13: 0.5, 14: 0.55, 15: 0.6, 17: 0.8}
+  service:   {14: 0.55, 16: 0.6, 17: 0.8}             # z15 likewise
+
+bridge-casings:
+  major:     {12: 0.5, 15: 0.75, 17: 1}              # z14 likewise
+  secondary: {12: 0.1, 13: 0.5, 14: 0.6, 15: 0.75, 17: 1}  # z12 is the minor bridge casing
+  minor:     {12: 0.1, 13: 0.5, 15: 0.75, 17: 0.8}
+  service:   {14: 0.5, 16: 0.75, 17: 0.8}            # z15 likewise
+
+lines:
+  motorway:
+    width: {6: 0.4, 7: 0.8, 8: 1, 9: 1.4, 10: 1.9, 11: 2, 12: 3.5, 13: 6, 15: 10, 17: 18, 18: 21, 19: 27, 20: 33}
+    casing: major
+    bridge-casing: major
+  trunk:
+    width: {6: 0.4, 7: 0.6, 8: 1, 9: 1.4, 10: 1.9, 12: 3.5, 13: 6, 15: 10, 17: 18, 18: 21, 19: 27}
+    casing: major
+    bridge-casing: major
+  primary:
+    width: {8: 1, 9: 1.4, 10: 1.8, 12: 3.5, 13: 5, 15: 10, 17: 18, 18: 21, 19: 27}
+    casing: major
+    bridge-casing: major
+  secondary:
+    width: {9: 1, 10: 1.1, 12: 3.5, 13: 5, 15: 9, 16: 10, 17: 18, 18: 21, 19: 27}
+    casing: secondary
+    bridge-casing: secondary
+  tertiary:
+    width: {10: 0.7, 12: 2.5, 13: 4, 14: 5, 15: 9, 16: 10, 17: 18, 18: 21, 19: 27}
+    casing: minor
+    bridge-casing: minor
+
+  motorway_link:
+    width: {10: 1.9, 11: 2, 12: 1.5, 13: 4, 15: 7.8, 17: 12, 18: 13, 19: 16, 20: 17}
+    casing: link
+    bridge-casing: minor
+  trunk_link:
+    width: {10: 1.9, 12: 1.5, 13: 4, 15: 7.8, 17: 12, 18: 13, 19: 16}
+    casing: link
+    bridge-casing: minor
+  primary_link:
+    width: {10: 1.8, 12: 1.5, 13: 4, 15: 7.8, 17: 12, 18: 13, 19: 16}
+    casing: link
+    bridge-casing: minor
+  secondary_link:
+    width: {10: 1.1, 12: 1.5, 13: 4, 15: 7, 17: 12, 18: 13, 19: 16}
+    casing: link
+    bridge-casing: minor
+  tertiary_link:
+    width: {10: 0.7, 12: 1.5, 13: 3, 15: 7, 17: 12, 18: 13, 19: 16}
+    casing: link
+    bridge-casing: minor
+
+  unclassified:
+    width: {12: 0.8, 13: 2.5, 14: 3, 15: 5, 16: 6, 17: 12, 18: 13, 19: 17}
+    casing: minor
+    bridge-casing: minor
+  residential:
+    width: {12: 0.5, 13: 2.5, 14: 3, 15: 5, 16: 6, 17: 12, 18: 13, 19: 17}
+    casing: minor
+    bridge-casing: minor
+  living_street:
+    width: {13: 2, 14: 3, 15: 5, 16: 6, 17: 12, 18: 13, 19: 17}
+    casing: minor
+    bridge-casing: minor
+  pedestrian:
+    width: {14: 3, 15: 5, 16: 6, 17: 12, 18: 13, 19: 17}
+    casing: minor
+    bridge-casing: minor
+  road:
+    width: {10: 1, 14: 2, 16: 3.5, 17: 7, 18: 8.5, 19: 11}
+    casing: service
+    bridge-casing: service
+  service:
+    width: {14: 2, 16: 3.5, 17: 7, 18: 8.5, 19: 11, 20: 12}
+    casing: service
+    bridge-casing: service
+  service_minor:  # parking aisles, drive-throughs, driveways and slipways
+    width: {16: 2, 17: 3.5, 18: 4.75, 19: 5.5, 20: 8.5}
+    casing: minor
+    bridge-casing: minor
+
+  footway:
+    width: {14: 0.7, 15: 1, 16: 1.3, 19: 1.6}
+  path: footway
+  cycleway:
+    width: {13: 0.7, 15: 0.9, 18: 1, 19: 1.3}
+  bridleway:
+    width: {13: 0.3, 15: 1.2}
+  steps:
+    width: {14: 0.7, 15: 3}
+  track:
+    width: {13: 0.5, 15: 1.5}
+
+  runway:  # the casing is drawn on bridges only, outside the line
+    width: {11: 2, 12: 4, 13: 6, 14: 12, 15: 18, 16: 24}
+    casing: {14: 0.6, 15: 0.7, 17: 1}
+  taxiway:
+    width: {11: 1, 13: 2, 14: 4, 15: 6, 16: 8}
+    casing: secondary
+
+  roller_coaster:  # the fill is half the width, the bridge casing is drawn outside the line
+    width: {15: 1, 16: 2.5, 17: 4, 18: 6, 19: 8, 20: 12}
+    bridge-casing: minor
