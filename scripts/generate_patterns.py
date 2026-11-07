@@ -69,6 +69,11 @@ LINEJOINS = {'miter': pathops.LineJoin.MITER_JOIN, 'round': pathops.LineJoin.ROU
              'bevel': pathops.LineJoin.BEVEL_JOIN}
 NAMED_COLORS = {'black': '#000000', 'white': '#ffffff'}
 
+# All path operations are done with keep_starting_points=False.  Keeping the
+# starting points of contours has no effect on the shapes, and skia-pathops
+# (0.9.2) unbalances the reference counts of True, False and small integers
+# doing it, by billions for these patterns, which breaks Python 3.14.
+
 # Precision (px) of curve approximations: round joins of strokes and casings
 TOLERANCE = 0.005
 # Parts of the neighboring tiles within this distance (px) of the pattern
@@ -191,7 +196,7 @@ def painted_areas(d, transform, attrs):
         if attrs['fill-rule'] == 'evenodd':
             area.fillType = pathops.FillType.EVEN_ODD
         area = area.transform(*transform)
-        area.simplify()
+        area.simplify(keep_starting_points=False)
         result.append((area, normalize_color(attrs['fill'])))
     if attrs['stroke'] != 'none' and number(attrs['stroke-width']) > 0:
         line = pathops.Path()
@@ -201,7 +206,7 @@ def painted_areas(d, transform, attrs):
                        LINEJOINS[attrs['stroke-linejoin']], number(attrs['stroke-miterlimit']),
                        TOLERANCE / scale)
         area = area.transform(*transform)
-        area.simplify()
+        area.simplify(keep_starting_points=False)
         result.append((area, normalize_color(attrs['stroke'])))
     return result
 
@@ -256,7 +261,7 @@ def union(areas):
     result = pathops.Path()
     for area in areas:
         result.addPath(area)
-    result.simplify()
+    result.simplify(keep_starting_points=False)
     return result
 
 
@@ -265,7 +270,7 @@ def operation(a, b, op):
     # minimal shift of the second operand avoids them.
     for shift in (0, 1e-4, -1e-4, 2e-4, -2e-4):
         try:
-            return pathops.op(a, translated(b, shift, shift) if shift else b, op)
+            return pathops.op(a, translated(b, shift, shift) if shift else b, op, keep_starting_points=False)
         except pathops.PathOpsError:
             pass
     fail('a path operation failed')
@@ -290,7 +295,7 @@ def translated(area, dx, dy):
 
 
 def clipped(area, x0, y0, x1, y1):
-    return pathops.op(area, rectangle(x0, y0, x1, y1), pathops.PathOp.INTERSECTION)
+    return pathops.op(area, rectangle(x0, y0, x1, y1), pathops.PathOp.INTERSECTION, keep_starting_points=False)
 
 
 def with_neighbors(area, width, height, margin):
@@ -322,7 +327,7 @@ def stroked(path, width, cap, join, miter_limit, tolerance, fill=None):
         if fill is not None:
             outline.addPath(fill)
         try:
-            outline.simplify()
+            outline.simplify(keep_starting_points=False)
             return outline
         except pathops.PathOpsError:
             pass
@@ -354,7 +359,7 @@ def pixels_covered(area, cut):
         part = pathops.Path()
         for contour in contours:
             part.addPath(contour)
-        if pathops.op(part, pixel, pathops.PathOp.INTERSECTION).area >= 0.5:
+        if pathops.op(part, pixel, pathops.PathOp.INTERSECTION, keep_starting_points=False).area >= 0.5:
             pixels.append(pixel)
     return union(pixels)
 
