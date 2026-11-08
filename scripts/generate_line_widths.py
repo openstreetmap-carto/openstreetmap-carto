@@ -3,9 +3,10 @@
 Generates line-widths.sql from line-widths.yaml.
 
 line-widths.sql creates the table carto_line_widths_data, with one row per class and zoom level
-and the columns listed in line-widths.yaml, and the function carto_line_widths(zoom), which the
-layers join on the class of a line to get its widths at the zoom level being rendered. The file
-begins with plain text tables of the widths by zoom level for checking.
+and a column for every kind of width the classes in line-widths.yaml give, and the function
+carto_line_widths(zoom), which the layers join on the class of a line to get its widths at the
+zoom level being rendered. The file begins with plain text tables of the widths by zoom level for
+checking.
 
 Run as
   scripts/generate_line_widths.py > line-widths.sql
@@ -19,8 +20,8 @@ import sys
 import yaml
 
 MAX_ZOOM = 20  # above this zoom level the widths of MAX_ZOOM apply
-SECTIONS = ('columns', 'progressions', 'classes')
-NAME = re.compile(r'^[a-z][a-z0-9_]*$')  # names of columns and classes, used in SQL as they are
+SECTIONS = ('progressions', 'classes')
+NAME = re.compile(r'^[a-z][a-z0-9_]*$')  # names of progressions, classes and columns
 KEY_COLUMNS = ('zoom', 'class')
 
 
@@ -75,22 +76,14 @@ def progression(widths, where):
 
 def load(path):
     '''Returns the columns, the widths of the classes as {class: {column: [width by zoom]}} and
-    the classes that are aliases of another one as {class: other class}.'''
+    the classes that have the widths of another one as {class: other class}.'''
     with open(path) as f:
         try:
             data = yaml.load(f, Loader=UniqueKeyLoader)
         except yaml.YAMLError as e:
             raise WidthError(str(e))
-    if not isinstance(data, dict) or set(data) - set(SECTIONS) or 'columns' not in data or 'classes' not in data:
-        raise WidthError('{}: expected the sections columns, classes and optionally progressions'.format(path))
-
-    columns = data['columns']
-    if not isinstance(columns, list) or not columns:
-        raise WidthError('columns: expected a list of column names, like [line_width, casing_width]')
-    for column in columns:
-        check_name(column, 'columns')
-        if column in KEY_COLUMNS or columns.count(column) > 1:
-            raise WidthError('columns: {} can not be a column'.format(column))
+    if not isinstance(data, dict) or set(data) - set(SECTIONS) or 'classes' not in data:
+        raise WidthError('{}: expected the sections progressions (optional) and classes'.format(path))
 
     progressions = data.get('progressions') or {}
     classes = data['classes']
@@ -99,28 +92,45 @@ def load(path):
             raise WidthError('{}: expected names with their widths'.format(section))
         for name in value:
             check_name(name, section)
-    for name, widths in progressions.items():
-        progression(widths, 'progression ' + name)
+    for name in set(progressions) & set(classes):
+        raise WidthError('{} is the name of both a progression and a class'.format(name))
+    progressions = {name: progression(widths, 'progression ' + name) for name, widths in progressions.items()}
+    used = set()
 
-    table, aliases, first_of = {}, {}, {}
+    def widths_of(value, where):
+        '''The widths given inline or by the name of a progression.'''
+        if isinstance(value, str):
+            if value not in progressions:
+                raise WidthError('{}: there is no progression named {!r}'.format(where, value))
+            used.add(value)
+            return progressions[value]
+        return progression(value, where)
+
+    # the columns are the ones the classes give, in the order they first appear
+    columns, table, aliases = [], {}, {}
     for name, widths in classes.items():
+        if isinstance(widths, str):
+            aliases[name] = widths
+            continue
         if not isinstance(widths, dict) or not widths:
-            raise WidthError('class {}: expected widths for one or more of the columns {}'.format(
-                name, ', '.join(columns)))
+            raise WidthError('class {}: expected widths by column, like line_width: {{12: 0.5}}, '
+                             'or the name of another class'.format(name))
         for column in widths:
+            check_name(column, 'class {}'.format(name))
+            if column in KEY_COLUMNS:
+                raise WidthError('class {}: {} can not be a column'.format(name, column))
             if column not in columns:
-                raise WidthError('class {}: {!r} is not one of the columns {}'.format(
-                    name, column, ', '.join(columns)))
-        # an alias of a class that came before is the very same mapping
-        if id(widths) in first_of:
-            aliases[name] = first_of[id(widths)]
-        first_of.setdefault(id(widths), name)
-        table[name] = {column: progression(widths[column], 'class {}, {}'.format(name, column))
-                       for column in columns if column in widths}
+                columns.append(column)
+        table[name] = {column: widths_of(value, 'class {}, {}'.format(name, column))
+                       for column, value in widths.items()}
+    for name, other in aliases.items():
+        if other not in table:
+            raise WidthError('class {}: there is no class {!r} to take the widths of'.format(name, other))
+    # the classes in the order they are listed
+    table = {name: table[aliases.get(name, name)] for name in classes}
 
-    used = {id(v) for widths in classes.values() for v in widths.values()}
-    for name, widths in progressions.items():
-        if id(widths) not in used:
+    for name in progressions:
+        if name not in used:
             print('warning: progression {} is not used'.format(name), file=sys.stderr)
 
     return columns, table, aliases
