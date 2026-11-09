@@ -345,8 +345,8 @@
 
 #roads-casing, #bridges, #tunnels {
   ::casing {
-    [zoom >= 12] {
-      [feature = 'highway_motorway'] {
+    [feature = 'highway_motorway'] {
+      [zoom >= 12] {
         line-width: @motorway-width-z12;
         [zoom >= 13] { line-width: @motorway-width-z13; }
         [zoom >= 15] { line-width: @motorway-width-z15; }
