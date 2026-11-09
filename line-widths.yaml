@@ -1,0 +1,136 @@
+# Line widths by zoom level, in pixels.
+#
+# scripts/generate_line_widths.py makes line-widths.sql from this file, which gives the database a
+# table with one row per class and zoom level and the function carto_line_widths(zoom). The layers
+# join that on the class of a line, and the CartoCSS reads the widths by their names, like
+# [line_width].
+#
+# A class is named like the `feature` of the layers: highway_motorway, aeroway_runway. It gives
+# each kind of width it has (line_width, casing_width, ...) at the zoom levels where it changes:
+# {12: 0.5, 15: 0.7} is 0.5 from z12 to z14 and 0.7 from z15 on. Every kind of width a class gives
+# becomes a column of the table. Where a class gives no width for a column, the column is NULL,
+# as it is for a class that is not listed here.
+#
+# Widths used by several classes are defined once under `progressions` and given by their name
+# (casing_width: major_casing). A class can also be given as the name of another class whose
+# widths it has (highway_path: highway_footway).
+#
+# For a road, line_width is the full width including the casings, which are drawn casing_width
+# wide on either side, or bridge_casing_width wide on a bridge. For the paths line_width is the
+# line itself, and the style draws the background around it. For the aeroways and the roller
+# coaster the bridge casing is drawn outside the line.
+#
+# How the widths are used (fill = width minus the casings, dashes, access markings, turning
+# circles) is decided in the CartoCSS.
+#
+# After editing, run
+#   scripts/generate_line_widths.py > line-widths.sql
+# and load the result with psql -d gis -f line-widths.sql (kosmtik in Docker does this when it
+# starts). line-widths.sql begins with tables of all widths by zoom level for checking.
+
+progressions:
+  major_casing:            {12: 0.5, 15: 0.7, 17: 1}  # z14 is 0.5 because the z13 casing stayed in use
+  secondary_casing:        {12: 0.3, 13: 0.35, 15: 0.7, 17: 1}
+  link_casing:             {12: 0.3, 13: 0.5, 15: 0.6, 17: 0.8}  # z14 likewise
+  minor_casing:            {12: 0.3, 13: 0.5, 14: 0.55, 15: 0.6, 17: 0.8}
+  service_casing:          {14: 0.55, 16: 0.6, 17: 0.8}  # z15 likewise
+
+  major_bridge_casing:     {12: 0.5, 15: 0.75, 17: 1}  # z14 likewise
+  secondary_bridge_casing: {12: 0.1, 13: 0.5, 14: 0.6, 15: 0.75, 17: 1}  # z12 is the minor bridge casing
+  minor_bridge_casing:     {12: 0.1, 13: 0.5, 15: 0.75, 17: 0.8}
+  service_bridge_casing:   {14: 0.5, 16: 0.75, 17: 0.8}  # z15 likewise
+
+classes:
+  highway_motorway:
+    line_width: {6: 0.4, 7: 0.8, 8: 1, 9: 1.4, 10: 1.9, 11: 2, 12: 3.5, 13: 6, 15: 10, 17: 18, 18: 21, 19: 27, 20: 33}
+    casing_width: major_casing
+    bridge_casing_width: major_bridge_casing
+  highway_trunk:
+    line_width: {6: 0.4, 7: 0.6, 8: 1, 9: 1.4, 10: 1.9, 12: 3.5, 13: 6, 15: 10, 17: 18, 18: 21, 19: 27}
+    casing_width: major_casing
+    bridge_casing_width: major_bridge_casing
+  highway_primary:
+    line_width: {8: 1, 9: 1.4, 10: 1.8, 12: 3.5, 13: 5, 15: 10, 17: 18, 18: 21, 19: 27}
+    casing_width: major_casing
+    bridge_casing_width: major_bridge_casing
+  highway_secondary:
+    line_width: {9: 1, 10: 1.1, 12: 3.5, 13: 5, 15: 9, 16: 10, 17: 18, 18: 21, 19: 27}
+    casing_width: secondary_casing
+    bridge_casing_width: secondary_bridge_casing
+  highway_tertiary:
+    line_width: {10: 0.7, 12: 2.5, 13: 4, 14: 5, 15: 9, 16: 10, 17: 18, 18: 21, 19: 27}
+    casing_width: minor_casing
+    bridge_casing_width: minor_bridge_casing
+
+  highway_motorway_link:
+    line_width: {10: 1.9, 11: 2, 12: 1.5, 13: 4, 15: 7.8, 17: 12, 18: 13, 19: 16, 20: 17}
+    casing_width: link_casing
+    bridge_casing_width: minor_bridge_casing
+  highway_trunk_link:
+    line_width: {10: 1.9, 12: 1.5, 13: 4, 15: 7.8, 17: 12, 18: 13, 19: 16}
+    casing_width: link_casing
+    bridge_casing_width: minor_bridge_casing
+  highway_primary_link:
+    line_width: {10: 1.8, 12: 1.5, 13: 4, 15: 7.8, 17: 12, 18: 13, 19: 16}
+    casing_width: link_casing
+    bridge_casing_width: minor_bridge_casing
+  highway_secondary_link:
+    line_width: {10: 1.1, 12: 1.5, 13: 4, 15: 7, 17: 12, 18: 13, 19: 16}
+    casing_width: link_casing
+    bridge_casing_width: minor_bridge_casing
+  highway_tertiary_link:
+    line_width: {10: 0.7, 12: 1.5, 13: 3, 15: 7, 17: 12, 18: 13, 19: 16}
+    casing_width: link_casing
+    bridge_casing_width: minor_bridge_casing
+
+  highway_unclassified:
+    line_width: {12: 0.8, 13: 2.5, 14: 3, 15: 5, 16: 6, 17: 12, 18: 13, 19: 17}
+    casing_width: minor_casing
+    bridge_casing_width: minor_bridge_casing
+  highway_residential:
+    line_width: {12: 0.5, 13: 2.5, 14: 3, 15: 5, 16: 6, 17: 12, 18: 13, 19: 17}
+    casing_width: minor_casing
+    bridge_casing_width: minor_bridge_casing
+  highway_living_street:
+    line_width: {13: 2, 14: 3, 15: 5, 16: 6, 17: 12, 18: 13, 19: 17}
+    casing_width: minor_casing
+    bridge_casing_width: minor_bridge_casing
+  highway_pedestrian:
+    line_width: {14: 3, 15: 5, 16: 6, 17: 12, 18: 13, 19: 17}
+    casing_width: minor_casing
+    bridge_casing_width: minor_bridge_casing
+  highway_road:
+    line_width: {10: 1, 14: 2, 16: 3.5, 17: 7, 18: 8.5, 19: 11}
+    casing_width: service_casing
+    bridge_casing_width: service_bridge_casing
+  highway_service:
+    line_width: {14: 2, 16: 3.5, 17: 7, 18: 8.5, 19: 11, 20: 12}
+    casing_width: service_casing
+    bridge_casing_width: service_bridge_casing
+  highway_service_minor:  # parking aisles, drive-throughs, driveways and slipways
+    line_width: {16: 2, 17: 3.5, 18: 4.75, 19: 5.5, 20: 8.5}
+    casing_width: minor_casing
+    bridge_casing_width: minor_bridge_casing
+
+  highway_footway:
+    line_width: {14: 0.7, 15: 1, 16: 1.3, 19: 1.6}
+  highway_path: highway_footway
+  highway_cycleway:
+    line_width: {13: 0.7, 15: 0.9, 18: 1, 19: 1.3}
+  highway_bridleway:
+    line_width: {13: 0.3, 15: 1.2}
+  highway_steps:
+    line_width: {14: 0.7, 15: 3}
+  highway_track:
+    line_width: {13: 0.5, 15: 1.5}
+
+  aeroway_runway:
+    line_width: {11: 2, 12: 4, 13: 6, 14: 12, 15: 18, 16: 24}
+    bridge_casing_width: {14: 0.6, 15: 0.7, 17: 1}
+  aeroway_taxiway:
+    line_width: {11: 1, 13: 2, 14: 4, 15: 6, 16: 8}
+    bridge_casing_width: secondary_casing  # the road casing, not the bridge casing
+
+  railway_roller_coaster:  # the fill is half the width
+    line_width: {15: 1, 16: 2.5, 17: 4, 18: 6, 19: 8, 20: 12}
+    bridge_casing_width: minor_bridge_casing
