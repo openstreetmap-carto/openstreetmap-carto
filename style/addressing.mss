@@ -61,7 +61,8 @@
 /* Building names (rendered differently from addresses because they are
 no official postal addresses) */
 
-#building-text {
+#building-text,
+#building-text::dodge {
   [zoom >= 14][way_pixels > 3000],
   [zoom >= 17] {
     text-name: "[name]";
@@ -72,5 +73,19 @@ no official postal addresses) */
     text-size: 11;
     text-wrap-width: 22; // 2.0 em
     text-line-spacing: -1.65; // -0.15 em
+  }
+}
+
+/* Second attempt for names whose centred placement collided with something, e.g. the
+   icon of a shop or room inside the building: try positions around the label point.
+   text-repeat-distance drops it when the centred name above was placed. */
+#building-text::dodge {
+  [zoom >= 14][way_pixels > 3000],
+  [zoom >= 17] {
+    text-dx: 8;
+    text-dy: 8;
+    text-placement-type: simple;
+    text-placements: "N,S,E,W,NE,SE,NW,SW";
+    text-repeat-distance: 100;
   }
 }

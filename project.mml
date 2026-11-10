@@ -2350,6 +2350,7 @@ Layer:
           ORDER BY way_pixels DESC
         ) AS building_text
     properties:
+      cache-features: true
       minzoom: 14
   - id: interpolation
     geometry: linestring
