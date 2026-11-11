@@ -61,8 +61,7 @@
 /* Building names (rendered differently from addresses because they are
 no official postal addresses) */
 
-#building-text,
-#building-text::dodge {
+#building-text {
   [zoom >= 14][way_pixels > 3000],
   [zoom >= 17] {
     text-name: "[name]";
@@ -78,10 +77,19 @@ no official postal addresses) */
 
 /* Second attempt for names whose centred placement collided with something, e.g. the
    icon of a shop or room inside the building: try positions around the label point.
-   text-repeat-distance drops it when the centred name above was placed. */
+   text-repeat-distance drops it when the centred name above was placed. Only for
+   buildings large enough on screen that the moved name still sits on them. */
 #building-text::dodge {
   [zoom >= 14][way_pixels > 3000],
-  [zoom >= 17] {
+  [zoom >= 17][way_pixels > 1000] {
+    text-name: "[name]";
+    text-face-name: @book-fonts;
+    text-fill: #444;
+    text-halo-radius: @standard-halo-radius;
+    text-halo-fill: @standard-halo-fill;
+    text-size: 11;
+    text-wrap-width: 22; // 2.0 em
+    text-line-spacing: -1.65; // -0.15 em
     text-dx: 8;
     text-dy: 8;
     text-placement-type: simple;
