@@ -1700,7 +1700,7 @@ Layer:
                 ELSE
                 CONCAT(
                   name,
-                  E'\n' || CONCAT( -- by doing this with a || if both the ele and height branches are null, this entire expression is null and only name is used
+                  E'\n' || NULLIF(CONCAT( -- by doing this with a || if both the ele and height branches are null, this entire expression is null and only name is used
                     CASE
                       WHEN (tags ? 'ele') AND tags->'ele' ~ '^-?\d{1,4}(\.\d+)?$'
                         AND ("natural" IN ('peak', 'volcano', 'saddle')
@@ -1713,7 +1713,7 @@ Layer:
                       WHEN (tags ? 'height') AND tags->'height' ~ '^\d{1,3}(\.\d+)?$'
                         AND waterway = 'waterfall'
                       THEN CONCAT(ROUND((tags->'height')::NUMERIC)::TEXT, U&'\00A0', 'm') END
-                    )
+                    ), '')
                   )
                 END AS name,
               tags->'parking' as "parking",
