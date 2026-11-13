@@ -78,10 +78,11 @@ no official postal addresses) */
 /* Second attempt for names whose centred placement collided with something, e.g. the
    icon of a shop or room inside the building: try positions around the label point.
    text-repeat-distance drops it when the centred name above was placed. Only for
-   buildings large enough on screen that the moved name still sits on them. */
+   buildings large enough on screen that the moved name still sits on them and not
+   for buildings that are already a POI themselves, since those are already labelled. */
 #building-text::dodge {
-  [zoom >= 14][way_pixels > 3000],
-  [zoom >= 17][way_pixels > 1000] {
+  [zoom >= 14][way_pixels > 3000][poi = null],
+  [zoom >= 17][way_pixels > 1000][poi = null] {
     text-name: "[name]";
     text-face-name: @book-fonts;
     text-fill: #444;
