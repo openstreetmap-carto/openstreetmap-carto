@@ -2340,6 +2340,10 @@ Layer:
         (SELECT
             COALESCE(way_area/NULLIF(POW(!scale_denominator!*0.001*0.28,2),0), 0) AS way_pixels,
             name,
+            -- If building already a POI it gets a label from text-point
+            -- so then no 2nd placement attempt for the building name.
+            COALESCE(amenity, shop, tourism, leisure, man_made, historic, "natural", power, aeroway,
+                     tags->'office', tags->'emergency', tags->'advertising') AS poi,
             ST_PointOnSurface(way) AS way
           FROM planet_osm_polygon
           WHERE ST_PointOnSurface(way) && !bbox!
@@ -2350,6 +2354,7 @@ Layer:
           ORDER BY way_pixels DESC
         ) AS building_text
     properties:
+      cache-features: true
       minzoom: 14
   - id: interpolation
     geometry: linestring
