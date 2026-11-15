@@ -424,7 +424,6 @@ Layer:
       <<: *osm2pgsql
       table: |-
         (SELECT
-            man_made,
             way
           FROM planet_osm_polygon
           WHERE man_made = 'bridge'
@@ -1633,7 +1632,6 @@ Layer:
       table: |-
         (SELECT
             COALESCE(way_area/NULLIF(POW(!scale_denominator!*0.001*0.28,2),0), 0) AS way_pixels,
-            man_made,
             name,
             ST_PointOnSurface(way) AS way
           FROM planet_osm_polygon
@@ -1645,7 +1643,7 @@ Layer:
           ORDER BY way_pixels DESC
         ) AS bridge_text
     properties:
-      minzoom: 11
+      minzoom: 12
   - id: county-names
     geometry: point
     <<: *extents
@@ -2117,7 +2115,7 @@ Layer:
       table: |-
         (SELECT
             COALESCE(layer, 0) AS layernotnull,
-            l.osm_id,
+            osm_id,
             length(name) AS name_length,
             z_order,
             name,
@@ -2129,7 +2127,7 @@ Layer:
               WHEN junction IN ('roundabout') AND (oneway IS NULL OR NOT oneway IN ('no', 'reversible')) THEN 'yes'
             END AS oneway,
             way
-          FROM planet_osm_line l
+          FROM planet_osm_line
           WHERE highway IN ('motorway', 'motorway_link', 'trunk', 'trunk_link', 'primary', 'primary_link', 'secondary', 'secondary_link', 'tertiary',
                             'tertiary_link', 'residential', 'unclassified', 'road', 'service', 'pedestrian', 'raceway', 'living_street', 'construction', 'bus_guideway')
             AND (name IS NOT NULL
@@ -2177,7 +2175,7 @@ Layer:
       table: |-
         (SELECT
             COALESCE(layer, 0) AS layernotnull,
-            l.osm_id,
+            osm_id,
             length(name) AS name_length,
             z_order,
             name,
@@ -2194,7 +2192,7 @@ Layer:
               ELSE 'no'
             END) AS preserved,
             way
-          FROM planet_osm_line l
+          FROM planet_osm_line
           WHERE railway IN ('rail', 'subway', 'narrow_gauge', 'light_rail', 'funicular', 'monorail', 'miniature', 'tram', 'disused', 'construction')
             AND (tunnel IS NULL OR NOT tunnel IN ('yes', 'building_passage', 'avalanche_protector'))
             AND highway IS NULL -- Prevent duplicate rendering
