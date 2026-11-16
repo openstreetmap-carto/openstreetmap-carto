@@ -1717,72 +1717,11 @@ Layer:
                   )
                 END AS name,
               tags->'parking' as "parking",
-              COALESCE(
-                'aeroway_' || CASE WHEN aeroway IN ('gate', 'apron', 'helipad', 'aerodrome') THEN aeroway END,
-                'tourism_' || CASE WHEN tourism IN ('alpine_hut', 'apartment', 'artwork', 'camp_site', 'caravan_site', 'chalet', 'gallery', 'guest_house',
-                                                    'hostel', 'hotel', 'motel', 'museum', 'picnic_site', 'theme_park', 'wilderness_hut',
-                                                    'zoo') THEN tourism END,
-                'amenity_' || CASE WHEN amenity IN ('arts_centre', 'atm', 'bank', 'bar', 'bbq', 'bicycle_rental',
-                                                    'bicycle_repair_station','biergarten', 'boat_rental', 'bureau_de_change', 'bus_station', 'cafe',
-                                                    'car_rental', 'car_wash', 'casino', 'charging_station', 'childcare', 'cinema', 'clinic', 'college',
-                                                    'community_centre', 'courthouse', 'dentist', 'doctors', 'drinking_water', 'driving_school',
-                                                    'fast_food', 'ferry_terminal', 'fire_station', 'food_court', 'fountain', 'fuel', 'grave_yard',
-                                                    'hospital', 'hunting_stand', 'ice_cream', 'internet_cafe', 'kindergarten', 'library', 'marketplace',
-                                                    'nightclub', 'nursing_home', 'pharmacy', 'place_of_worship', 'police', 'post_box',
-                                                    'post_office', 'prison', 'pub', 'public_bath', 'public_bookcase', 'recycling', 'restaurant', 'school',
-                                                    'shelter', 'shower', 'social_facility', 'taxi', 'telephone', 'theatre', 'toilets', 'townhall',
-                                                    'university', 'vehicle_inspection', 'veterinary') THEN amenity END,
-                'amenity_' || CASE WHEN amenity IN ('waste_disposal') AND way_area IS NOT NULL THEN amenity END, -- Waste disposal points are rendered in the low priority layer
-                'amenity_' || CASE WHEN amenity IN ('vending_machine') AND tags->'vending' IN ('excrement_bags', 'parking_tickets', 'public_transport_tickets') THEN amenity END,
-                'amenity_' || CASE WHEN amenity IN ('parcel_locker') THEN amenity END,
-                'diplomatic_'|| CASE WHEN tags->'office' IN ('diplomatic') AND tags->'diplomatic' IN ('embassy', 'consulate') THEN tags->'diplomatic' ELSE NULL END,
-                'advertising_' || CASE WHEN tags->'advertising' in ('column') THEN tags->'advertising' END,
-                'emergency_' || CASE WHEN tags->'emergency' IN ('phone') AND way_area IS NULL THEN tags->'emergency' END,
-                'shop' || CASE WHEN shop IS NOT NULL AND EXISTS (SELECT 1 FROM carto_pois WHERE key = 'shop' AND value = shop) THEN '' END,
-                'leisure_' || CASE WHEN leisure IN ('amusement_arcade', 'beach_resort', 'bird_hide', 'bowling_alley', 'dance', 'dog_park', 'firepit', 'fishing',
-                                                    'fitness_centre', 'fitness_station', 'garden', 'golf_course', 'ice_rink', 'marina', 'miniature_golf',
-                                                    'outdoor_seating', 'park', 'picnic_table', 'pitch', 'playground',
-                                                    'sauna', 'slipway', 'sports_centre', 'stadium', 'swimming_area', 'swimming_pool', 'track', 'water_park') THEN leisure END,
-                'power_' || CASE WHEN power IN ('plant', 'generator', 'substation') THEN power END,
-                'man_made_' || CASE WHEN (man_made IN ('ceremonial_gate', 'chimney', 'communications_tower', 'crane', 'lighthouse', 'mast', 'obelisk', 'silo', 'storage_tank',
-                                                       'telescope', 'tower', 'wastewater_plant', 'water_tower', 'water_works', 'windmill', 'works')
-                                            AND (tags->'location' NOT IN ('roof', 'rooftop') OR NOT (tags ? 'location'))) THEN man_made END,
-                'landuse_' || CASE WHEN landuse IN ('reservoir', 'basin', 'recreation_ground', 'village_green', 'quarry', 'vineyard', 'orchard', 'cemetery',
-                                                    'residential', 'garages', 'meadow', 'grass', 'allotments', 'forest', 'farmyard', 'farmland',
-                                                    'greenhouse_horticulture', 'retail', 'industrial', 'railway', 'commercial', 'brownfield', 'landfill',
-                                                    'construction', 'salt_pond', 'military', 'plant_nursery') THEN landuse END,
-                'natural_' || CASE WHEN "natural" IN ('peak', 'volcano', 'saddle', 'cave_entrance') AND way_area IS NULL THEN "natural" END,
-                'natural_' || CASE WHEN "natural" IN ('wood', 'water', 'mud', 'wetland', 'bay', 'spring', 'scree', 'shingle', 'bare_rock', 'sand', 'heath',
-                                                      'grassland', 'scrub', 'beach', 'glacier', 'tree', 'strait', 'cape', 'reef', 'peninsula')
-                                                      THEN "natural" END,
-                'mountain_pass' || CASE WHEN tags->'mountain_pass' IN ('yes') THEN '' END, -- after natural=saddle to give priority to that tag on the same node
-                'waterway_' || CASE WHEN "waterway" IN ('waterfall') AND way_area IS NULL THEN waterway END,
-                'place_' || CASE WHEN place IN ('island', 'islet', 'square') THEN place END,
-                'historic_' || CASE WHEN historic IN ('memorial', 'monument', 'archaeological_site', 'fort', 'castle', 'manor', 'city_gate')
-                              THEN historic END,
-                'military_'|| CASE WHEN military IN ('danger_area', 'bunker') THEN military END,
-                'highway_' || CASE WHEN highway IN ('services', 'rest_area', 'bus_stop', 'elevator', 'traffic_signals') THEN highway END,
-                'highway_'|| CASE WHEN tags->'ford' IN ('yes', 'stepping_stones') AND way_area IS NULL THEN 'ford' END,
-                'boundary_' || CASE WHEN boundary IN ('aboriginal_lands', 'national_park')
-                                          OR (boundary = 'protected_area' AND tags->'protect_class' IN ('1','1a','1b','2','3','4','5','6'))
-                                          THEN boundary END,
-                'leisure_' || CASE WHEN leisure IN ('nature_reserve') THEN leisure END,
-                'tourism_' || CASE WHEN tourism IN ('information') AND tags->'information' IN ('audioguide', 'board', 'guidepost', 'office', 'map', 'tactile_map', 'terminal') THEN tourism END,
-                'office' || CASE WHEN (tags->'office') IS NOT NULL AND EXISTS (SELECT 1 FROM carto_pois WHERE key = 'office' AND value = tags->'office') THEN '' END,
-                'barrier_' || CASE WHEN barrier IN ('toll_booth') AND way_area IS NULL THEN barrier END,
-                'waterway_' || CASE WHEN waterway IN ('dam', 'dock') THEN waterway END,
-                'waterway_' || CASE WHEN waterway IN ('weir') AND way_area IS NULL THEN waterway END,
-                'amenity_' || CASE WHEN amenity IN ('bicycle_parking', 'motorcycle_parking') THEN amenity END,
-                'amenity_' || CASE WHEN amenity IN ('parking') AND (tags->'parking' NOT IN ('underground') OR (tags->'parking') IS NULL) THEN amenity END,
-                'amenity_' || CASE WHEN amenity IN ('parking_entrance')
-                                        AND tags->'parking' IN ('multi-storey', 'underground')
-                                        AND (access IS NULL OR access NOT IN ('private', 'no', 'customers', 'permit', 'delivery'))
-                                        AND way_area IS NULL
-                                   THEN amenity END,
-                'tourism_' || CASE WHEN tourism IN ('viewpoint', 'attraction') THEN tourism END,
-                'place_' || CASE WHEN place IN ('locality') AND way_area IS NULL THEN place END,
-                'golf_' || CASE WHEN tags->'golf' IN ('pin') AND way_area IS NULL THEN tags->'golf' END
-              ) AS feature,
+              carto_poi_feature(aeroway, amenity, barrier, boundary, highway, historic, landuse, leisure, man_made, military,
+                                "natural", place, power, shop, tourism, waterway, access, tags, way_area,
+                                shop IS NOT NULL AND EXISTS (SELECT 1 FROM carto_pois WHERE key = 'shop' AND value = shop),
+                                (tags->'office') IS NOT NULL AND EXISTS (SELECT 1 FROM carto_pois WHERE key = 'office' AND value = tags->'office')
+                               ) AS feature,
               CASE WHEN access IN ('private', 'no', 'customers', 'permit', 'delivery') THEN 'restricted' ELSE 'yes' END AS int_access,
               religion,
               tags->'denomination' as denomination,
