@@ -31,7 +31,7 @@ cartographic project you can expect the following:
 * PATCH: When a patch version is released, there would be no reason not to
   upgrade. PATCH versions contain only bugfixes e.g. stylesheets won't compile,
   features are missing by mistake, etc.
-* MINOR: These are routine releases and happen every 2-5 weeks. They will
+* MINOR: These are routine releases. They will
   contain changes to what's shown on the map, how they appear, new features
   added and old features removed. They may rarely contain changes to assets i.e.
   shapefiles and fonts but will not contain changes that require software or
