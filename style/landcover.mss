@@ -555,6 +555,7 @@
 
   [feature = 'amenity_hospital'],
   [feature = 'amenity_clinic'],
+  [feature = 'amenity_health_post'],
   [feature = 'amenity_university'],
   [feature = 'amenity_college'],
   [feature = 'amenity_school'],
