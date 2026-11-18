@@ -26,7 +26,8 @@
 # After editing, run
 #   scripts/generate_line_widths.py > line-widths.sql
 # and load the result with psql -d gis -f line-widths.sql (kosmtik in Docker does this when it
-# starts). line-widths.sql begins with tables of all widths by zoom level for checking.
+# starts). The script prints tables of all widths by zoom level for checking, with a summary of
+# the classes giving each kind of width, and line-widths.sql begins with the same tables.
 
 progressions:
   major_casing:            {12: 0.5, 15: 0.7, 17: 1}  # z14 is 0.5 because the z13 casing stayed in use

@@ -6,7 +6,7 @@ line-widths.sql creates the table carto_line_widths_data, with one row per class
 and a column for every kind of width the classes in line-widths.yaml give, and the function
 carto_line_widths(zoom), which the layers join on the class of a line to get its widths at the
 zoom level being rendered. The file begins with plain text tables of the widths by zoom level for
-checking.
+checking, which are also printed to stderr with a summary.
 
 Run as
   scripts/generate_line_widths.py > line-widths.sql
@@ -19,7 +19,6 @@ import sys
 
 import yaml
 
-MAX_ZOOM = 20  # above this zoom level the widths of MAX_ZOOM apply
 SECTIONS = ('progressions', 'classes')
 NAME = re.compile(r'^[a-z][a-z0-9_]*$')  # names of progressions, classes and columns
 KEY_COLUMNS = ('zoom', 'class')
@@ -54,29 +53,36 @@ def check_name(name, what):
 
 
 def progression(widths, where):
-    '''Checks a {zoom: width} mapping and returns it as a list of MAX_ZOOM + 1 widths or None.'''
+    '''Checks a {zoom: width} mapping and returns it.'''
     if not isinstance(widths, dict) or not widths:
         raise WidthError('{}: expected widths by zoom level, like {{12: 0.5, 15: 0.7}}'.format(where))
     zooms = list(widths)
     for zoom in zooms:
-        if isinstance(zoom, bool) or not isinstance(zoom, int) or not 0 <= zoom <= MAX_ZOOM:
-            raise WidthError('{}: {!r} is not a zoom level from 0 to {}'.format(where, zoom, MAX_ZOOM))
+        if isinstance(zoom, bool) or not isinstance(zoom, int) or zoom < 0:
+            raise WidthError('{}: {!r} is not a zoom level'.format(where, zoom))
         width = widths[zoom]
         if isinstance(width, bool) or not isinstance(width, (int, float)) or width < 0:
             raise WidthError('{}, z{}: {!r} is not a width'.format(where, zoom, width))
     if zooms != sorted(zooms):
         raise WidthError('{}: zoom levels must be listed in increasing order'.format(where))
-    result = [None] * (MAX_ZOOM + 1)
-    current = None
-    for zoom in range(MAX_ZOOM + 1):
+    return widths
+
+
+def by_zoom(widths, max_zoom):
+    '''The widths of a progression at every zoom level up to max_zoom: the width given for that
+    zoom level or the last one below it, None below the first.'''
+    result, current = [], None
+    for zoom in range(max_zoom + 1):
         current = widths.get(zoom, current)
-        result[zoom] = current
+        result.append(current)
     return result
 
 
 def load(path):
-    '''Returns the columns, the widths of the classes as {class: {column: [width by zoom]}} and
-    the classes that have the widths of another one as {class: other class}.'''
+    '''Returns the columns, the widths of the classes as {class: {column: [width by zoom]}}, the
+    classes that have the widths of another one as {class: other class}, the highest zoom level
+    a width is given for (the widths stay the same above it), the number of progressions and
+    any warnings.'''
     with open(path) as f:
         try:
             data = yaml.load(f, Loader=UniqueKeyLoader)
@@ -95,7 +101,7 @@ def load(path):
     for name in set(progressions) & set(classes):
         raise WidthError('{} is the name of both a progression and a class'.format(name))
     progressions = {name: progression(widths, 'progression ' + name) for name, widths in progressions.items()}
-    used = set()
+    used, warnings = set(), []
 
     def widths_of(value, where):
         '''The widths given inline or by the name of a progression.'''
@@ -126,33 +132,55 @@ def load(path):
     for name, other in aliases.items():
         if other not in table:
             raise WidthError('class {}: there is no class {!r} to take the widths of'.format(name, other))
+    max_zoom = max(max(widths) for given in table.values() for widths in given.values())
+    table = {name: {column: by_zoom(widths, max_zoom) for column, widths in given.items()}
+             for name, given in table.items()}
     # the classes in the order they are listed
     table = {name: table[aliases.get(name, name)] for name in classes}
 
     for name in progressions:
         if name not in used:
-            print('warning: progression {} is not used'.format(name), file=sys.stderr)
+            warnings.append('warning: progression {} is not used'.format(name))
 
-    return columns, table, aliases
+    return columns, table, aliases, max_zoom, len(progressions), warnings
 
 
-def grid(column, table):
-    '''A plain text table of the widths in one column by class and zoom level, as SQL comments.'''
+def grid(column, table, max_zoom):
+    '''A plain text table of the widths in one column by class and zoom level.'''
     rows = {name: widths[column] for name, widths in table.items() if column in widths}
-    if not rows:
-        return ['-- ' + column + ': none']
     first = min(zoom for widths in rows.values() for zoom, w in enumerate(widths) if w is not None)
-    zooms = range(first, MAX_ZOOM + 1)
+    zooms = range(first, max_zoom + 1)
     name_width = max(len(name) for name in rows)
-    out = ['-- ' + column,
-           '--   {:<{}}'.format('', name_width) + ''.join('{:>6}'.format('z%d' % z) for z in zooms)]
+    out = [column,
+           '  {:<{}}'.format('', name_width) + ''.join('{:>6}'.format('z%d' % z) for z in zooms)]
     for name, widths in rows.items():
         cells = ''.join('{:>6}'.format('' if widths[z] is None else number(widths[z])) for z in zooms)
-        out.append(('--   {:<{}}'.format(name, name_width) + cells).rstrip())
+        out.append(('  {:<{}}'.format(name, name_width) + cells).rstrip())
     return out
 
 
-def generate(columns, table, aliases, source):
+def aliases_line(aliases):
+    return 'Aliases: ' + ', '.join('{} has the widths of {}'.format(name, other) for name, other in aliases.items())
+
+
+def report(columns, table, aliases, max_zoom, progressions, source):
+    '''The tables of the widths followed by a summary, for checking an edit at a glance.'''
+    out = []
+    for column in columns:
+        out += grid(column, table, max_zoom) + ['']
+    if aliases:
+        out += [aliases_line(aliases), '']
+    out.append('{}: {} classes, {} progressions, widths up to z{} (and the same above it)'.format(
+        source, len(table), progressions, max_zoom))
+    name_width = max(len(column) for column in columns)
+    for column in columns:
+        given = [name for name, widths in table.items() if column in widths]
+        out.append('  {:<{}}  given by {}'.format(
+            column, name_width, given[0] if len(given) == 1 else '{} classes'.format(len(given))))
+    return out
+
+
+def generate(columns, table, aliases, max_zoom, source):
     out = [
         '-- This is generated code; do not change this file manually.',
         '-- To change the line widths, edit {} and run:'.format(source),
@@ -163,11 +191,10 @@ def generate(columns, table, aliases, source):
         '--',
     ]
     for column in columns:
-        out += grid(column, table)
+        out += ['-- ' + line for line in grid(column, table, max_zoom)]
         out.append('--')
     if aliases:
-        out.append('-- Aliases: ' + ', '.join('{} has the widths of {}'.format(name, other)
-                                             for name, other in aliases.items()))
+        out.append('-- ' + aliases_line(aliases))
     out.append('')
 
     column_list = ', '.join(columns)
@@ -186,7 +213,7 @@ def generate(columns, table, aliases, source):
         'INSERT INTO carto_line_widths_data (zoom, class, {}) VALUES'.format(column_list),
     ]
     rows = []
-    for zoom in range(MAX_ZOOM + 1):
+    for zoom in range(max_zoom + 1):
         for name, widths in table.items():
             values = [widths[column][zoom] if column in widths else None for column in columns]
             if all(value is None for value in values):
@@ -196,7 +223,7 @@ def generate(columns, table, aliases, source):
     out += [
         'ANALYZE carto_line_widths_data;',
         '',
-        '-- The widths at a zoom level, those of z{0} above it, none for no zoom level. The layers'.format(MAX_ZOOM),
+        '-- The widths at a zoom level, those of z{0} above it, none for no zoom level. The layers'.format(max_zoom),
         '-- join this on the class of the line. A plain SQL function like this is inlined into the',
         '-- queries, so the planner reads the table directly. It is dropped first, as its columns',
         '-- may have changed.',
@@ -208,7 +235,7 @@ def generate(columns, table, aliases, source):
         'AS $$',
         'SELECT class, {}'.format(column_list),
         '  FROM carto_line_widths_data',
-        '  WHERE carto_line_widths_data.zoom = CASE WHEN $1 > {0} THEN {0} ELSE $1 END'.format(MAX_ZOOM),
+        '  WHERE carto_line_widths_data.zoom = CASE WHEN $1 > {0} THEN {0} ELSE $1 END'.format(max_zoom),
         '$$;',
     ]
     return '\n'.join(out) + '\n'
@@ -219,10 +246,14 @@ def main():
     parser.add_argument('yaml', nargs='?', default=os.path.join(os.path.dirname(__file__), '..', 'line-widths.yaml'))
     args = parser.parse_args()
     try:
-        columns, table, aliases = load(args.yaml)
+        columns, table, aliases, max_zoom, progressions, warnings = load(args.yaml)
     except WidthError as e:
         sys.exit('error: {}'.format(e))
-    sys.stdout.write(generate(columns, table, aliases, 'line-widths.yaml'))
+    sys.stdout.write(generate(columns, table, aliases, max_zoom, 'line-widths.yaml'))
+    # stderr stays on the terminal when stdout goes to line-widths.sql; warnings last, where
+    # they are seen
+    print('\n'.join(report(columns, table, aliases, max_zoom, progressions, os.path.basename(args.yaml))
+                    + warnings), file=sys.stderr)
 
 
 if __name__ == '__main__':
