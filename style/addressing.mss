@@ -75,14 +75,23 @@ no official postal addresses) */
   }
 }
 
-/* Second attempt for names whose centred placement collided with something, e.g. the
-   icon of a shop or room inside the building: try positions around the label point.
-   text-repeat-distance drops it when the centred name above was placed. Only for
+/* Further attempts for names whose centred placement collided with something, e.g. the
+   icon of a shop or room inside the building: try positions around the label point,
+   one attachment per position, in this order. The name stays horizontally centred on
+   each position, so it never ends up further than the offset from the label point.
+   text-repeat-distance drops it when an earlier attempt already placed it. Only for
    buildings large enough on screen that the moved name still sits on them and not
    for buildings that are already a POI themselves, since those are already labelled. */
-#building-text::dodge {
-  [zoom >= 14][way_pixels > 3000][poi = null],
-  [zoom >= 17][way_pixels > 1000][poi = null] {
+#building-text::dodge-n,
+#building-text::dodge-s,
+#building-text::dodge-e,
+#building-text::dodge-w,
+#building-text::dodge-ne,
+#building-text::dodge-se,
+#building-text::dodge-nw,
+#building-text::dodge-sw {
+  [zoom >= 14][way_pixels > 3000][poi_feature = null],
+  [zoom >= 17][way_pixels > 1000][poi_feature = null] {
     text-name: "[name]";
     text-face-name: @book-fonts;
     text-fill: #444;
@@ -91,10 +100,40 @@ no official postal addresses) */
     text-size: 11;
     text-wrap-width: 22; // 2.0 em
     text-line-spacing: -1.65; // -0.15 em
-    text-dx: 8;
-    text-dy: 8;
-    text-placement-type: simple;
-    text-placements: "N,S,E,W,NE,SE,NW,SW";
+    text-horizontal-alignment: middle;
     text-repeat-distance: 100;
   }
+}
+
+#building-text::dodge-n {
+  [zoom >= 14][way_pixels > 3000][poi_feature = null],
+  [zoom >= 17][way_pixels > 1000][poi_feature = null] { text-dy: -8; }
+}
+#building-text::dodge-s {
+  [zoom >= 14][way_pixels > 3000][poi_feature = null],
+  [zoom >= 17][way_pixels > 1000][poi_feature = null] { text-dy: 8; }
+}
+#building-text::dodge-e {
+  [zoom >= 14][way_pixels > 3000][poi_feature = null],
+  [zoom >= 17][way_pixels > 1000][poi_feature = null] { text-dx: 28; }
+}
+#building-text::dodge-w {
+  [zoom >= 14][way_pixels > 3000][poi_feature = null],
+  [zoom >= 17][way_pixels > 1000][poi_feature = null] { text-dx: -28; }
+}
+#building-text::dodge-ne {
+  [zoom >= 14][way_pixels > 3000][poi_feature = null],
+  [zoom >= 17][way_pixels > 1000][poi_feature = null] { text-dx: 28; text-dy: -8; }
+}
+#building-text::dodge-se {
+  [zoom >= 14][way_pixels > 3000][poi_feature = null],
+  [zoom >= 17][way_pixels > 1000][poi_feature = null] { text-dx: 28; text-dy: 8; }
+}
+#building-text::dodge-nw {
+  [zoom >= 14][way_pixels > 3000][poi_feature = null],
+  [zoom >= 17][way_pixels > 1000][poi_feature = null] { text-dx: -28; text-dy: -8; }
+}
+#building-text::dodge-sw {
+  [zoom >= 14][way_pixels > 3000][poi_feature = null],
+  [zoom >= 17][way_pixels > 1000][poi_feature = null] { text-dx: -28; text-dy: 8; }
 }

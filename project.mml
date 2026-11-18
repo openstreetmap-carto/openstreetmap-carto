@@ -2281,8 +2281,11 @@ Layer:
             name,
             -- If building already a POI it gets a label from text-point
             -- so then no 2nd placement attempt for the building name.
-            COALESCE(amenity, shop, tourism, leisure, man_made, historic, "natural", power, aeroway,
-                     tags->'office', tags->'emergency', tags->'advertising') AS poi,
+            carto_poi_feature(aeroway, amenity, barrier, boundary, highway, historic, landuse, leisure, man_made, military,
+                              "natural", place, power, shop, tourism, waterway, access, tags, way_area,
+                              shop IS NOT NULL AND EXISTS (SELECT 1 FROM carto_pois WHERE key = 'shop' AND value = shop),
+                              (tags->'office') IS NOT NULL AND EXISTS (SELECT 1 FROM carto_pois WHERE key = 'office' AND value = tags->'office')
+                             ) AS poi_feature,
             ST_PointOnSurface(way) AS way
           FROM planet_osm_polygon
           WHERE ST_PointOnSurface(way) && !bbox!
