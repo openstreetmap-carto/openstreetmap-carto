@@ -1174,21 +1174,21 @@ tertiary is rendered from z10 and is not included in osm_planet_roads. */
 
     #roads-fill[feature = 'highway_secondary'][int_surface = 'unpaved'],
     #bridges[feature = 'highway_secondary'][int_surface = 'unpaved'] {
-        [zoom >= 12] {
-          line-pattern-type: repeat;
-          line-pattern-alignment: global;
-          line-pattern-width: [line_width] - 2 * [casing_width];
-          line-pattern-file: url("symbols/unpaved/unpaved_secondary-fill.svg");          
-          line-pattern-cap: round;
-          line-pattern-join: round;
-          /* at z12 the links get the pattern at the width of a secondary road, as before */
-          [zoom = 12][link = 'yes'] { line-pattern-width: 2.9; }
-          [zoom >= 13] {
-            #bridges {
-              line-pattern-width: [line_width] - 2 * [bridge_casing_width];
-            }
+      [zoom >= 12] {
+        line-pattern-type: repeat;
+        line-pattern-alignment: global;
+        line-pattern-width: [line_width] - 2 * [casing_width];
+        line-pattern-file: url("symbols/unpaved/unpaved_secondary-fill.svg");          
+        line-pattern-cap: round;
+        line-pattern-join: round;
+        /* at z12 the links get the pattern at the width of a secondary road, as before */
+        [zoom = 12][link = 'yes'] { line-pattern-width: 2.9; }
+        [zoom >= 13] {
+          #bridges {
+            line-pattern-width: [line_width] - 2 * [bridge_casing_width];
           }
         }
+      }
     }
 
     [feature = 'highway_tertiary'] {
@@ -1212,17 +1212,17 @@ tertiary is rendered from z10 and is not included in osm_planet_roads. */
 
     #roads-fill[feature = 'highway_tertiary'][int_surface = 'unpaved'],
     #bridges[feature = 'highway_tertiary'][int_surface = 'unpaved'] {
-        [zoom >= 13] {
-          line-pattern-type: repeat;
-          line-pattern-alignment: global;
-          line-pattern-width: [line_width] - 2 * [casing_width];
-          line-pattern-file: url("symbols/unpaved/unpaved_residential-fill.svg");
-          #bridges {
-            line-pattern-width: [line_width] - 2 * [bridge_casing_width];
-          }
-          line-pattern-cap: round;
-          line-pattern-join: round;
+      [zoom >= 13] {
+        line-pattern-type: repeat;
+        line-pattern-alignment: global;
+        line-pattern-width: [line_width] - 2 * [casing_width];
+        line-pattern-file: url("symbols/unpaved/unpaved_residential-fill.svg");
+        #bridges {
+          line-pattern-width: [line_width] - 2 * [bridge_casing_width];
         }
+        line-pattern-cap: round;
+        line-pattern-join: round;
+      }
     }
 
     [feature = 'highway_residential'],
