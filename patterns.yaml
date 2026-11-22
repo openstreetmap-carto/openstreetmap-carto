@@ -1,0 +1,104 @@
+# Area fill patterns
+#
+# scripts/generate_patterns.py generates the pattern files symbols/<name>.svg
+# listed below from the pattern sources in symbols/generating_patterns/.  See
+# symbols/generating_patterns/README.md for how to make a new pattern or to
+# change an existing one.  After changing this file, run
+#
+#   scripts/generate_patterns.py
+#
+# A pattern consists of one or more layers, drawn bottom to top.  A pattern
+# with a single layer gives the layer settings directly, otherwise they are
+# given as a list under 'layers'.  Layer settings:
+#
+#   source:    The pattern source, an SVG file in symbols/generating_patterns/.
+#              Its width and height are the size of the repeating tile.  A
+#              source smaller than the pattern is repeated, so its size has
+#              to divide the pattern size.
+#   color:     The color the layer is drawn in.  The colors used in the
+#              source do not matter (except for 'erase').
+#   opacity:   The opacity of the layer (optional, default 1).
+#   erase:     A color used in the source for drawing gaps (optional).
+#              Shapes and strokes in this color are not drawn but cut out
+#              what is below them in the source - for example a casing
+#              around overlapping symbols.
+#   casing:    Width in pixels of a gap kept free around the shapes of the
+#              layers above, including the areas they enclose (optional).
+#   pixel-aligned:
+#              For a layer drawn on the pixel grid: the casing then removes
+#              whole pixels, those covered at least half by it, so the layer
+#              stays aligned and sharp at 1x (optional, needs 'casing').
+#   min-area:  Parts of this layer left smaller than this many square pixels
+#              by cutting the casing are dropped (optional, needs 'casing').
+
+patterns:
+
+  # Bare ground (see symbols/generating_patterns/bare_ground.md)
+  rock_overlay:
+    source: rock.svg
+    color: "#cfcdca"
+    erase: "#ffffff"
+  scree_overlay:
+    source: scree.svg
+    color: "#cbc9c6"
+
+  # Beach and reef (see symbols/generating_patterns/beach.md)
+  beach:
+    source: beach.svg
+    color: "#685d45"
+    opacity: 0.4
+  beach_coarse:
+    source: reef.svg
+    color: "#969696"
+  reef:
+    source: reef.svg
+    color: "#549ccd"
+
+  # Salt (see symbols/generating_patterns/salt-dots.md and salt_pond.md)
+  salt-dots-2:
+    source: salt-dots-2.svg
+    color: "#ffffff"
+  salt_pond:
+    source: salt_pond.svg
+    color: "#ffffff"
+
+  # Scrub (see symbols/generating_patterns/scrub.md)
+  scrub:
+    source: scrub.svg
+    color: "#b0be93"
+
+  # Wetland (see symbols/generating_patterns/wetland.md)
+  wetland:
+    source: wetland.svg
+    color: "#4aa5fa"
+  wetland_bog:
+    layers:
+      - &wetland-dashes
+        source: wetland.svg
+        color: "#4aa5fa"
+        opacity: 0.8
+        casing: 1.95
+        pixel-aligned: true
+        min-area: 1.5
+      - source: bog.svg
+        color: "#73b386"
+  wetland_mangrove:
+    layers:
+      - *wetland-dashes
+      - source: mangrove.svg
+        color: "#709b6f"
+  wetland_marsh:
+    layers:
+      - *wetland-dashes
+      - source: marsh.svg
+        color: "#73b386"
+  wetland_reed:
+    layers:
+      - *wetland-dashes
+      - source: reed.svg
+        color: "#73b386"
+  wetland_swamp:
+    layers:
+      - *wetland-dashes
+      - source: swamp.svg
+        color: "#93b685"
