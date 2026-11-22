@@ -58,6 +58,7 @@ EOF
   psql -d gis -f indexes.sql
   psql -d gis -f functions.sql
   psql -d gis -f common-values.sql
+  psql -d gis -f line-widths.sql
 
   # Downloading and importing needed shapefiles
   scripts/get-external-data.py $EXTERNAL_DATA_SCRIPT_FLAGS
@@ -72,6 +73,11 @@ kosmtik)
     cp /tmp/.kosmtik-config.yml .kosmtik-config.yml
   fi
   export KOSMTIK_CONFIGPATH=".kosmtik-config.yml"
+
+  # Loading the line widths again, so that a change to them takes effect on a
+  # restart of kosmtik (after line-widths.sql has been generated from
+  # line-widths.yaml with scripts/generate_line_widths.py)
+  psql -d gis -f line-widths.sql
 
   # Starting Kosmtik
   kosmtik serve project.mml --host 0.0.0.0

@@ -62,6 +62,13 @@ psql -d gis -f common-values.sql
 ```
 Failure to create this table will result in errors such as `relation "carto_pois" does not exist"`.
 
+The line widths of the roads are also stored in a database table, generated from `line-widths.yaml`. It needs to be loaded again whenever `line-widths.sql` changes:
+
+```sh
+psql -d gis -f line-widths.sql
+```
+Failure to create this table will result in errors such as `function carto_line_widths(integer) does not exist`.
+
 ## Scripted download
 Some features are rendered using preprocessed shapefiles.
 
