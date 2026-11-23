@@ -82,12 +82,13 @@
 @bus-guideway-fill: #6699ff;
 @bus-guideway-tunnel-fill: lighten(desaturate(@bus-guideway-fill, 20%), 8%);
 
-/* The widths of the roads by zoom level are not variables here: they come from
-   carto_line_widths() in functions.sql, which the roads layers join. Every road
-   row carries line_width, the full width of the road including its casing,
-   casing_width, the casing on either side, and bridge_casing_width, the casing
-   on a bridge. The paths carry the width of their line in line_width and get
-   their background from @paths-background-width below. */
+/* The widths of the roads and aeroways by zoom level are not variables here:
+   they are defined in line-widths.yaml, from which scripts/generate_line_widths.py
+   makes line-widths.sql, and the layers join them. Every road row carries
+   line_width, the full width of the road including its casing, casing_width,
+   the casing on either side, and bridge_casing_width, the casing on a bridge.
+   The paths carry the width of their line in line_width and get their
+   background from @paths-background-width below. */
 
 @paths-background-width:          1;
 @paths-bridge-casing-width:       0.5;
@@ -147,13 +148,13 @@
 
 #roads-casing, #bridges, #tunnels {
   ::casing {
-    [zoom >= 12] {
-      [feature = 'highway_motorway'] {
-        line-width: [line_width];
+    [feature = 'highway_motorway'] {
+      [zoom >= 12] {
         line-color: @motorway-low-zoom-casing;
         [zoom >= 13] {
           line-color: @motorway-casing;
         }
+        line-width: [line_width];
         #roads-casing {
           line-join: round;
           line-cap: round;
@@ -498,6 +499,9 @@
       }
     }
 
+    /* Minor trackage bridges follow the track width (see the fill rules
+    below): white fill = track + 1px each side, casing 0.75px beyond that,
+    the same margins the other railway classes use. */
     [feature = 'railway_INT-tram-service'][zoom >= 15],
     [feature = 'railway_INT-light_rail-service'],
     [feature = 'railway_INT-funicular-service'],
@@ -507,9 +511,10 @@
       #bridges {
         [zoom >= 14] {
           line-width: 4;
-          [zoom >= 15] {
-            line-width: 5;
-          }
+          [feature = 'railway_INT-subway-service'][zoom < 17] { line-width: 4.25; }
+          [zoom >= 17] { line-width: 4.5; }
+          [zoom >= 18] { line-width: 5; }
+          [zoom >= 19] { line-width: 5.5; }
           line-color: @bridge-casing;
           line-join: round;
         }
@@ -755,10 +760,11 @@
     [feature = 'railway_INT-subway-service'] {
       #bridges {
         [zoom >= 14] {
-          line-width: 3;
-          [zoom >= 15] {
-            line-width: 4;
-          }
+          line-width: 2.5;
+          [feature = 'railway_INT-subway-service'][zoom < 17] { line-width: 2.75; }
+          [zoom >= 17] { line-width: 3; }
+          [zoom >= 18] { line-width: 3.5; }
+          [zoom >= 19] { line-width: 4; }
           line-color: white;
         }
       }
@@ -1182,21 +1188,21 @@ tertiary is rendered from z10 and is not included in osm_planet_roads. */
 
     #roads-fill[feature = 'highway_secondary'][int_surface = 'unpaved'],
     #bridges[feature = 'highway_secondary'][int_surface = 'unpaved'] {
-        [zoom >= 12] {
-          line-pattern-type: repeat;
-          line-pattern-alignment: global;
-          line-pattern-width: [line_width] - 2 * [casing_width];
-          line-pattern-file: url("symbols/unpaved/unpaved_secondary-fill.svg");          
-          line-pattern-cap: round;
-          line-pattern-join: round;
-          /* at z12 the links get the pattern at the width of a secondary road, as before */
-          [zoom = 12][link = 'yes'] { line-pattern-width: 2.9; }
-          [zoom >= 13] {
-            #bridges {
-              line-pattern-width: [line_width] - 2 * [bridge_casing_width];
-            }
+      [zoom >= 12] {
+        line-pattern-type: repeat;
+        line-pattern-alignment: global;
+        line-pattern-width: [line_width] - 2 * [casing_width];
+        line-pattern-file: url("symbols/unpaved/unpaved_secondary-fill.svg");          
+        line-pattern-cap: round;
+        line-pattern-join: round;
+        /* at z12 the links get the pattern at the width of a secondary road, as before */
+        [zoom = 12][link = 'yes'] { line-pattern-width: 2.9; }
+        [zoom >= 13] {
+          #bridges {
+            line-pattern-width: [line_width] - 2 * [bridge_casing_width];
           }
         }
+      }
     }
 
     [feature = 'highway_tertiary'] {
@@ -1220,17 +1226,17 @@ tertiary is rendered from z10 and is not included in osm_planet_roads. */
 
     #roads-fill[feature = 'highway_tertiary'][int_surface = 'unpaved'],
     #bridges[feature = 'highway_tertiary'][int_surface = 'unpaved'] {
-        [zoom >= 13] {
-          line-pattern-type: repeat;
-          line-pattern-alignment: global;
-          line-pattern-width: [line_width] - 2 * [casing_width];
-          line-pattern-file: url("symbols/unpaved/unpaved_residential-fill.svg");
-          #bridges {
-            line-pattern-width: [line_width] - 2 * [bridge_casing_width];
-          }
-          line-pattern-cap: round;
-          line-pattern-join: round;
+      [zoom >= 13] {
+        line-pattern-type: repeat;
+        line-pattern-alignment: global;
+        line-pattern-width: [line_width] - 2 * [casing_width];
+        line-pattern-file: url("symbols/unpaved/unpaved_residential-fill.svg");
+        #bridges {
+          line-pattern-width: [line_width] - 2 * [bridge_casing_width];
         }
+        line-pattern-cap: round;
+        line-pattern-join: round;
+      }
     }
 
     [feature = 'highway_residential'],
@@ -2348,46 +2354,44 @@ tertiary is rendered from z10 and is not included in osm_planet_roads. */
 }
 
 #bridge-text  {
-  [man_made = 'bridge'] {
-    [zoom >= 12][way_pixels > 125][way_pixels <= 768000] {
-      text-name: "[name]";
-      text-size: 10;
-      text-wrap-width: 30; // 3 em
-      text-line-spacing: -1.2; // -0.15 em
-      text-fill: black;
-      text-face-name: @book-fonts;
-      text-halo-radius: @standard-halo-radius;
-      text-halo-fill: @standard-halo-fill;
-      text-margin: 3; // 0.3 em
-      text-wrap-width: 30;
-      [way_pixels > 250] {
-        text-size: 11;
-        text-margin: 3.3; // 0.3 em
-        text-wrap-width: 33; // 3 em
-        text-line-spacing: -1.35; // -0.15 em
-        text-halo-radius: @standard-halo-radius * 1.1;
-      }
-      [way_pixels > 1000] {
-        text-size: 12;
-        text-margin: 3.6; // 0.3 em
-        text-wrap-width: 36; // 3 em
-        text-line-spacing: -1.65; // -0.15 em
-        text-halo-radius: @standard-halo-radius * 1.2;
-      }
-      [way_pixels > 4000] {
-        text-size: 13;
-        text-margin: 3.9; // 0.3 em
-        text-wrap-width: 39; // 3 em
-        text-line-spacing: -1.80; // -0.15 em
-        text-halo-radius: @standard-halo-radius * 1.3;
-      }
-      [way_pixels > 16000] {
-        text-size: 14;
-        text-margin: 4.2; // 0.3 em
-        text-wrap-width: 42; // 3 em
-        text-line-spacing: -1.95; // -0.15 em
-        text-halo-radius: @standard-halo-radius * 1.4;
-      }
+  [zoom >= 12][way_pixels > 125][way_pixels <= 768000] {
+    text-name: "[name]";
+    text-size: 10;
+    text-wrap-width: 30; // 3 em
+    text-line-spacing: -1.2; // -0.15 em
+    text-fill: black;
+    text-face-name: @book-fonts;
+    text-halo-radius: @standard-halo-radius;
+    text-halo-fill: @standard-halo-fill;
+    text-margin: 3; // 0.3 em
+    text-wrap-width: 30;
+    [way_pixels > 250] {
+      text-size: 11;
+      text-margin: 3.3; // 0.3 em
+      text-wrap-width: 33; // 3 em
+      text-line-spacing: -1.35; // -0.15 em
+      text-halo-radius: @standard-halo-radius * 1.1;
+    }
+    [way_pixels > 1000] {
+      text-size: 12;
+      text-margin: 3.6; // 0.3 em
+      text-wrap-width: 36; // 3 em
+      text-line-spacing: -1.65; // -0.15 em
+      text-halo-radius: @standard-halo-radius * 1.2;
+    }
+    [way_pixels > 4000] {
+      text-size: 13;
+      text-margin: 3.9; // 0.3 em
+      text-wrap-width: 39; // 3 em
+      text-line-spacing: -1.80; // -0.15 em
+      text-halo-radius: @standard-halo-radius * 1.3;
+    }
+    [way_pixels > 16000] {
+      text-size: 14;
+      text-margin: 4.2; // 0.3 em
+      text-wrap-width: 42; // 3 em
+      text-line-spacing: -1.95; // -0.15 em
+      text-halo-radius: @standard-halo-radius * 1.4;
     }
   }
 }
@@ -2702,66 +2706,25 @@ tertiary is rendered from z10 and is not included in osm_planet_roads. */
 }
 
 #aeroways {
-  [aeroway = 'runway'] {
-    [zoom >= 11] {
-      ::casing[bridge = true][zoom >= 14] {
-        line-width: 12 + 2*[casing_width];
-        line-color: @bridge-casing;
-        line-join: round;
-        [zoom >= 15] { line-width: 18 + 2*[casing_width]; }
-        [zoom >= 16] { line-width: 24 + 2*[casing_width]; }
-      }
-      ::fill {
-        [int_surface != 'unpaved'] {
-          line-color: @runway-fill;
-          line-width: 2;
-          [zoom >= 12] { line-width: 4; }
-          [zoom >= 13] { line-width: 6; }
-          [zoom >= 14] { line-width: 12; }
-          [zoom >= 15] { line-width: 18; }
-          [zoom >= 16] { line-width: 24; }
-        }
-        [int_surface = 'unpaved'] {
-          line-pattern-type: repeat;
-          line-pattern-alignment: global;
-          line-pattern-file: url("symbols/unpaved/unpaved_aeroway-fill.svg"); 
-          line-pattern-width: 2;
-          [zoom >= 12] { line-pattern-width: 4; }
-          [zoom >= 13] { line-pattern-width: 6; }
-          [zoom >= 14] { line-pattern-width: 12; }
-          [zoom >= 15] { line-pattern-width: 18; }
-          [zoom >= 16] { line-pattern-width: 24; }
-        }
-      }
-    }
-  }
+  [aeroway = 'runway'],
   [aeroway = 'taxiway'] {
     [zoom >= 11] {
       ::casing[bridge = true][zoom >= 14] {
-        line-width: 4 + 2*[casing_width];
+        line-width: [line_width] + 2 * [bridge_casing_width];
         line-color: @bridge-casing;
         line-join: round;
-        [zoom >= 15] { line-width: 6 + 2*[casing_width]; }
-        [zoom >= 16] { line-width: 8 + 2*[casing_width]; }
       }
       ::fill {
         [int_surface != 'unpaved'] {
-          line-color: @taxiway-fill ;
-          line-width: 1;
-          [zoom >= 13] { line-width: 2; }
-          [zoom >= 14] { line-width: 4; }
-          [zoom >= 15] { line-width: 6; }
-          [zoom >= 16] { line-width: 8; }
+          [aeroway = 'runway'] { line-color: @runway-fill; }
+          [aeroway = 'taxiway'] { line-color: @taxiway-fill; }
+          line-width: [line_width];
         }
         [int_surface = 'unpaved'] {
           line-pattern-type: repeat;
           line-pattern-alignment: global;
-          line-pattern-file: url("symbols/unpaved/unpaved_aeroway-fill.svg"); 
-          line-pattern-width: 1;
-          [zoom >= 13] { line-pattern-width: 2; }
-          [zoom >= 14] { line-pattern-width: 4; }
-          [zoom >= 15] { line-pattern-width: 6; }
-          [zoom >= 16] { line-pattern-width: 8; }
+          line-pattern-file: url("symbols/unpaved/unpaved_aeroway-fill.svg");
+          line-pattern-width: [line_width];
         }
       }
     }

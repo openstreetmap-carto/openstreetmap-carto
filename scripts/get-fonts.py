@@ -170,7 +170,7 @@ with zipfile.ZipFile(emojiPath, "r") as zip_ref:
         shutil.move(os.path.join(FONTDIR, "static", file), FONTDIR)
 
 downloadToFile(
-    ["https://mirrors.dotsrc.org/osdn/hanazono-font/68253/hanazono-20170904.zip"],
+    ["https://web.archive.org/web/20260811045230if_/https://mirrors.dotsrc.org/osdn/hanazono-font/68253/hanazono-20170904.zip"],
     "hanazono.zip",
     dir=TMPDIR,
 )

@@ -18,6 +18,8 @@
 @man-made-icon: #666666;
 @advertising-grey: @man-made-icon;
 @barrier-icon: #3f3f3f;
+@street-lamp-light: #ffffaa;
+@street-lamp-pole: @man-made-icon;
 @landform-color: #d08f55;
 @leisure-green: darken(@park, 60%);
 @protected-area: #008000;
@@ -148,9 +150,10 @@
 
   [feature = 'highway_bus_stop'] {
     [zoom >= 16][zoom < 17] {
-      marker-file: url('symbols/square.svg');
+      // 4px square centered in a 6px transparent frame: the collision
+      // footprint stays that of the previous 6px square
+      marker-file: url('symbols/square4_in6.svg');
       marker-fill: @transportation-icon;
-      marker-width: 6;
       marker-clip: false;
     }
     [zoom >= 17] {
@@ -193,16 +196,10 @@
     marker-clip: false;
   }
 
-  [feature = 'amenity_parcel_locker'][zoom >= 17] {
+  [feature = 'amenity_parcel_locker'][zoom >= 18] {
     marker-fill: @amenity-brown;
-    [zoom >= 17][zoom < 18] {
-      marker-width: 4;
-      marker-line-width: 0;
-    }
-    [zoom >= 18] {
-      marker-file: url('symbols/amenity/parcel_locker.svg');
-      marker-clip: false;
-    }
+    marker-file: url('symbols/amenity/parcel_locker.svg');
+    marker-clip: false;
   }
 
   [feature = 'highway_traffic_signals'][zoom >= 17] {
@@ -589,13 +586,7 @@
   }
 
   [feature = 'amenity_dentist'][zoom >= 17] {
-    [zoom >= 17][zoom < 18] {
-      marker-width: 4;
-      marker-line-width: 0;
-    }
-    [zoom >= 18] {
-      marker-file: url('symbols/amenity/dentist.svg');
-    }
+    marker-file: url('symbols/amenity/dentist.svg');
     marker-fill: @health-color;
     marker-clip: false;
   }
@@ -1373,8 +1364,7 @@
   [feature = 'aeroway_aerodrome'][int_access = 'restricted'][zoom >= 12][zoom < 18],
   [feature = 'aeroway_aerodrome'][icao = null][zoom >= 12][zoom < 18],
   [feature = 'aeroway_aerodrome'][iata = null][zoom >= 12][zoom < 18] {
-    [way_pixels <= 192000],
-    [way_pixels = null] {
+    [way_pixels <= 192000] {
       marker-file: url('symbols/amenity/aerodrome.svg');
       marker-clip: false;
       marker-fill: @airtransport;
@@ -2814,8 +2804,7 @@
   [feature = 'aeroway_aerodrome'][int_access = 'restricted'][zoom >= 13][zoom < 18],
   [feature = 'aeroway_aerodrome'][icao = null][zoom >= 13][zoom < 18],
   [feature = 'aeroway_aerodrome'][iata = null][zoom >= 13][zoom < 18] {
-    [way_pixels <= 192000],
-    [way_pixels = null] {
+    [way_pixels <= 192000] {
       text-name: "[name]";
       text-size: @standard-font-size;
       text-wrap-width: @standard-wrap-width;
@@ -2914,7 +2903,7 @@
     }
   }
 
-  [feature = 'amenity_parcel_locker'][zoom >= 18] {
+  [feature = 'amenity_parcel_locker'][zoom >= 19] {
     text-name: "[name]";
     text-dy: 10;
     text-size: @standard-font-size;
@@ -3040,6 +3029,27 @@
     text-face-name: @standard-font;
     text-halo-radius: @standard-halo-radius;
     text-halo-fill: @standard-halo-fill;
+  }
+}
+
+/* Street lamps: the light itself as a small pale yellow disc with the pole as a
+   dark dot in the middle. Non-blocking (allow-overlap + ignore-placement) and
+   drawn below all POI symbols and labels, see #3277. */
+#street-lamps [zoom >= 19] {
+  ::light {
+    opacity: 0.85;
+    marker-fill: @street-lamp-light;
+    marker-width: 6;
+    marker-line-width: 0;
+    marker-allow-overlap: true;
+    marker-ignore-placement: true;
+  }
+  ::pole {
+    marker-fill: @street-lamp-pole;
+    marker-width: 2;
+    marker-line-width: 0;
+    marker-allow-overlap: true;
+    marker-ignore-placement: true;
   }
 }
 
