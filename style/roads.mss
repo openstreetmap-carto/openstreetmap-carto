@@ -897,12 +897,8 @@ tertiary is rendered from z10 and is not included in osm_planet_roads. */
         line-color: @minor-construction;
         b/line-color: white;
         line-width: [line_width];
-        /* at z14 with the casing width of z13, 0.5, as before */
-        b/line-width: [line_width] - 2 * 0.5;
+        b/line-width: [line_width] - 2 * [casing_width];
         b/line-dasharray: 6,4;
-        [zoom >= 15] {
-          b/line-width: [line_width] - 2 * [casing_width];
-        }
         [zoom >= 16] {
           b/line-dasharray: 8,6;
         }
@@ -915,12 +911,8 @@ tertiary is rendered from z10 and is not included in osm_planet_roads. */
         line-color: @minor-construction;
         b/line-color: @living-street-fill;
         line-width: [line_width];
-        /* at z14 with the casing width of z13, 0.5, as before */
-        b/line-width: [line_width] - 2 * 0.5;
+        b/line-width: [line_width] - 2 * [casing_width];
         b/line-dasharray: 6,4;
-        [zoom >= 15] {
-          b/line-width: [line_width] - 2 * [casing_width];
-        }
         [zoom >= 16] {
           b/line-dasharray: 8,6;
         }
@@ -933,12 +925,8 @@ tertiary is rendered from z10 and is not included in osm_planet_roads. */
         line-color: @minor-construction;
         b/line-color: @pedestrian-fill;
         line-width: [line_width];
-        /* at z14 with the casing width of z13, 0.5, as before */
-        b/line-width: [line_width] - 2 * 0.5;
+        b/line-width: [line_width] - 2 * [casing_width];
         b/line-dasharray: 6,4;
-        [zoom >= 15] {
-          b/line-width: [line_width] - 2 * [casing_width];
-        }
         [zoom >= 16] {
           b/line-dasharray: 8,6;
         }
