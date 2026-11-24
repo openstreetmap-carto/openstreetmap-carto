@@ -425,26 +425,16 @@
       /* The background of grade1 and grade2 tracks, which have the heaviest dashes,
          is based on half the width of the track from z15 on */
       #bridges {
-        /* Tracks with unrestricted access are drawn on bridges at the width of z13,
-           0.5, at every zoom level, as before: this rule is more specific than the
-           one for z15 below and wins over it */
-        [zoom >= 13][int_access != 'no'] {
-          line-color: @bridge-casing;
-          line-join: round;
-          line-width: 0.5 + 2 * (@paths-background-width + @paths-bridge-casing-width);
-          /* whatever the tracktype: a rule as specific as the ones for grade1 and
-             grade2 below, so that it wins over those too */
-          [tracktype != null] {
-            line-width: 0.5 + 2 * (@paths-background-width + @paths-bridge-casing-width);
-          }
-        }
+        [zoom >= 13][int_access != 'no'],
         [zoom >= 15] {
           line-color: @bridge-casing;
           line-join: round;
           line-width: [line_width] + 2 * (@paths-background-width + @paths-bridge-casing-width);
-          [tracktype = 'grade1'],
-          [tracktype = 'grade2'] {
-            line-width: [line_width] / 2 + 2 * (@paths-background-width + @paths-bridge-casing-width);
+          [zoom >= 15] {
+            [tracktype = 'grade1'],
+            [tracktype = 'grade2'] {
+              line-width: [line_width] / 2 + 2 * (@paths-background-width + @paths-bridge-casing-width);
+            }
           }
         }
       }
@@ -650,23 +640,16 @@
     [feature = 'highway_track'] {
       /* We don't set opacity here, so it's 1.0. Aside from that, it's basically a copy of roads-fill::background in the track part of ::fill */
       #bridges {
-        /* the width of z13 at every zoom level for tracks with unrestricted access,
-           see the casing above */
-        [zoom >= 13][int_access != 'no'] {
-          line-color: @track-casing;
-          line-join: round;
-          line-width: 0.5 + 2 * @paths-background-width;
-          [tracktype != null] {
-            line-width: 0.5 + 2 * @paths-background-width;
-          }
-        }
+        [zoom >= 13][int_access != 'no'],
         [zoom >= 15] {
           line-color: @track-casing;
           line-join: round;
           line-width: [line_width] + 2 * @paths-background-width;
-          [tracktype = 'grade1'],
-          [tracktype = 'grade2'] {
-            line-width: [line_width] / 2 + 2 * @paths-background-width;
+          [zoom >= 15] {
+            [tracktype = 'grade1'],
+            [tracktype = 'grade2'] {
+              line-width: [line_width] / 2 + 2 * @paths-background-width;
+            }
           }
         }
       }
@@ -965,11 +948,6 @@ tertiary is rendered from z10 and is not included in osm_planet_roads. */
               line-width: [line_width] - 2 * [casing_width];
               b/line-width: [line_width] - 4 * [casing_width];
             }
-            /* the widths of z19, as before */
-            [zoom >= 20] {
-              line-width: 3.9;
-              b/line-width: 2.3;
-            }
           }
         }
       }
@@ -1169,8 +1147,6 @@ tertiary is rendered from z10 and is not included in osm_planet_roads. */
         line-pattern-file: url("symbols/unpaved/unpaved_secondary-fill.svg");          
         line-pattern-cap: round;
         line-pattern-join: round;
-        /* at z12 the links get the pattern at the width of a secondary road, as before */
-        [zoom = 12][link = 'yes'] { line-pattern-width: 2.9; }
         [zoom >= 13] {
           #bridges {
             line-pattern-width: [line_width] - 2 * [bridge_casing_width];

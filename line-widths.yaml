@@ -35,9 +35,7 @@ progressions:
   minor_casing:            {12: 0.3, 13: 0.5, 14: 0.55, 15: 0.6, 17: 0.8}
 
   major_bridge_casing:     {12: 0.5, 14: 0.6, 15: 0.75, 17: 1}
-  secondary_bridge_casing: {12: 0.1, 13: 0.5, 14: 0.6, 15: 0.75, 17: 1}  # z12 is the minor bridge casing
   minor_bridge_casing:     {12: 0.1, 13: 0.5, 15: 0.75, 17: 0.8}
-  service_bridge_casing:   {14: 0.5, 16: 0.75, 17: 0.8}  # z15 is 0.5 because the z14 casing stayed in use
 
 classes:
   highway_motorway:
@@ -55,7 +53,7 @@ classes:
   highway_secondary:
     line_width: {9: 1, 10: 1.1, 12: 3.5, 13: 5, 15: 9, 16: 10, 17: 18, 18: 21, 19: 27}
     casing_width: secondary_casing
-    bridge_casing_width: secondary_bridge_casing
+    bridge_casing_width: major_bridge_casing
   highway_tertiary:
     line_width: {10: 0.7, 12: 2.5, 13: 4, 14: 5, 15: 9, 16: 10, 17: 18, 18: 21, 19: 27}
     casing_width: minor_casing
@@ -101,11 +99,11 @@ classes:
   highway_road:
     line_width: {10: 1, 14: 2, 16: 3.5, 17: 7, 18: 8.5, 19: 11}
     casing_width: minor_casing
-    bridge_casing_width: service_bridge_casing
+    bridge_casing_width: minor_bridge_casing
   highway_service:
     line_width: {14: 2, 16: 3.5, 17: 7, 18: 8.5, 19: 11, 20: 12}
     casing_width: minor_casing
-    bridge_casing_width: service_bridge_casing
+    bridge_casing_width: minor_bridge_casing
   highway_service_minor:  # parking aisles, drive-throughs, driveways and slipways
     line_width: {16: 2, 17: 3.5, 18: 4.75, 19: 5.5, 20: 8.5}
     casing_width: minor_casing

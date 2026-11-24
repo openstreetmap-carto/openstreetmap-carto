@@ -59,7 +59,7 @@
 --   highway_motorway         0.5   0.5   0.6  0.75  0.75     1     1     1     1
 --   highway_trunk            0.5   0.5   0.6  0.75  0.75     1     1     1     1
 --   highway_primary          0.5   0.5   0.6  0.75  0.75     1     1     1     1
---   highway_secondary        0.1   0.5   0.6  0.75  0.75     1     1     1     1
+--   highway_secondary        0.5   0.5   0.6  0.75  0.75     1     1     1     1
 --   highway_tertiary         0.1   0.5   0.5  0.75  0.75   0.8   0.8   0.8   0.8
 --   highway_motorway_link    0.1   0.5   0.5  0.75  0.75   0.8   0.8   0.8   0.8
 --   highway_trunk_link       0.1   0.5   0.5  0.75  0.75   0.8   0.8   0.8   0.8
@@ -70,8 +70,8 @@
 --   highway_residential      0.1   0.5   0.5  0.75  0.75   0.8   0.8   0.8   0.8
 --   highway_living_street    0.1   0.5   0.5  0.75  0.75   0.8   0.8   0.8   0.8
 --   highway_pedestrian       0.1   0.5   0.5  0.75  0.75   0.8   0.8   0.8   0.8
---   highway_road                         0.5   0.5  0.75   0.8   0.8   0.8   0.8
---   highway_service                      0.5   0.5  0.75   0.8   0.8   0.8   0.8
+--   highway_road             0.1   0.5   0.5  0.75  0.75   0.8   0.8   0.8   0.8
+--   highway_service          0.1   0.5   0.5  0.75  0.75   0.8   0.8   0.8   0.8
 --   highway_service_minor    0.1   0.5   0.5  0.75  0.75   0.8   0.8   0.8   0.8
 --   aeroway_runway           0.5   0.5   0.6   0.7   0.7     1     1     1     1
 --   aeroway_taxiway          0.3  0.35  0.35   0.7   0.7     1     1     1     1
@@ -131,7 +131,7 @@ INSERT INTO carto_line_widths_data (zoom, class, line_width, casing_width, bridg
     (12, 'highway_motorway', 3.5, 0.5, 0.5),
     (12, 'highway_trunk', 3.5, 0.5, 0.5),
     (12, 'highway_primary', 3.5, 0.5, 0.5),
-    (12, 'highway_secondary', 3.5, 0.3, 0.1),
+    (12, 'highway_secondary', 3.5, 0.3, 0.5),
     (12, 'highway_tertiary', 2.5, 0.3, 0.1),
     (12, 'highway_motorway_link', 1.5, 0.3, 0.1),
     (12, 'highway_trunk_link', 1.5, 0.3, 0.1),
@@ -142,8 +142,8 @@ INSERT INTO carto_line_widths_data (zoom, class, line_width, casing_width, bridg
     (12, 'highway_residential', 0.5, 0.3, 0.1),
     (12, 'highway_living_street', NULL, 0.3, 0.1),
     (12, 'highway_pedestrian', NULL, 0.3, 0.1),
-    (12, 'highway_road', 1, 0.3, NULL),
-    (12, 'highway_service', NULL, 0.3, NULL),
+    (12, 'highway_road', 1, 0.3, 0.1),
+    (12, 'highway_service', NULL, 0.3, 0.1),
     (12, 'highway_service_minor', NULL, 0.3, 0.1),
     (12, 'aeroway_runway', 4, NULL, 0.5),
     (12, 'aeroway_taxiway', 1, NULL, 0.3),
@@ -162,8 +162,8 @@ INSERT INTO carto_line_widths_data (zoom, class, line_width, casing_width, bridg
     (13, 'highway_residential', 2.5, 0.5, 0.5),
     (13, 'highway_living_street', 2, 0.5, 0.5),
     (13, 'highway_pedestrian', NULL, 0.5, 0.5),
-    (13, 'highway_road', 1, 0.5, NULL),
-    (13, 'highway_service', NULL, 0.5, NULL),
+    (13, 'highway_road', 1, 0.5, 0.5),
+    (13, 'highway_service', NULL, 0.5, 0.5),
     (13, 'highway_service_minor', NULL, 0.5, 0.5),
     (13, 'highway_cycleway', 0.7, NULL, NULL),
     (13, 'highway_bridleway', 0.3, NULL, NULL),
@@ -211,8 +211,8 @@ INSERT INTO carto_line_widths_data (zoom, class, line_width, casing_width, bridg
     (15, 'highway_residential', 5, 0.6, 0.75),
     (15, 'highway_living_street', 5, 0.6, 0.75),
     (15, 'highway_pedestrian', 5, 0.6, 0.75),
-    (15, 'highway_road', 2, 0.6, 0.5),
-    (15, 'highway_service', 2, 0.6, 0.5),
+    (15, 'highway_road', 2, 0.6, 0.75),
+    (15, 'highway_service', 2, 0.6, 0.75),
     (15, 'highway_service_minor', NULL, 0.6, 0.75),
     (15, 'highway_footway', 1, NULL, NULL),
     (15, 'highway_path', 1, NULL, NULL),
