@@ -30,16 +30,14 @@
 # the classes giving each kind of width, and line-widths.sql begins with the same tables.
 
 progressions:
-  major_casing:            {12: 0.5, 15: 0.7, 17: 1}  # z14 is 0.5 because the z13 casing stayed in use
+  major_casing:            {12: 0.5, 14: 0.6, 15: 0.7, 17: 1}
   secondary_casing:        {12: 0.3, 13: 0.35, 15: 0.7, 17: 1}
-  link_casing:             {12: 0.3, 13: 0.5, 15: 0.6, 17: 0.8}  # z14 likewise
   minor_casing:            {12: 0.3, 13: 0.5, 14: 0.55, 15: 0.6, 17: 0.8}
-  service_casing:          {14: 0.55, 16: 0.6, 17: 0.8}  # z15 likewise
 
-  major_bridge_casing:     {12: 0.5, 15: 0.75, 17: 1}  # z14 likewise
+  major_bridge_casing:     {12: 0.5, 14: 0.6, 15: 0.75, 17: 1}
   secondary_bridge_casing: {12: 0.1, 13: 0.5, 14: 0.6, 15: 0.75, 17: 1}  # z12 is the minor bridge casing
   minor_bridge_casing:     {12: 0.1, 13: 0.5, 15: 0.75, 17: 0.8}
-  service_bridge_casing:   {14: 0.5, 16: 0.75, 17: 0.8}  # z15 likewise
+  service_bridge_casing:   {14: 0.5, 16: 0.75, 17: 0.8}  # z15 is 0.5 because the z14 casing stayed in use
 
 classes:
   highway_motorway:
@@ -65,23 +63,23 @@ classes:
 
   highway_motorway_link:
     line_width: {10: 1.9, 11: 2, 12: 1.5, 13: 4, 15: 7.8, 17: 12, 18: 13, 19: 16, 20: 17}
-    casing_width: link_casing
+    casing_width: minor_casing
     bridge_casing_width: minor_bridge_casing
   highway_trunk_link:
     line_width: {10: 1.9, 12: 1.5, 13: 4, 15: 7.8, 17: 12, 18: 13, 19: 16}
-    casing_width: link_casing
+    casing_width: minor_casing
     bridge_casing_width: minor_bridge_casing
   highway_primary_link:
     line_width: {10: 1.8, 12: 1.5, 13: 4, 15: 7.8, 17: 12, 18: 13, 19: 16}
-    casing_width: link_casing
+    casing_width: minor_casing
     bridge_casing_width: minor_bridge_casing
   highway_secondary_link:
     line_width: {10: 1.1, 12: 1.5, 13: 4, 15: 7, 17: 12, 18: 13, 19: 16}
-    casing_width: link_casing
+    casing_width: minor_casing
     bridge_casing_width: minor_bridge_casing
   highway_tertiary_link:
     line_width: {10: 0.7, 12: 1.5, 13: 3, 15: 7, 17: 12, 18: 13, 19: 16}
-    casing_width: link_casing
+    casing_width: minor_casing
     bridge_casing_width: minor_bridge_casing
 
   highway_unclassified:
@@ -102,11 +100,11 @@ classes:
     bridge_casing_width: minor_bridge_casing
   highway_road:
     line_width: {10: 1, 14: 2, 16: 3.5, 17: 7, 18: 8.5, 19: 11}
-    casing_width: service_casing
+    casing_width: minor_casing
     bridge_casing_width: service_bridge_casing
   highway_service:
     line_width: {14: 2, 16: 3.5, 17: 7, 18: 8.5, 19: 11, 20: 12}
-    casing_width: service_casing
+    casing_width: minor_casing
     bridge_casing_width: service_bridge_casing
   highway_service_minor:  # parking aisles, drive-throughs, driveways and slipways
     line_width: {16: 2, 17: 3.5, 18: 4.75, 19: 5.5, 20: 8.5}
@@ -127,7 +125,7 @@ classes:
 
   aeroway_runway:
     line_width: {11: 2, 12: 4, 13: 6, 14: 12, 15: 18, 16: 24}
-    bridge_casing_width: {14: 0.6, 15: 0.7, 17: 1}
+    bridge_casing_width: major_casing
   aeroway_taxiway:
     line_width: {11: 1, 13: 2, 14: 4, 15: 6, 16: 8}
     bridge_casing_width: secondary_casing  # the road casing, not the bridge casing
