@@ -59,7 +59,7 @@
 --   highway_motorway         0.5   0.5   0.5  0.75  0.75     1     1     1     1
 --   highway_trunk            0.5   0.5   0.5  0.75  0.75     1     1     1     1
 --   highway_primary          0.5   0.5   0.5  0.75  0.75     1     1     1     1
---   highway_secondary        0.1   0.5   0.6  0.75  0.75     1     1     1     1
+--   highway_secondary        0.5   0.5   0.6  0.75  0.75     1     1     1     1
 --   highway_tertiary         0.1   0.5   0.5  0.75  0.75   0.8   0.8   0.8   0.8
 --   highway_motorway_link    0.1   0.5   0.5  0.75  0.75   0.8   0.8   0.8   0.8
 --   highway_trunk_link       0.1   0.5   0.5  0.75  0.75   0.8   0.8   0.8   0.8
@@ -131,7 +131,7 @@ INSERT INTO carto_line_widths_data (zoom, class, line_width, casing_width, bridg
     (12, 'highway_motorway', 3.5, 0.5, 0.5),
     (12, 'highway_trunk', 3.5, 0.5, 0.5),
     (12, 'highway_primary', 3.5, 0.5, 0.5),
-    (12, 'highway_secondary', 3.5, 0.3, 0.1),
+    (12, 'highway_secondary', 3.5, 0.3, 0.5),
     (12, 'highway_tertiary', 2.5, 0.3, 0.1),
     (12, 'highway_motorway_link', 1.5, 0.3, 0.1),
     (12, 'highway_trunk_link', 1.5, 0.3, 0.1),

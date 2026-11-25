@@ -30,16 +30,17 @@
 # the classes giving each kind of width, and line-widths.sql begins with the same tables.
 
 progressions:
-  major_casing:            {12: 0.5, 15: 0.7, 17: 1}  # z14 is 0.5 because the z13 casing stayed in use
+  # A casing steps where the line width does, so the fill does not get narrower when zooming in.
+  major_casing:            {12: 0.5, 15: 0.7, 17: 1}  # no step at z14, where these roads keep their z13 width
   secondary_casing:        {12: 0.3, 13: 0.35, 15: 0.7, 17: 1}
-  link_casing:             {12: 0.3, 13: 0.5, 15: 0.6, 17: 0.8}  # z14 likewise
+  link_casing:             {12: 0.3, 13: 0.5, 15: 0.6, 17: 0.8}  # likewise
   minor_casing:            {12: 0.3, 13: 0.5, 14: 0.55, 15: 0.6, 17: 0.8}
-  service_casing:          {14: 0.55, 16: 0.6, 17: 0.8}  # z15 likewise
+  service_casing:          {14: 0.55, 16: 0.6, 17: 0.8}  # no step at z15, where these roads keep their z14 width
 
-  major_bridge_casing:     {12: 0.5, 15: 0.75, 17: 1}  # z14 likewise
-  secondary_bridge_casing: {12: 0.1, 13: 0.5, 14: 0.6, 15: 0.75, 17: 1}  # z12 is the minor bridge casing
+  major_bridge_casing:     {12: 0.5, 15: 0.75, 17: 1}  # no step at z14, like major_casing
+  secondary_bridge_casing: {12: 0.5, 14: 0.6, 15: 0.75, 17: 1}
   minor_bridge_casing:     {12: 0.1, 13: 0.5, 15: 0.75, 17: 0.8}
-  service_bridge_casing:   {14: 0.5, 16: 0.75, 17: 0.8}  # z15 likewise
+  service_bridge_casing:   {14: 0.5, 16: 0.75, 17: 0.8}  # like service_casing
 
 classes:
   highway_motorway:
