@@ -623,10 +623,12 @@ Layer:
                   FROM planet_osm_line
                   WHERE way && !bbox!
                 ) _
-              WHERE barrier IN ('chain', 'city_wall', 'ditch', 'fence', 'guard_rail',
-                  'handrail', 'hedge', 'retaining_wall', 'wall', 'jersey_barrier')
-              OR historic = 'citywalls'
-              AND (waterway IS NULL OR waterway NOT IN ('river', 'canal', 'stream', 'drain', 'ditch', 'fish_pass'))
+              -- some barriers are also mapped as waterways; we don't want those
+              -- we put the citywalls in just in case
+              WHERE (barrier IN ('chain', 'city_wall', 'ditch', 'fence', 'guard_rail', 'handrail', 'hedge', 'retaining_wall', 'wall', 'jersey_barrier')
+                  OR historic = 'citywalls')
+                AND (waterway IS NULL
+                  OR waterway NOT IN ('river', 'canal', 'stream', 'drain', 'ditch', 'fish_pass'))
           ) AS features
         ) AS line_barriers
     properties:
