@@ -610,7 +610,6 @@ Layer:
                 (SELECT
                     historic,
                     barrier,
-                    waterway,
                     way
                   FROM planet_osm_polygon
                   WHERE way && !bbox!
@@ -618,7 +617,6 @@ Layer:
                 SELECT
                     historic,
                     barrier,
-                    waterway,
                     way
                   FROM planet_osm_line
                   WHERE way && !bbox!
@@ -626,7 +624,6 @@ Layer:
               WHERE barrier IN ('chain', 'city_wall', 'ditch', 'fence', 'guard_rail',
                   'handrail', 'hedge', 'retaining_wall', 'wall', 'jersey_barrier')
               OR historic = 'citywalls'
-              AND (waterway IS NULL OR waterway NOT IN ('river', 'canal', 'stream', 'drain', 'ditch', 'fish_pass'))
           ) AS features
         ) AS line_barriers
     properties:
