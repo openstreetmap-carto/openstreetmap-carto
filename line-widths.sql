@@ -36,29 +36,29 @@
 --
 -- casing_width
 --                            z12   z13   z14   z15   z16   z17   z18   z19   z20
---   highway_motorway         0.5   0.5   0.6   0.7   0.7     1     1     1     1
---   highway_trunk            0.5   0.5   0.6   0.7   0.7     1     1     1     1
---   highway_primary          0.5   0.5   0.6   0.7   0.7     1     1     1     1
+--   highway_motorway         0.5   0.5   0.5   0.7   0.7     1     1     1     1
+--   highway_trunk            0.5   0.5   0.5   0.7   0.7     1     1     1     1
+--   highway_primary          0.5   0.5   0.5   0.7   0.7     1     1     1     1
 --   highway_secondary        0.3  0.35  0.35   0.7   0.7     1     1     1     1
 --   highway_tertiary         0.3   0.5  0.55   0.6   0.6   0.8   0.8   0.8   0.8
---   highway_motorway_link    0.3   0.5  0.55   0.6   0.6   0.8   0.8   0.8   0.8
---   highway_trunk_link       0.3   0.5  0.55   0.6   0.6   0.8   0.8   0.8   0.8
---   highway_primary_link     0.3   0.5  0.55   0.6   0.6   0.8   0.8   0.8   0.8
---   highway_secondary_link   0.3   0.5  0.55   0.6   0.6   0.8   0.8   0.8   0.8
---   highway_tertiary_link    0.3   0.5  0.55   0.6   0.6   0.8   0.8   0.8   0.8
+--   highway_motorway_link    0.3   0.5   0.5   0.6   0.6   0.8   0.8   0.8   0.8
+--   highway_trunk_link       0.3   0.5   0.5   0.6   0.6   0.8   0.8   0.8   0.8
+--   highway_primary_link     0.3   0.5   0.5   0.6   0.6   0.8   0.8   0.8   0.8
+--   highway_secondary_link   0.3   0.5   0.5   0.6   0.6   0.8   0.8   0.8   0.8
+--   highway_tertiary_link    0.3   0.5   0.5   0.6   0.6   0.8   0.8   0.8   0.8
 --   highway_unclassified     0.3   0.5  0.55   0.6   0.6   0.8   0.8   0.8   0.8
 --   highway_residential      0.3   0.5  0.55   0.6   0.6   0.8   0.8   0.8   0.8
 --   highway_living_street    0.3   0.5  0.55   0.6   0.6   0.8   0.8   0.8   0.8
 --   highway_pedestrian       0.3   0.5  0.55   0.6   0.6   0.8   0.8   0.8   0.8
---   highway_road             0.3   0.5  0.55   0.6   0.6   0.8   0.8   0.8   0.8
---   highway_service          0.3   0.5  0.55   0.6   0.6   0.8   0.8   0.8   0.8
+--   highway_road                        0.55  0.55   0.6   0.8   0.8   0.8   0.8
+--   highway_service                     0.55  0.55   0.6   0.8   0.8   0.8   0.8
 --   highway_service_minor    0.3   0.5  0.55   0.6   0.6   0.8   0.8   0.8   0.8
 --
 -- bridge_casing_width
 --                            z12   z13   z14   z15   z16   z17   z18   z19   z20
---   highway_motorway         0.5   0.5   0.6  0.75  0.75     1     1     1     1
---   highway_trunk            0.5   0.5   0.6  0.75  0.75     1     1     1     1
---   highway_primary          0.5   0.5   0.6  0.75  0.75     1     1     1     1
+--   highway_motorway         0.5   0.5   0.5  0.75  0.75     1     1     1     1
+--   highway_trunk            0.5   0.5   0.5  0.75  0.75     1     1     1     1
+--   highway_primary          0.5   0.5   0.5  0.75  0.75     1     1     1     1
 --   highway_secondary        0.5   0.5   0.6  0.75  0.75     1     1     1     1
 --   highway_tertiary         0.1   0.5   0.5  0.75  0.75   0.8   0.8   0.8   0.8
 --   highway_motorway_link    0.1   0.5   0.5  0.75  0.75   0.8   0.8   0.8   0.8
@@ -70,10 +70,10 @@
 --   highway_residential      0.1   0.5   0.5  0.75  0.75   0.8   0.8   0.8   0.8
 --   highway_living_street    0.1   0.5   0.5  0.75  0.75   0.8   0.8   0.8   0.8
 --   highway_pedestrian       0.1   0.5   0.5  0.75  0.75   0.8   0.8   0.8   0.8
---   highway_road             0.1   0.5   0.5  0.75  0.75   0.8   0.8   0.8   0.8
---   highway_service          0.1   0.5   0.5  0.75  0.75   0.8   0.8   0.8   0.8
+--   highway_road                         0.5   0.5  0.75   0.8   0.8   0.8   0.8
+--   highway_service                      0.5   0.5  0.75   0.8   0.8   0.8   0.8
 --   highway_service_minor    0.1   0.5   0.5  0.75  0.75   0.8   0.8   0.8   0.8
---   aeroway_runway           0.5   0.5   0.6   0.7   0.7     1     1     1     1
+--   aeroway_runway                       0.6   0.7   0.7     1     1     1     1
 --   aeroway_taxiway          0.3  0.35  0.35   0.7   0.7     1     1     1     1
 --   railway_roller_coaster   0.1   0.5   0.5  0.75  0.75   0.8   0.8   0.8   0.8
 --
@@ -142,10 +142,9 @@ INSERT INTO carto_line_widths_data (zoom, class, line_width, casing_width, bridg
     (12, 'highway_residential', 0.5, 0.3, 0.1),
     (12, 'highway_living_street', NULL, 0.3, 0.1),
     (12, 'highway_pedestrian', NULL, 0.3, 0.1),
-    (12, 'highway_road', 1, 0.3, 0.1),
-    (12, 'highway_service', NULL, 0.3, 0.1),
+    (12, 'highway_road', 1, NULL, NULL),
     (12, 'highway_service_minor', NULL, 0.3, 0.1),
-    (12, 'aeroway_runway', 4, NULL, 0.5),
+    (12, 'aeroway_runway', 4, NULL, NULL),
     (12, 'aeroway_taxiway', 1, NULL, 0.3),
     (12, 'railway_roller_coaster', NULL, NULL, 0.1),
     (13, 'highway_motorway', 6, 0.5, 0.5),
@@ -162,25 +161,24 @@ INSERT INTO carto_line_widths_data (zoom, class, line_width, casing_width, bridg
     (13, 'highway_residential', 2.5, 0.5, 0.5),
     (13, 'highway_living_street', 2, 0.5, 0.5),
     (13, 'highway_pedestrian', NULL, 0.5, 0.5),
-    (13, 'highway_road', 1, 0.5, 0.5),
-    (13, 'highway_service', NULL, 0.5, 0.5),
+    (13, 'highway_road', 1, NULL, NULL),
     (13, 'highway_service_minor', NULL, 0.5, 0.5),
     (13, 'highway_cycleway', 0.7, NULL, NULL),
     (13, 'highway_bridleway', 0.3, NULL, NULL),
     (13, 'highway_track', 0.5, NULL, NULL),
-    (13, 'aeroway_runway', 6, NULL, 0.5),
+    (13, 'aeroway_runway', 6, NULL, NULL),
     (13, 'aeroway_taxiway', 2, NULL, 0.35),
     (13, 'railway_roller_coaster', NULL, NULL, 0.5),
-    (14, 'highway_motorway', 6, 0.6, 0.6),
-    (14, 'highway_trunk', 6, 0.6, 0.6),
-    (14, 'highway_primary', 5, 0.6, 0.6),
+    (14, 'highway_motorway', 6, 0.5, 0.5),
+    (14, 'highway_trunk', 6, 0.5, 0.5),
+    (14, 'highway_primary', 5, 0.5, 0.5),
     (14, 'highway_secondary', 5, 0.35, 0.6),
     (14, 'highway_tertiary', 5, 0.55, 0.5),
-    (14, 'highway_motorway_link', 4, 0.55, 0.5),
-    (14, 'highway_trunk_link', 4, 0.55, 0.5),
-    (14, 'highway_primary_link', 4, 0.55, 0.5),
-    (14, 'highway_secondary_link', 4, 0.55, 0.5),
-    (14, 'highway_tertiary_link', 3, 0.55, 0.5),
+    (14, 'highway_motorway_link', 4, 0.5, 0.5),
+    (14, 'highway_trunk_link', 4, 0.5, 0.5),
+    (14, 'highway_primary_link', 4, 0.5, 0.5),
+    (14, 'highway_secondary_link', 4, 0.5, 0.5),
+    (14, 'highway_tertiary_link', 3, 0.5, 0.5),
     (14, 'highway_unclassified', 3, 0.55, 0.5),
     (14, 'highway_residential', 3, 0.55, 0.5),
     (14, 'highway_living_street', 3, 0.55, 0.5),
@@ -211,8 +209,8 @@ INSERT INTO carto_line_widths_data (zoom, class, line_width, casing_width, bridg
     (15, 'highway_residential', 5, 0.6, 0.75),
     (15, 'highway_living_street', 5, 0.6, 0.75),
     (15, 'highway_pedestrian', 5, 0.6, 0.75),
-    (15, 'highway_road', 2, 0.6, 0.75),
-    (15, 'highway_service', 2, 0.6, 0.75),
+    (15, 'highway_road', 2, 0.55, 0.5),
+    (15, 'highway_service', 2, 0.55, 0.5),
     (15, 'highway_service_minor', NULL, 0.6, 0.75),
     (15, 'highway_footway', 1, NULL, NULL),
     (15, 'highway_path', 1, NULL, NULL),
