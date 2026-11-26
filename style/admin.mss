@@ -230,7 +230,6 @@ Then all three layers are added to the rendering with comp-op: darken, so that t
       line-color: @admin-boundaries;
       line-join: bevel;
       line-width: 0.4;
-      line-clip: false;
     }
     [zoom >= 5] {
       background/line-width: 0.5;
@@ -328,7 +327,6 @@ Then all three layers are added to the rendering with comp-op: darken, so that t
     line-color: @admin-boundaries;
     line-width: 0.6;
     line-dasharray: 4,0.6,2,0.6;
-    line-clip: false;
     [zoom >= 9] {
       background/line-width: 0.8;
       line-width: 0.8;
@@ -362,7 +360,6 @@ Then all three layers are added to the rendering with comp-op: darken, so that t
     line-color: @admin-boundaries;
     line-width: 1;
     line-dasharray: 8,1.5,1.5,1.5;
-    line-clip: false;
     [zoom >= 11] {
       background/line-width: 1.4;
       line-width: 1.4;
@@ -387,7 +384,6 @@ Then all three layers are added to the rendering with comp-op: darken, so that t
       line-color: @admin-boundaries;
       line-width: 1.2;
       line-dasharray: 6,1.5,1.5,1.5,1.5,1.5;
-      line-clip: false;
     }
     [zoom >= 12] {
       background/line-width: 1.5;
@@ -409,7 +405,6 @@ Then all three layers are added to the rendering with comp-op: darken, so that t
       line-color: @admin-boundaries;
       line-width: 1.4;
       line-dasharray: 8,2,2,2,2.5,2,2,2;
-      line-clip: false;
     }
     [zoom >= 14] {
       background/line-width: 1.6;
@@ -426,7 +421,6 @@ Then all three layers are added to the rendering with comp-op: darken, so that t
     line-color: @admin-boundaries;
     line-width: 1.2;
     line-dasharray: 0,3,2,2,2,2,2,3;
-    line-clip: false;
     [zoom >= 14] {
       background/line-width: 1.4;
       line-width: 1.4;
@@ -441,7 +435,6 @@ Then all three layers are added to the rendering with comp-op: darken, so that t
     line-color: @admin-boundaries;
     line-width: 1.2;
     line-dasharray: 0,3,2,2,2,3;
-    line-clip: false;
   }
 }
 

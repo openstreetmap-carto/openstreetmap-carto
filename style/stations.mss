@@ -5,7 +5,6 @@
   [railway = 'subway_entrance'][zoom >= 18] {
     marker-file: url('symbols/amenity/entrance.svg');
     marker-fill: @transportation-icon;
-    marker-clip: false;
     [zoom >= 19] {
       text-name: [ref];
       text-face-name: @book-fonts;
@@ -21,7 +20,6 @@
   [railway = 'station'][zoom >= 12] {
     marker-file: url('symbols/square.svg');
     marker-fill: @station-color;
-    marker-clip: false;
     [station != 'subway'] {
       marker-width: 4;
     }
@@ -56,7 +54,6 @@
       marker-file: url('symbols/square.svg');
       marker-fill: @station-color;
       marker-width: 4;
-      marker-clip: false;
       [zoom >= 15] {
         marker-width: 6;
       }
@@ -79,7 +76,6 @@
       marker-file: url('symbols/square.svg');
       marker-fill: @station-color;
       marker-width: 4;
-      marker-clip: false;
     }
     [zoom >= 15] {
       marker-width: 6;
@@ -102,7 +98,6 @@
       marker-file: url('symbols/square.svg');
       marker-fill: @station-color;
       marker-width: 4;
-      marker-clip: false;
       [zoom >= 15] {
         marker-width: 6;
       }

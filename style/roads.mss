@@ -1176,7 +1176,6 @@ tertiary is rendered from z10 and is not included in osm_planet_roads. */
     #bridges[feature = 'highway_secondary'][int_surface = 'unpaved'] {
       [zoom >= 12] {
         line-pattern-type: repeat;
-        line-pattern-alignment: global;
         line-pattern-width: [line_width] - 2 * [casing_width];
         line-pattern-file: url("symbols/unpaved/unpaved_secondary-fill.svg");          
         line-pattern-cap: round;
@@ -1214,7 +1213,6 @@ tertiary is rendered from z10 and is not included in osm_planet_roads. */
     #bridges[feature = 'highway_tertiary'][int_surface = 'unpaved'] {
       [zoom >= 13] {
         line-pattern-type: repeat;
-        line-pattern-alignment: global;
         line-pattern-width: [line_width] - 2 * [casing_width];
         line-pattern-file: url("symbols/unpaved/unpaved_residential-fill.svg");
         #bridges {
@@ -1254,7 +1252,6 @@ tertiary is rendered from z10 and is not included in osm_planet_roads. */
       [zoom >= 14] {
         line-pattern-width: [line_width] - 2 * [casing_width];
         line-pattern-type: repeat;
-        line-pattern-alignment: global;
         line-pattern-file: url("symbols/unpaved/unpaved_residential-fill.svg"); 
         #bridges {
           line-pattern-width: [line_width] - 2 * [bridge_casing_width];
@@ -1288,7 +1285,6 @@ tertiary is rendered from z10 and is not included in osm_planet_roads. */
       [zoom >= 13] {
         line-pattern-width: [line_width] - 2 * [casing_width];
         line-pattern-type: repeat;
-        line-pattern-alignment: global;
         line-pattern-file: url("symbols/unpaved/unpaved_living-street-fill.svg"); 
         #bridges {
           [zoom >= 14] { line-pattern-width: [line_width] - 2 * [bridge_casing_width]; }
@@ -1327,7 +1323,6 @@ tertiary is rendered from z10 and is not included in osm_planet_roads. */
         line-pattern-cap: round;
         line-pattern-width: [line_width] - 2 * [casing_width];
         line-pattern-type: repeat;
-        line-pattern-alignment: global;
         line-pattern-file: url("symbols/unpaved/unpaved_road-fill.svg"); 
         #bridges {
           line-pattern-width: [line_width] - 2 * [bridge_casing_width];
@@ -1408,7 +1403,6 @@ tertiary is rendered from z10 and is not included in osm_planet_roads. */
       [zoom >= 14] {
         line-pattern-width: [line_width] - 2 * [casing_width];
         line-pattern-type: repeat;
-        line-pattern-alignment: global;
         line-pattern-file: url("symbols/unpaved/unpaved_pedestrian-fill.svg"); 
         #bridges {
           line-pattern-width: [line_width] - 2 * [bridge_casing_width];
@@ -1436,7 +1430,6 @@ tertiary is rendered from z10 and is not included in osm_planet_roads. */
     [feature = 'highway_raceway'][int_surface = 'unpaved'] {
       [zoom >= 12] {
         line-pattern-type: repeat;
-        line-pattern-alignment: global;
         line-pattern-file: url("symbols/unpaved/unpaved_raceway-fill.svg"); 
         line-pattern-width: 1.2;
         line-pattern-join: round;
@@ -1471,7 +1464,6 @@ tertiary is rendered from z10 and is not included in osm_planet_roads. */
         line-cap: round;
         b/line-pattern-width: 4;
         b/line-pattern-type: repeat;
-        b/line-pattern-alignment: global;
         b/line-pattern-file: url("symbols/unpaved/unpaved_platform-fill.svg"); 
         b/line-pattern-cap: round;
         b/line-pattern-join: round;
@@ -1631,7 +1623,6 @@ tertiary is rendered from z10 and is not included in osm_planet_roads. */
         line/line-cap: round;
         line/line-join: round;
         line/line-opacity: 0.8;
-        line/line-clip:false;
 
         line/line-width: [line_width];
 
@@ -1761,7 +1752,6 @@ tertiary is rendered from z10 and is not included in osm_planet_roads. */
           line-color: #787878;
           line-width: 2.8;
           line-dasharray: 6,4;
-          line-clip: false;
           [feature = 'railway_INT-rail-service'] {
             line-color: #aaa;
             line-width: 1.9;
@@ -2063,7 +2053,6 @@ tertiary is rendered from z10 and is not included in osm_planet_roads. */
   }
   [int_tc_type = 'trunk'][zoom >= 15][int_surface = 'unpaved'] {
     line-pattern-type: repeat;
-    line-pattern-alignment: global;
     line-pattern-width: [line_width] * @turning-circle-factor;
     line-pattern-file: url("symbols/unpaved/unpaved_trunk-fill.svg");
     line-pattern-cap: round;
@@ -2076,7 +2065,6 @@ tertiary is rendered from z10 and is not included in osm_planet_roads. */
   }
   [int_tc_type = 'primary'][zoom >= 15][int_surface = 'unpaved'] {
     line-pattern-type: repeat;
-    line-pattern-alignment: global;
     line-pattern-width: [line_width] * @turning-circle-factor;
     line-pattern-file: url("symbols/unpaved/unpaved_primary-fill.svg");
     line-pattern-cap: round;
@@ -2089,7 +2077,6 @@ tertiary is rendered from z10 and is not included in osm_planet_roads. */
   }
   [int_tc_type = 'secondary'][zoom >= 15][int_surface = 'unpaved'] {
     line-pattern-type: repeat;
-    line-pattern-alignment: global;
     line-pattern-width: [line_width] * @turning-circle-factor;
     line-pattern-file: url("symbols/unpaved/unpaved_secondary-fill.svg");
     line-pattern-cap: round;
@@ -2123,7 +2110,6 @@ tertiary is rendered from z10 and is not included in osm_planet_roads. */
   [int_tc_type = 'unclassified'][int_surface = 'unpaved'] {
     [zoom >= 15] {
       line-pattern-type: repeat;
-      line-pattern-alignment: global;
       line-pattern-width: [line_width] * @turning-circle-factor;
       line-pattern-file: url("symbols/unpaved/unpaved_residential-fill.svg");
       line-pattern-cap: round;
@@ -2137,7 +2123,6 @@ tertiary is rendered from z10 and is not included in osm_planet_roads. */
   }
   [int_tc_type = 'living_street'][zoom >= 15][int_surface = 'unpaved'] {
     line-pattern-type: repeat;
-    line-pattern-alignment: global;
     line-pattern-width: [line_width] * @turning-circle-factor;
     line-pattern-file: url("symbols/unpaved/unpaved_living-street-fill.svg");
     line-pattern-cap: round;
@@ -2150,7 +2135,6 @@ tertiary is rendered from z10 and is not included in osm_planet_roads. */
   }
   [int_tc_type = 'service'][int_tc_service = 'INT-normal'][zoom >= 16][int_surface = 'unpaved'] {
     line-pattern-type: repeat;
-    line-pattern-alignment: global;
     line-pattern-width: [line_width] * @turning-circle-factor;
     line-pattern-file: url("symbols/unpaved/unpaved_residential-fill.svg");
     line-pattern-cap: round;
@@ -2163,7 +2147,6 @@ tertiary is rendered from z10 and is not included in osm_planet_roads. */
   }
   [int_tc_type = 'service'][int_tc_service = 'INT-minor'][zoom >= 18][int_surface = 'unpaved'] {
     line-pattern-type: repeat;
-    line-pattern-alignment: global;
     line-pattern-width: [line_width] * @turning-circle-factor;
     line-pattern-file: url("symbols/unpaved/unpaved_residential-fill.svg");
     line-pattern-cap: round;
@@ -2226,7 +2209,6 @@ tertiary is rendered from z10 and is not included in osm_planet_roads. */
     polygon-fill: @living-street-fill;
     [int_surface = 'unpaved'] {
       polygon-pattern-file: url('symbols/unpaved/unpaved_living-street-fill.svg');
-      polygon-pattern-alignment: global;
     }
   }
 
@@ -2235,7 +2217,6 @@ tertiary is rendered from z10 and is not included in osm_planet_roads. */
       polygon-fill: #fff;
       [int_surface = 'unpaved'] {
         polygon-pattern-file: url('symbols/unpaved/unpaved_residential-fill.svg');
-        polygon-pattern-alignment: global;
       }
     }
   }
@@ -2246,7 +2227,6 @@ tertiary is rendered from z10 and is not included in osm_planet_roads. */
       polygon-fill: @pedestrian-fill;
       [int_surface = 'unpaved'] {
         polygon-pattern-file: url('symbols/unpaved/unpaved_pedestrian-fill.svg');
-        polygon-pattern-alignment: global;
       }
     }
   }
@@ -2257,7 +2237,6 @@ tertiary is rendered from z10 and is not included in osm_planet_roads. */
       polygon-fill: @platform-fill;
       [int_surface = 'unpaved'] {
         polygon-pattern-file: url('symbols/unpaved/unpaved_platform-fill.svg');
-        polygon-pattern-alignment: global;
       }
     }
   }
@@ -2266,7 +2245,6 @@ tertiary is rendered from z10 and is not included in osm_planet_roads. */
     polygon-fill: @runway-fill;
     [int_surface = 'unpaved'] {
       polygon-pattern-file: url('symbols/unpaved/unpaved_aeroway-fill.svg');
-      polygon-pattern-alignment: global;
     }
   }
 
@@ -2274,7 +2252,6 @@ tertiary is rendered from z10 and is not included in osm_planet_roads. */
     polygon-fill: @taxiway-fill;
     [int_surface = 'unpaved'] {
       polygon-pattern-file: url('symbols/unpaved/unpaved_aeroway-fill.svg');
-      polygon-pattern-alignment: global;
     }
   }
 
@@ -2282,7 +2259,6 @@ tertiary is rendered from z10 and is not included in osm_planet_roads. */
     polygon-fill: @helipad-fill;
     [int_surface = 'unpaved'] {
       polygon-pattern-file: url('symbols/unpaved/unpaved_aeroway-fill.svg');
-      polygon-pattern-alignment: global;
     }
   }
 }
@@ -2548,7 +2524,6 @@ tertiary is rendered from z10 and is not included in osm_planet_roads. */
         }
         [int_surface = 'unpaved'] {
           line-pattern-type: repeat;
-          line-pattern-alignment: global;
           line-pattern-file: url("symbols/unpaved/unpaved_aeroway-fill.svg");
           line-pattern-width: [line_width];
         }
@@ -2685,7 +2660,6 @@ tertiary is rendered from z10 and is not included in osm_planet_roads. */
       text-size: 10;
       text-fill: #333;
       text-spacing: 750;
-      text-clip: false;
       text-placement: line;
       text-face-name: @oblique-fonts;
       text-halo-radius: @standard-halo-radius;
@@ -2716,7 +2690,6 @@ tertiary is rendered from z10 and is not included in osm_planet_roads. */
       text-halo-radius: @standard-halo-radius;
       text-halo-fill: @standard-halo-fill;
       text-spacing: 760;
-      text-clip: false;
     }
   }
 
@@ -2735,7 +2708,6 @@ tertiary is rendered from z10 and is not included in osm_planet_roads. */
         text-dy: 9;
       }
 
-      text-clip: false;
       text-fill: #222;
       text-face-name: @oblique-fonts;
       text-halo-radius: @standard-halo-radius;
@@ -2761,7 +2733,6 @@ tertiary is rendered from z10 and is not included in osm_planet_roads. */
       text-size: 8;
       text-fill: black;
       text-spacing: 300;
-      text-clip: false;
       text-placement: line;
       text-face-name: @book-fonts;
       text-repeat-distance: @major-highway-text-repeat-distance;
@@ -2819,7 +2790,6 @@ tertiary is rendered from z10 and is not included in osm_planet_roads. */
       text-size: 9;
       text-fill: black;
       text-spacing: 300;
-      text-clip: false;
       text-placement: line;
       text-face-name: @book-fonts;
       text-halo-radius: @standard-halo-radius;
@@ -2866,7 +2836,6 @@ tertiary is rendered from z10 and is not included in osm_planet_roads. */
       text-size: 8;
       text-fill: black;
       text-spacing: 300;
-      text-clip: false;
       text-placement: line;
       text-halo-radius: @standard-halo-radius;
       text-halo-fill: @residential-fill;
@@ -2896,7 +2865,6 @@ tertiary is rendered from z10 and is not included in osm_planet_roads. */
       text-size: 9;
       text-fill: black;
       text-spacing: 300;
-      text-clip: false;
       text-placement: line;
       text-halo-radius: @standard-halo-radius;
       [highway = 'raceway'] { text-halo-fill: @raceway-fill; }
@@ -2918,7 +2886,6 @@ tertiary is rendered from z10 and is not included in osm_planet_roads. */
       text-size: 8;
       text-fill: black;
       text-spacing: 300;
-      text-clip: false;
       text-placement: line;
       text-halo-radius: @standard-halo-radius;
       [highway = 'living_street'] {
@@ -2962,7 +2929,6 @@ tertiary is rendered from z10 and is not included in osm_planet_roads. */
       text-halo-radius: @standard-halo-radius;
       text-halo-fill: @standard-halo-fill;
       text-spacing: 300;
-      text-clip: false;
       text-placement: line;
       text-face-name: @book-fonts;
       text-vertical-alignment: middle;
@@ -2996,7 +2962,6 @@ tertiary is rendered from z10 and is not included in osm_planet_roads. */
       text-halo-radius: @standard-halo-radius;
       text-halo-fill: @standard-halo-fill;
       text-spacing: 300;
-      text-clip: false;
       text-placement: line;
       text-face-name: @book-fonts;
       text-vertical-alignment: middle;
@@ -3092,7 +3057,6 @@ tertiary is rendered from z10 and is not included in osm_planet_roads. */
       [oneway != null] {
         text-name: "'🠖'";
         text-size: 15;
-        text-clip: false;
         text-spacing: 180;
         text-placement: line;
         text-halo-fill: @standard-halo-fill;
@@ -3142,7 +3106,6 @@ tertiary is rendered from z10 and is not included in osm_planet_roads. */
       text-size: 10;
       text-dy: 6;
       text-spacing: 900;
-      text-clip: false;
       text-placement: line;
       text-face-name: @book-fonts;
       text-halo-radius: @standard-halo-radius;
@@ -3164,7 +3127,6 @@ tertiary is rendered from z10 and is not included in osm_planet_roads. */
         text-size: 10;
         text-dy: 3;
         text-spacing: 300;
-        text-clip: false;
         text-placement: line;
         text-face-name: @book-fonts;
         text-halo-radius: @standard-halo-radius;
@@ -3193,7 +3155,6 @@ tertiary is rendered from z10 and is not included in osm_planet_roads. */
         text-size: 10;
         text-dy: 6;
         text-spacing: 300;
-        text-clip: false;
         text-placement: line;
         text-face-name: @book-fonts;
         text-halo-radius: @standard-halo-radius;
