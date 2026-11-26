@@ -876,7 +876,6 @@ Layer:
                     node.osm_id,
                     node.way AS node,
                     node.int_crossing_island,
-                    node.int_tactile_paving,
                     -- where the node is the end of two ways they are merged into one line,
                     -- so that the markings run around the corner continuously instead of
                     -- as two pieces that do not meet
@@ -889,8 +888,7 @@ Layer:
                     SELECT
                         osm_id,
                         way,
-                        CASE WHEN tags->'crossing:island' = 'yes' THEN 'yes' ELSE 'no' END AS int_crossing_island,
-                        CASE WHEN tags->'tactile_paving' = 'yes' THEN 'yes' ELSE 'no' END AS int_tactile_paving
+                        CASE WHEN tags->'crossing:island' = 'yes' THEN 'yes' ELSE 'no' END AS int_crossing_island
                       FROM planet_osm_point
                       WHERE way && !bbox!
                         AND Z(!scale_denominator!) >= 18
@@ -916,7 +914,7 @@ Layer:
                         AND (bridge IS NULL OR NOT bridge IN ('yes', 'boardwalk', 'cantilever', 'covered', 'low_water_crossing', 'movable', 'trestle', 'viaduct'))
                         AND ST_Length(way) > 0
                   ) AS road
-                  GROUP BY node.osm_id, node.way, node.int_crossing_island, node.int_tactile_paving
+                  GROUP BY node.osm_id, node.way, node.int_crossing_island
                   -- three or more roads meeting at the node, or two that do not continue
                   -- one another, do not merge into a single line, and it cannot be told
                   -- which of them is being crossed
@@ -928,10 +926,9 @@ Layer:
                 SELECT ST_LineLocatePoint(crossing.way, crossing.node) AS position, 3.0 / ST_Length(crossing.way) AS half
               ) AS along
               -- the bars are drawn on the piece of road over the depth of the markings.
-              -- The refuge in the middle of the road and the tactile paving at the kerbs
-              -- are both features of the road rather than of the markings, so they are
-              -- drawn on the middle half of it and read as patches rather than as
-              -- stripes running the whole way over the road.
+              -- The refuge in the middle of the road is a feature of the road rather
+              -- than of the markings, so it is drawn on the middle half of it and reads
+              -- as a patch rather than as a stripe running the whole way over the road.
               CROSS JOIN LATERAL (
                 SELECT 'bars' AS int_crossing_part,
                        ST_LineSubstring(crossing.way, GREATEST(0, along.position - along.half), LEAST(1, along.position + along.half)) AS way
@@ -939,10 +936,6 @@ Layer:
                 SELECT 'island',
                        ST_LineSubstring(crossing.way, GREATEST(0, along.position - along.half / 2), LEAST(1, along.position + along.half / 2))
                   WHERE crossing.int_crossing_island = 'yes'
-                UNION ALL
-                SELECT 'tactile',
-                       ST_LineSubstring(crossing.way, GREATEST(0, along.position - along.half / 2), LEAST(1, along.position + along.half / 2))
-                  WHERE crossing.int_tactile_paving = 'yes'
               ) AS part
               -- a piece that has shrunk to a point at the very end of a road
               WHERE ST_NPoints(part.way) > 1 -- end of crossing select

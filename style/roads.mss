@@ -15,8 +15,6 @@
 @crossing-marking: #cfcfcf;
 @crossing-marking-light: #f7f7f7;
 @crossing-marking-road: #bdbdbd;
-/* Tactile paving at the kerbs on either side of a crossing. */
-@crossing-tactile-paving: #eccf51;
 /* The refuge of a crossing with crossing:island=yes. A neutral kerb grey
    rather than the casing colour of the road: those are saturated identity
    colours on the main classes and read as a marking rather than as a kerb. */
@@ -2563,20 +2561,19 @@ tertiary is rendered from z10 and is not included in osm_planet_roads. */
    than letting them grow with the road: five for the classes drawn at full
    width, three for the narrower ones.
 
-   The bars stop short of the edge of the road fill, which leaves room for the
-   tactile paving strips to sit across the kerb on either side.
+   The bars stop short of the edge of the road fill, so the outer ones stay
+   clear of the casing.
 
-   A refuge from crossing:island=yes and the tactile paving both belong to the
-   road rather than to the markings, so the query returns them as features of
-   their own (int_crossing_part) over the middle half of the marking depth:
-   they read as patches rather than as stripes running the whole way over the
-   road. The bar counts are odd, so the refuge takes the place of the bar on
-   the centre line, which is hidden where there is one. */
+   A refuge from crossing:island=yes belongs to the road rather than to the
+   markings, so the query returns it as a feature of its own (int_crossing_part)
+   over the middle half of the marking depth: it reads as a patch rather than
+   as a stripe running the whole way over the road. The bar counts are odd, so
+   the refuge takes the place of the bar on the centre line, which is hidden
+   where there is one. */
 
 @crossing-span: 0.8;
 @crossing-bar-3: @crossing-span / 5;
 @crossing-bar-5: @crossing-span / 9;
-@crossing-tactile-width: 0.12;
 
 #roads-fill::fill {
   /* five bars on the classes drawn at full width */
@@ -2670,7 +2667,7 @@ tertiary is rendered from z10 and is not included in osm_planet_roads. */
       }
     }
   }
-  /* the refuge and the tactile paving are the same on every class */
+  /* the refuge is the same on every class */
   [feature = 'crossing_motorway'],
   [feature = 'crossing_motorway_link'],
   [feature = 'crossing_trunk'],
@@ -2690,16 +2687,6 @@ tertiary is rendered from z10 and is not included in osm_planet_roads. */
         island/line-color: @crossing-island;
         island/line-join: round;
         island/line-cap: round;
-      }
-      [int_crossing_part = 'tactile'] {
-        tactile_l/line-color: @crossing-tactile-paving;
-        tactile_r/line-color: @crossing-tactile-paving;
-        tactile_l/line-join: round;
-        tactile_r/line-join: round;
-        tactile_l/line-width: @crossing-tactile-width * [line_width] - 2 * @crossing-tactile-width * [casing_width];
-        tactile_r/line-width: @crossing-tactile-width * [line_width] - 2 * @crossing-tactile-width * [casing_width];
-        tactile_l/line-offset: 0.5 * [line_width] - [casing_width];
-        tactile_r/line-offset: -0.5 * [line_width] + [casing_width];
       }
     }
   }
