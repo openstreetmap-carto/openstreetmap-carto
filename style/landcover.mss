@@ -131,7 +131,6 @@
     }
     [zoom >= 13] {
       polygon-pattern-file: url('patterns/vineyard.svg');
-      polygon-pattern-alignment: global;
       [way_pixels >= 4]  { polygon-pattern-gamma: 0.75; }
       [way_pixels >= 64] { polygon-pattern-gamma: 0.3;  }
     }
@@ -145,7 +144,6 @@
     }
     [zoom >= 13] {
       polygon-pattern-file: url('patterns/orchard.svg');
-      polygon-pattern-alignment: global;
       [way_pixels >= 4]  { polygon-pattern-gamma: 0.75; }
       [way_pixels >= 64] { polygon-pattern-gamma: 0.3;  }
     }
@@ -160,7 +158,6 @@
     [zoom >= 13] {
       polygon-pattern-file: url('patterns/plant_nursery.svg');
       polygon-pattern-opacity: 0.6;
-      polygon-pattern-alignment: global;
       [way_pixels >= 4]  { polygon-pattern-gamma: 0.75; }
       [way_pixels >= 64] { polygon-pattern-gamma: 0.3;  }
     }
@@ -174,13 +171,11 @@
     }
     [zoom >= 15] {
       polygon-pattern-file: url('symbols/flowerbed_mid_zoom.svg');
-      polygon-pattern-alignment: global;
       [way_pixels >= 4]  { polygon-pattern-gamma: 0.75; }
       [way_pixels >= 64] { polygon-pattern-gamma: 0.3;  }
     }
     [zoom >= 17] {
       polygon-pattern-file: url('symbols/flowerbed_high_zoom.svg');
-      polygon-pattern-alignment: global;
       [way_pixels >= 4]  { polygon-pattern-gamma: 0.75; }
       [way_pixels >= 64] { polygon-pattern-gamma: 0.3;  }
     }
@@ -194,7 +189,6 @@
     }
     [zoom >= 13] {
       polygon-pattern-file: url('patterns/plant_nursery.svg');
-      polygon-pattern-alignment: global;
       [way_pixels >= 4]  { polygon-pattern-gamma: 0.75; }
       [way_pixels >= 64] { polygon-pattern-gamma: 0.3;  }
     }
@@ -225,11 +219,9 @@
   [feature = 'amenity_place_of_worship'][zoom >= 13],
   [feature = 'landuse_religious'][zoom >= 13] {
     polygon-fill: @place_of_worship;
-    polygon-clip: false;
     [zoom >= 15] {
       line-color: @place_of_worship_outline;
       line-width: 0.3;
-      line-clip: false;
     }
   }
 
@@ -237,7 +229,6 @@
     polygon-fill: #8e8e8e;
     polygon-opacity: 0.14;
     polygon-pattern-file: url('patterns/grey_vertical_hatch.svg');
-    polygon-pattern-alignment: global;
     line-color: #888;
     line-width: 3;
     line-opacity: 0.329;
@@ -287,7 +278,6 @@
     }
     [zoom >= 16] {
       polygon-pattern-file: url('patterns/dog_park.svg');
-      polygon-pattern-alignment: global;
       [way_pixels >= 4]  { polygon-pattern-gamma: 0.75; }
       [way_pixels >= 64] { polygon-pattern-gamma: 0.3;  }
     }
@@ -308,7 +298,6 @@
     }
     [zoom >= 13] {
       polygon-pattern-file: url('patterns/allotments.svg');
-      polygon-pattern-alignment: global;
       [way_pixels >= 4]  { polygon-pattern-gamma: 0.75; }
       [way_pixels >= 64] { polygon-pattern-gamma: 0.3;  }
     }
@@ -544,7 +533,6 @@
       polygon-fill: @grass;
       [feature = 'wetland_saltmarsh'][zoom >= 13] {
         polygon-pattern-file: url('symbols/salt-dots-2.png');
-        polygon-pattern-alignment: global;
         [way_pixels >= 4]  { polygon-pattern-gamma: 0.75; }
         [way_pixels >= 64] { polygon-pattern-gamma: 0.3;  }
       }
@@ -714,46 +702,37 @@
 
   [int_wetland != null][zoom >= 10] {
     polygon-pattern-file: url('symbols/wetland.png');
-    polygon-pattern-alignment: global;
   }
   [natural = 'reef'][zoom >= 10] {
     polygon-pattern-file: url('symbols/reef.png');
-    polygon-pattern-alignment: global;
   }
   [zoom >= 13] {
     [int_wetland = 'marsh'],
     [int_wetland = 'saltmarsh'],
     [int_wetland = 'wet_meadow'] {
       polygon-pattern-file: url('symbols/wetland_marsh.png');
-      polygon-pattern-alignment: global;
     }
     [int_wetland = 'reedbed'] {
       polygon-pattern-file: url('symbols/wetland_reed.png');
-      polygon-pattern-alignment: global;
     }
     [int_wetland = 'mangrove'] {
       polygon-pattern-file: url('symbols/wetland_mangrove.png');
-      polygon-pattern-alignment: global;
     }
     [int_wetland = 'swamp'] {
       polygon-pattern-file: url('symbols/wetland_swamp.png');
-      polygon-pattern-alignment: global;
     }
     [int_wetland = 'bog'],
     [int_wetland = 'fen'],
     [int_wetland = 'string_bog'] {
       polygon-pattern-file: url('symbols/wetland_bog.png');
-      polygon-pattern-alignment: global;
     }
     [landuse = 'salt_pond'] {
       polygon-pattern-file: url('symbols/salt_pond.png');
-      polygon-pattern-alignment: global;
     }
     [natural = 'beach'],
     [natural = 'shoal'] {
       [surface = 'sand'] {
         polygon-pattern-file: url('symbols/beach.png');
-        polygon-pattern-alignment: global;
       }
       [surface = 'gravel'],
       [surface = 'fine_gravel'],
@@ -763,12 +742,10 @@
       [surface = 'stones'],
       [surface = 'shells'] {
         polygon-pattern-file: url('symbols/beach_coarse.png');
-        polygon-pattern-alignment: global;
       }
     }
     [natural = 'scrub'] {
       polygon-pattern-file: url('symbols/scrub.png');
-      polygon-pattern-alignment: global;
     }
   }
 
@@ -779,7 +756,6 @@
     [leaf_type = 'needleleaved'] { polygon-pattern-file: url('symbols/leaftype_needleleaved.svg'); }
     [leaf_type = 'mixed'] { polygon-pattern-file: url('symbols/leaftype_mixed.svg'); }
     [leaf_type = 'leafless'] { polygon-pattern-file: url('symbols/leaftype_leafless.svg'); }
-    polygon-pattern-alignment: global;
     opacity: 0.4; // The entire layer has opacity to handle overlapping forests
   }
 }
@@ -790,7 +766,6 @@
     polygon-fill: #ff5555;
     polygon-opacity: 0.08;
     polygon-pattern-file: url('patterns/military_red_hatch.svg');
-    polygon-pattern-alignment: global;
     line-color: @military;
     line-opacity: 0.24;
     line-width: 1.0;
@@ -805,7 +780,6 @@
     polygon-fill: #ff5555;
     polygon-opacity: 0.1;
     polygon-pattern-file: url('patterns/danger_red_hatch.svg');
-    polygon-pattern-alignment: global;
     line-color: @military;
     line-opacity: 0.2;
     line-width: 2;
