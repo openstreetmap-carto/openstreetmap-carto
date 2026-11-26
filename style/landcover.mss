@@ -20,7 +20,7 @@
 @commercial: #f2dad9;       // Lch(89,8.5,25)
 @commercial-line: #d1b2b0;  // Lch(75,12,25)
 @industrial: #ebdbe8;       // Lch(89,9,330) (Also used for railway, wastewater_plant)
-@industrial-line: #c6b3c3;  // Lch(75,11,330) (Also used for railway-line, wastewater_plant-line)
+@industrial-line: #c6b3c3;  // Lch(75,11,330) (Also used for wastewater_plant-line)
 @farmland: #eef0d5;         // Lch(94,14,112)
 @farmland-line: #c7c9ae;    // Lch(80,14,112)
 @farmyard: #f5dcba;         // Lch(89,20,80)
@@ -39,7 +39,6 @@
 @parking: #eeeeee;
 @parking-outline: saturate(darken(@parking, 40%), 20%);
 @railway: @industrial;
-@railway-line: @industrial-line;
 @rest_area: #efc8c8; // also services
 
 // --- Other ----
@@ -392,7 +391,7 @@
     line-color: @industrial-line;
   }
 
-  [feature = 'man_made_wastewater_plant'] {
+  [feature = 'man_made_wastewater_plant'][zoom >= 10] {
     polygon-fill: @wastewater_plant;
     [zoom >= 16] {
       line-width: @landuse-faint-outline-width;
@@ -400,7 +399,7 @@
     }
   }
 
-  [feature = 'man_made_water_works'] {
+  [feature = 'man_made_water_works'][zoom >= 10] {
     polygon-fill: @water_works;
     [zoom >= 16] {
       line-width: @landuse-faint-outline-width;
@@ -577,8 +576,8 @@
     }
   }
 
-  [feature = 'amenity_fire_station'][zoom >= 8][way_pixels > 900],
-  [feature = 'amenity_police'][zoom >= 8][way_pixels > 900],
+  [feature = 'amenity_fire_station'][zoom >= 10][way_pixels > 900],
+  [feature = 'amenity_police'][zoom >= 10][way_pixels > 900],
   [feature = 'amenity_fire_station'][zoom >= 13],
   [feature = 'amenity_police'][zoom >= 13] {
     polygon-fill: #F3E3DD;
@@ -895,15 +894,12 @@
     a/line-opacity: 0.5;
     a/line-join: round;
     a/line-cap: round;
-    [zoom >= 17],
-    [way_pixels >= 60] {
-      b/line-width: 4;
-      b/line-offset: -2;
-      b/line-color: @tourism;
-      b/line-opacity: 0.3;
-      b/line-join: round;
-      b/line-cap: round;
-    }
+    b/line-width: 4;
+    b/line-offset: -2;
+    b/line-color: @tourism;
+    b/line-opacity: 0.3;
+    b/line-join: round;
+    b/line-cap: round;
     [zoom >= 17] {
       a/line-width: 2;
       a/line-offset: -1;

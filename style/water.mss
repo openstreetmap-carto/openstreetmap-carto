@@ -166,7 +166,7 @@
 #water-lines::fill,
 #bridges::fill {
   [feature = 'waterway_river'][zoom >= 12] {
-    [int_bridge_tunnel = 'tunnel'] {
+    #water-lines[int_bridge_tunnel = 'tunnel'] {
       // Background for dashed tunnel casings
       background/line-color: @water-tunnelfill-color;
       background/line-width: @river-width-z12;
@@ -178,7 +178,7 @@
       [zoom >= 18] { background/line-width: @river-width-z18; }
       background/line-join: round;
     }
-    [int_bridge_tunnel = 'bridge'][int_intermittent = 'yes'][zoom >= 14] {
+    #bridges[int_intermittent = 'yes'][zoom >= 14] {
       background/line-color: white;
       background/line-join: round;
       background/line-width: @river-width-z14;
@@ -204,7 +204,7 @@
       water/line-cap: butt;
     }
 
-    [int_bridge_tunnel = 'tunnel'] {
+    #water-lines[int_bridge_tunnel = 'tunnel'] {
       // This provides the blue dashed casing of waterway tunnels
       water/line-dasharray: 4,2;
       water/line-cap: butt;
@@ -226,13 +226,13 @@
   [feature = 'waterway_stream'] {
     [int_intermittent != 'yes'][zoom >= 12],
     [zoom >= 13] {
-      [int_bridge_tunnel = 'tunnel'][zoom >= 14] {
+      #water-lines[int_bridge_tunnel = 'tunnel'][zoom >= 14] {
         // Background for dashed tunnel casings
         // The line widths are adjusted later - this just "books in" the background layer
         background/line-color: @water-tunnelfill-color;
         background/line-join: round;
       }
-      [int_bridge_tunnel = 'bridge'][int_intermittent = 'yes'][zoom >= 14] {
+      #bridges[int_intermittent = 'yes'][zoom >= 14] {
         background/line-color: white;
         background/line-join: round;
         background/line-width: @stream-width-z14;
@@ -262,14 +262,14 @@
         water/line-dasharray: 4,3;
         water/line-cap: butt;
       }
-      [feature = 'waterway_fish_pass'][int_bridge_tunnel != 'tunnel'][zoom >= 17] {
+      #bridges[feature = 'waterway_fish_pass'][zoom >= 17] {
         steps/line-dasharray: 1.5,3;
         steps/line-color: @fishpass-fill-color; 
         steps/line-width: @ditchdrain-width-z17; 
         steps/line-join: round;
       }
 
-      [int_bridge_tunnel = 'tunnel'][zoom >= 14] {
+      #water-lines[int_bridge_tunnel = 'tunnel'][zoom >= 14] {
         water/line-dasharray: 4,2;
         water/line-cap: butt;
         background/line-width: @stream-width-z14 + 1;
@@ -309,13 +309,13 @@
   }
 
   [feature = 'waterway_canal'][zoom >= 12] {
-    [int_bridge_tunnel = 'tunnel'][zoom >= 13] {
+    #water-lines[int_bridge_tunnel = 'tunnel'][zoom >= 13] {
       // Background for dashed tunnel casings
       // The line widths are adjusted later - this just "books in" the background layer
       background/line-color: @water-tunnelfill-color;
       background/line-join: round;
     }
-    [int_bridge_tunnel = 'bridge'][int_intermittent = 'yes'][zoom >= 14] {
+    #bridges[int_intermittent = 'yes'][zoom >= 14] {
       background/line-color: white;
       background/line-join: round;
       background/line-width: @stream-width-z14 * @canal-scale-factor;
@@ -341,7 +341,7 @@
       water/line-cap: butt;
     }
     
-    [int_bridge_tunnel = 'tunnel'][zoom >= 13] {
+    #water-lines[int_bridge_tunnel = 'tunnel'][zoom >= 13] {
       water/line-dasharray: 4,2;
       water/line-cap: butt;
       background/line-width: (@stream-width-z13 * @canal-scale-factor) + 1;
@@ -381,7 +381,7 @@
 #water-lines-text {
   [lock = 'yes'][zoom >= 17] {
       text-name: "[lock_name]";
-      text-face-name: @standard-font;
+      text-face-name: @book-fonts;
       text-placement: line;
       text-fill: @water-text;
       text-spacing: @waterway-text-spacing;
@@ -391,29 +391,18 @@
   }
 
   [lock != 'yes'][int_tunnel != 'yes'] {
-    [waterway = 'river'][zoom >= 13] {
-      text-name: "[name]";
-      text-size: 10;
-      text-face-name: @oblique-fonts;
-      text-fill: @water-text;
-      text-halo-radius: @standard-halo-radius;
-      text-halo-fill: @standard-halo-fill;
-      text-spacing: @waterway-text-spacing;
-      text-placement: line;
-      text-repeat-distance: @waterway-text-repeat-distance;
-      [zoom >= 14] { text-size: 12; }
-    }
-
+    [waterway = 'river'][zoom >= 13],
     [waterway = 'canal'][zoom >= 13] {
       text-name: "[name]";
       text-size: 10;
-      text-face-name: @standard-font;
+      text-face-name: @book-fonts;
+      [waterway = 'river'] { text-face-name: @oblique-fonts; }
       text-fill: @water-text;
       text-halo-radius: @standard-halo-radius;
       text-halo-fill: @standard-halo-fill;
+      text-spacing: @waterway-text-spacing;
       text-placement: line;
       text-repeat-distance: @waterway-text-repeat-distance;
-      text-spacing: @waterway-text-spacing;
       [zoom >= 14] { text-size: 12; }
     }
 
@@ -422,7 +411,7 @@
     [waterway = 'stream'][zoom >= 15] {
       text-name: "[name]";
       text-size: 10;
-      text-face-name: @standard-font;
+      text-face-name: @book-fonts;
       [waterway = 'stream'] { text-face-name: @oblique-fonts; }
       text-fill: @water-text;
       text-halo-radius: @standard-halo-radius;
