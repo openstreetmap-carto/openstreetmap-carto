@@ -908,8 +908,6 @@ Layer:
             CASE WHEN highway IN ('motorway_link', 'trunk_link', 'primary_link', 'secondary_link', 'tertiary_link') THEN 'yes' ELSE 'no' END AS link,
             carto_highway_int_surface(surface) AS int_surface,
             widths.line_width,
-            widths.casing_width,
-            widths.bridge_casing_width,
             way
           FROM planet_osm_roads
             -- the widths of the road at this zoom level, see line-widths.yaml
@@ -1338,7 +1336,6 @@ Layer:
         (SELECT
             COALESCE(way_area/NULLIF(POW(!scale_denominator!*0.001*0.28,2),0), 0) AS way_pixels,
             boundary,
-            tags->'protect_class' AS protect_class,
             way
           FROM planet_osm_polygon
           WHERE (boundary IN ('aboriginal_lands', 'national_park')
@@ -1399,7 +1396,7 @@ Layer:
           ORDER BY way_pixels DESC
         ) AS country_names
     properties:
-      minzoom: 2
+      minzoom: 3
   - id: capital-names
     geometry: point
     <<: *extents
@@ -1420,7 +1417,7 @@ Layer:
           ORDER BY population DESC
         ) AS capital_names
     properties:
-      minzoom: 3
+      minzoom: 4
       maxzoom: 15
   - id: state-names
     geometry: point
@@ -1431,8 +1428,6 @@ Layer:
         (SELECT
             COALESCE(way_area/NULLIF(POW(!scale_denominator!*0.001*0.28,2),0), 0) AS way_pixels,
             name,
-            admin_level,
-            ref,
             ST_PointOnSurface(way) AS way
           FROM planet_osm_polygon
           WHERE ST_PointOnSurface(way) && !bbox!
@@ -1445,7 +1440,7 @@ Layer:
           ORDER BY way_pixels DESC
         ) AS state_names
     properties:
-      minzoom: 4
+      minzoom: 5
   - id: placenames-medium
     geometry: point
     <<: *extents
@@ -1869,7 +1864,6 @@ Layer:
               tags->'location' as location,
               tags->'icao' as icao,
               tags->'iata' as iata,
-              tags->'office' as office,
               tags->'recycling_type' as recycling_type,
               tags->'tower:construction' as "tower:construction",
               tags->'tower:type' as "tower:type",
@@ -2164,7 +2158,6 @@ Layer:
       table: |-
         (SELECT
             COALESCE(way_area/NULLIF(POW(!scale_denominator!*0.001*0.28,2),0), 0) AS way_pixels,
-            highway,
             name,
             ST_PointOnSurface(way) AS way
           FROM planet_osm_polygon
@@ -2260,11 +2253,6 @@ Layer:
             END AS railway,
             tags->'highspeed' as highspeed,
             tags->'usage' as usage,
-            construction,
-            (CASE
-              WHEN tags->'railway:preserved' = 'yes' THEN 'yes'
-              ELSE 'no'
-            END) AS preserved,
             way
           FROM planet_osm_line
           WHERE railway IN ('rail', 'subway', 'narrow_gauge', 'light_rail', 'funicular', 'monorail', 'miniature', 'tram', 'disused', 'construction')
@@ -2482,9 +2470,6 @@ Layer:
             name,
             "natural",
             tags->'lock_name' AS lock_name,
-            CASE WHEN tags->'intermittent' IN ('yes')
-              OR tags->'seasonal' IN ('yes', 'spring', 'summer', 'autumn', 'winter', 'wet_season', 'dry_season')
-              THEN 'yes' ELSE 'no' END AS int_intermittent,
             CASE WHEN tunnel IN ('yes', 'culvert') 
               OR waterway = 'canal' AND tunnel = 'flooded'
               THEN 'yes' ELSE 'no' END AS int_tunnel,
@@ -2546,7 +2531,6 @@ Layer:
             COALESCE(way_area/NULLIF(POW(!scale_denominator!*0.001*0.28,2),0), 0) AS way_pixels,
             name,
             boundary,
-            tags->'protect_class' AS protect_class,
             way
           FROM planet_osm_polygon
           WHERE (boundary IN ('aboriginal_lands', 'national_park')
@@ -2586,10 +2570,8 @@ Layer:
                   access,
                   amenity,
                   barrier,
-                  highway,
                   historic,
                   man_made,
-                  tags,
                   ST_PointOnSurface(way) AS way
                 FROM planet_osm_polygon
                 WHERE way && !bbox! -- Not ST_PointOnSurface(way) because name might be NULL
@@ -2601,10 +2583,8 @@ Layer:
                   access,
                   amenity,
                   barrier,
-                  highway,
                   historic,
                   man_made,
-                  tags,
                   way
                 FROM planet_osm_point
                 WHERE way && !bbox!
@@ -2619,7 +2599,7 @@ Layer:
           ) AS amenity_low_priority
     properties:
       cache-features: true
-      minzoom: 14
+      minzoom: 16
   - id: text-low-priority
     geometry: point
     <<: *extents
