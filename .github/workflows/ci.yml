@@ -27,6 +27,8 @@ jobs:
       run: find symbols/ -name '*.svg' | xargs xmllint --noout
     - name: Check indexes are up to date
       run: diff -qu <(scripts/indexes.py) indexes.sql
+    - name: Check line widths are up to date
+      run: diff -qu <(scripts/generate_line_widths.py) line-widths.sql
     - name: Check colors of paved roads are up to date
       run: diff -qu <(scripts/generate_road_colours.py) style/road-colors-generated.mss
     - name: Check colors of unpaved roads are up to date
@@ -67,6 +69,8 @@ jobs:
       run: psql -1Xq -v ON_ERROR_STOP=1 -d gis -f functions.sql
     - name: Load POI common values
       run: psql -1Xq -v ON_ERROR_STOP=1 -d gis -f common-values.sql
+    - name: Load line widths
+      run: psql -1Xq -v ON_ERROR_STOP=1 -d gis -f line-widths.sql
     - name: Load empty shapefiles
       run: scripts/get-external-data.py --no-update --cache -D scripts/empty_files
     - name: Test queries are valid
