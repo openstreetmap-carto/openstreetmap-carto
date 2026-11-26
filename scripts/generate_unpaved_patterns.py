@@ -100,13 +100,15 @@ def main():
         'pedestrian-fill',
         'living-street-fill',
         'raceway-fill',
-        'residential-fill'
+        'residential-fill',
+        'parking'
         }
 
     # List of names of mss files in which we search for color variables
     file_names = {
         'style/roads.mss',
-        'style/road-colors-generated.mss'
+        'style/road-colors-generated.mss',
+        'style/landcover.mss'
         }
 
     # The value by which the original color is darkened for the pattern foreground
