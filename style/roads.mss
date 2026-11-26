@@ -7,6 +7,18 @@
 @pedestrian-fill: #dddde8;
 @raceway-fill: #ffc0cb;
 @road-fill: #ddd;
+/* Pedestrian crossing markings. Like the access markings below, these are kept
+   in a narrow band of greys and picked to contrast with the fill of the road
+   they are drawn on: lighter than the fill for the saturated colours of the
+   main road classes, darker than it for the white and near white fills of the
+   minor ones. */
+@crossing-marking: #cfcfcf;
+@crossing-marking-light: #f7f7f7;
+@crossing-marking-road: #bdbdbd;
+/* The refuge of a crossing with crossing:island=yes. A neutral kerb grey
+   rather than the casing colour of the road: those are saturated identity
+   colours on the main classes and read as a marking rather than as a kerb. */
+@crossing-island: #8f8f8f;
 @footway-fill: salmon;
 @footway-fill-noaccess: #bbbbbb;
 @steps-fill: @footway-fill;
@@ -2526,6 +2538,155 @@ tertiary is rendered from z10 and is not included in osm_planet_roads. */
       access/line-dasharray: 6,8;
       [zoom >= 17] {
         access/line-width: 2;
+      }
+    }
+  }
+}
+
+/* Pedestrian crossings mapped as highway=crossing nodes.
+
+   The features are short pieces of the road centre line, centred on the
+   crossing node and running along the road, so the bars are drawn along the
+   direction of traffic and are spread across the road with line-offset -- the
+   same way the markings are painted in reality. The width of the road fill is
+   [line_width] less the two casings of [casing_width] (see carto_line_widths()
+   in functions.sql), so the layout is written once here rather than for every
+   road class and zoom level. Carto drops the parentheses of grouped field
+   expressions, so the products with the fill width are written out term by
+   term below.
+
+   The bars cover @crossing-span of the road fill width with half of that span
+   painted, so a run of n bars is 2n-1 equal slots wide. The count is chosen per
+   road class to keep the bars in the same range of a couple of pixels rather
+   than letting them grow with the road: five for the classes drawn at full
+   width, three for the narrower ones.
+
+   The bars stop short of the edge of the road fill, so the outer ones stay
+   clear of the casing.
+
+   A refuge from crossing:island=yes belongs to the road rather than to the
+   markings, so the query returns it as a feature of its own (int_crossing_part)
+   over the middle half of the marking depth: it reads as a patch rather than
+   as a stripe running the whole way over the road. The bar counts are odd, so
+   the refuge takes the place of the bar on the centre line, which is hidden
+   where there is one. */
+
+@crossing-span: 0.8;
+@crossing-bar-3: @crossing-span / 5;
+@crossing-bar-5: @crossing-span / 9;
+
+#roads-fill::fill {
+  /* five bars on the classes drawn at full width */
+  [feature = 'crossing_motorway'],
+  [feature = 'crossing_trunk'],
+  [feature = 'crossing_primary'],
+  [feature = 'crossing_secondary'],
+  [feature = 'crossing_tertiary'] {
+    [zoom >= 18] {
+      [int_crossing_part = 'bars'] {
+        bar_c/line-width: @crossing-bar-5 * [line_width] - 2 * @crossing-bar-5 * [casing_width];
+        bar_l/line-width: @crossing-bar-5 * [line_width] - 2 * @crossing-bar-5 * [casing_width];
+        bar_r/line-width: @crossing-bar-5 * [line_width] - 2 * @crossing-bar-5 * [casing_width];
+        bar_ll/line-width: @crossing-bar-5 * [line_width] - 2 * @crossing-bar-5 * [casing_width];
+        bar_rr/line-width: @crossing-bar-5 * [line_width] - 2 * @crossing-bar-5 * [casing_width];
+        bar_l/line-offset: 2 * @crossing-bar-5 * [line_width] - 4 * @crossing-bar-5 * [casing_width];
+        bar_r/line-offset: -2 * @crossing-bar-5 * [line_width] + 4 * @crossing-bar-5 * [casing_width];
+        bar_ll/line-offset: 4 * @crossing-bar-5 * [line_width] - 8 * @crossing-bar-5 * [casing_width];
+        bar_rr/line-offset: -4 * @crossing-bar-5 * [line_width] + 8 * @crossing-bar-5 * [casing_width];
+        bar_c/line-join: round;
+        bar_l/line-join: round;
+        bar_r/line-join: round;
+        bar_ll/line-join: round;
+        bar_rr/line-join: round;
+        bar_c/line-color: @crossing-marking;
+        bar_l/line-color: @crossing-marking;
+        bar_r/line-color: @crossing-marking;
+        bar_ll/line-color: @crossing-marking;
+        bar_rr/line-color: @crossing-marking;
+        [feature = 'crossing_motorway'],
+        [feature = 'crossing_trunk'],
+        [feature = 'crossing_primary'] {
+          bar_c/line-color: @crossing-marking-light;
+          bar_l/line-color: @crossing-marking-light;
+          bar_r/line-color: @crossing-marking-light;
+          bar_ll/line-color: @crossing-marking-light;
+          bar_rr/line-color: @crossing-marking-light;
+        }
+        /* the refuge is drawn on the centre line instead, and the bar there
+           would only show through at either end of it */
+        [int_crossing_island = 'yes'] {
+          bar_c/line-opacity: 0;
+        }
+      }
+      [int_crossing_part = 'island'] {
+        island/line-width: @crossing-bar-5 * [line_width] - 2 * @crossing-bar-5 * [casing_width];
+      }
+    }
+  }
+  /* three bars on the narrower classes */
+  [feature = 'crossing_motorway_link'],
+  [feature = 'crossing_trunk_link'],
+  [feature = 'crossing_primary_link'],
+  [feature = 'crossing_secondary_link'],
+  [feature = 'crossing_tertiary_link'],
+  [feature = 'crossing_unclassified'],
+  [feature = 'crossing_residential'],
+  [feature = 'crossing_living_street'],
+  [feature = 'crossing_road'] {
+    [zoom >= 18] {
+      [int_crossing_part = 'bars'] {
+        bar_c/line-width: @crossing-bar-3 * [line_width] - 2 * @crossing-bar-3 * [casing_width];
+        bar_l/line-width: @crossing-bar-3 * [line_width] - 2 * @crossing-bar-3 * [casing_width];
+        bar_r/line-width: @crossing-bar-3 * [line_width] - 2 * @crossing-bar-3 * [casing_width];
+        bar_l/line-offset: 2 * @crossing-bar-3 * [line_width] - 4 * @crossing-bar-3 * [casing_width];
+        bar_r/line-offset: -2 * @crossing-bar-3 * [line_width] + 4 * @crossing-bar-3 * [casing_width];
+        bar_c/line-join: round;
+        bar_l/line-join: round;
+        bar_r/line-join: round;
+        bar_c/line-color: @crossing-marking;
+        bar_l/line-color: @crossing-marking;
+        bar_r/line-color: @crossing-marking;
+        [feature = 'crossing_motorway_link'],
+        [feature = 'crossing_trunk_link'],
+        [feature = 'crossing_primary_link'] {
+          bar_c/line-color: @crossing-marking-light;
+          bar_l/line-color: @crossing-marking-light;
+          bar_r/line-color: @crossing-marking-light;
+        }
+        [feature = 'crossing_road'] {
+          bar_c/line-color: @crossing-marking-road;
+          bar_l/line-color: @crossing-marking-road;
+          bar_r/line-color: @crossing-marking-road;
+        }
+        [int_crossing_island = 'yes'] {
+          bar_c/line-opacity: 0;
+        }
+      }
+      [int_crossing_part = 'island'] {
+        island/line-width: @crossing-bar-3 * [line_width] - 2 * @crossing-bar-3 * [casing_width];
+      }
+    }
+  }
+  /* the refuge is the same on every class */
+  [feature = 'crossing_motorway'],
+  [feature = 'crossing_motorway_link'],
+  [feature = 'crossing_trunk'],
+  [feature = 'crossing_trunk_link'],
+  [feature = 'crossing_primary'],
+  [feature = 'crossing_primary_link'],
+  [feature = 'crossing_secondary'],
+  [feature = 'crossing_secondary_link'],
+  [feature = 'crossing_tertiary'],
+  [feature = 'crossing_tertiary_link'],
+  [feature = 'crossing_unclassified'],
+  [feature = 'crossing_residential'],
+  [feature = 'crossing_living_street'],
+  [feature = 'crossing_road'] {
+    [zoom >= 18] {
+      [int_crossing_part = 'island'] {
+        island/line-color: @crossing-island;
+        island/line-join: round;
+        island/line-cap: round;
       }
     }
   }

@@ -750,8 +750,11 @@ Layer:
         (SELECT
             COALESCE(layer,0) AS layernotnull,
             osm_id,
-            -- Road score: rail, service, access, surface, in decreasing priority.
-            (CASE WHEN substring(feature for 8) = 'railway_' THEN 2000 ELSE 1000 END)
+            -- Road score: crossing markings, rail, service, access, surface, in decreasing
+            -- priority. Crossing markings are drawn over the road they belong to, but under
+            -- any road drawn on top of it.
+            (CASE WHEN substring(feature for 9) = 'crossing_' THEN 10000 ELSE 0 END)
+              + (CASE WHEN substring(feature for 8) = 'railway_' THEN 2000 ELSE 1000 END)
               + (CASE WHEN feature IN ('railway_INT-rail-service', 'railway_INT-tram-service', 'railway_INT-light_rail-service', 'railway_INT-subway-service',
                                   'railway_INT-funicular-service', 'railway_INT-narrow_gauge-service', 'railway_INT-monorail-service') THEN 0 ELSE 100 END)
               + (CASE int_access WHEN 'no' THEN 0 WHEN 'restricted' THEN 10 ELSE 20 END)
@@ -765,6 +768,8 @@ Layer:
             service,
             link,
             preserved,
+            int_crossing_part,
+            int_crossing_island,
             widths.line_width,
             widths.casing_width,
             widths.bridge_casing_width,
@@ -797,11 +802,15 @@ Layer:
                   WHEN highway = 'path' THEN carto_path_type(bicycle, horse)
                   ELSE highway
                 END AS width_class,
+                NULL AS int_crossing_part,
+                NULL AS int_crossing_island,
                 layer,
                 z_order,
                 way
               FROM planet_osm_line
-              WHERE (tunnel IS NULL OR NOT tunnel IN ('yes', 'building_passage', 'avalanche_protector'))
+              WHERE way && !bbox! -- necessary because the crossing select below uses !bbox!,
+                                  -- which stops mapnik adding the bounding box filter itself
+                AND (tunnel IS NULL OR NOT tunnel IN ('yes', 'building_passage', 'avalanche_protector'))
                 AND (covered IS NULL OR NOT covered = 'yes')
                 AND (bridge IS NULL OR NOT bridge IN ('yes', 'boardwalk', 'cantilever', 'covered', 'low_water_crossing', 'movable', 'trestle', 'viaduct'))
                 AND highway IS NOT NULL -- end of road select
@@ -824,15 +833,112 @@ Layer:
                   ELSE 'no'
                 END AS preserved,
                 NULL AS width_class,
+                NULL AS int_crossing_part,
+                NULL AS int_crossing_island,
                 layer,
                 z_order,
                 way
               FROM planet_osm_line
-              WHERE (tunnel IS NULL OR NOT tunnel IN ('yes', 'building_passage', 'avalanche_protector'))
+              WHERE way && !bbox! -- see the road select above
+                AND (tunnel IS NULL OR NOT tunnel IN ('yes', 'building_passage', 'avalanche_protector'))
                 AND (covered IS NULL OR NOT covered = 'yes' OR railway IN ('platform'))
                 AND (bridge IS NULL OR NOT bridge IN ('yes', 'boardwalk', 'cantilever', 'covered', 'low_water_crossing', 'movable', 'trestle', 'viaduct'))
                 AND (railway NOT IN ('platform') OR (tags->'location' NOT IN ('underground')) OR (tags->'location') IS NULL)
                 AND railway IS NOT NULL -- end of rail select
+            UNION ALL
+            -- Markings of pedestrian crossings mapped as highway=crossing nodes.
+            --
+            -- Each row is a short piece of the road being crossed, centred on the
+            -- crossing node and running along the road, on which the style draws the
+            -- bars with line offsets. The markings therefore follow the road without
+            -- depending on the geometry of any separately mapped crossing way, and take
+            -- the widths of the road from the join below like any other row.
+            SELECT
+                crossing.osm_id,
+                ('crossing_' || crossing.highway) AS feature,
+                NULL AS tracktype,
+                NULL AS int_surface,
+                NULL AS int_access,
+                NULL AS construction,
+                NULL AS service,
+                'no' AS link,
+                NULL AS preserved,
+                'highway_' || crossing.highway AS width_class,
+                part.int_crossing_part,
+                crossing.int_crossing_island,
+                crossing.layernotnull AS layer,
+                crossing.z_order,
+                part.way
+              FROM (
+                -- one row per crossing node: the road through it as a single line, and
+                -- the class and layer of that road
+                SELECT
+                    node.osm_id,
+                    node.way AS node,
+                    node.int_crossing_island,
+                    -- where the node is the end of two ways they are merged into one line,
+                    -- so that the markings run around the corner continuously instead of
+                    -- as two pieces that do not meet
+                    ST_LineMerge(ST_Collect(road.way)) AS way,
+                    -- and the markings take after the more important of the two roads
+                    (array_agg(road.highway ORDER BY road.z_order DESC, road.osm_id))[1] AS highway,
+                    (array_agg(road.layernotnull ORDER BY road.z_order DESC, road.osm_id))[1] AS layernotnull,
+                    max(road.z_order) AS z_order
+                  FROM (
+                    SELECT
+                        osm_id,
+                        way,
+                        CASE WHEN tags->'crossing:island' = 'yes' THEN 'yes' ELSE 'no' END AS int_crossing_island
+                      FROM planet_osm_point
+                      WHERE way && !bbox!
+                        AND Z(!scale_denominator!) >= 18
+                        AND highway = 'crossing'
+                        -- marked, preferring crossing:markings over the crossing key
+                        AND CASE
+                              WHEN tags->'crossing:markings' IS NOT NULL THEN tags->'crossing:markings' <> 'no'
+                              ELSE tags->'crossing' IN ('marked', 'zebra', 'uncontrolled', 'traffic_signals')
+                            END
+                  ) AS node
+                  -- the roads through the node, restricted to the roads the road select
+                  -- above draws so that a crossing on a bridge or in a tunnel is not
+                  -- drawn on the surface
+                  CROSS JOIN LATERAL (
+                    SELECT way, highway, COALESCE(layer, 0) AS layernotnull, z_order, osm_id
+                      FROM planet_osm_line
+                      WHERE ST_Intersects(way, node.way)
+                        AND highway IN ('motorway', 'trunk', 'primary', 'secondary', 'tertiary',
+                                        'motorway_link', 'trunk_link', 'primary_link', 'secondary_link', 'tertiary_link',
+                                        'unclassified', 'residential', 'living_street', 'road')
+                        AND (tunnel IS NULL OR NOT tunnel IN ('yes', 'building_passage', 'avalanche_protector'))
+                        AND (covered IS NULL OR NOT covered = 'yes')
+                        AND (bridge IS NULL OR NOT bridge IN ('yes', 'boardwalk', 'cantilever', 'covered', 'low_water_crossing', 'movable', 'trestle', 'viaduct'))
+                        AND ST_Length(way) > 0
+                  ) AS road
+                  GROUP BY node.osm_id, node.way, node.int_crossing_island
+                  -- three or more roads meeting at the node, or two that do not continue
+                  -- one another, do not merge into a single line, and it cannot be told
+                  -- which of them is being crossed
+                  HAVING ST_GeometryType(ST_LineMerge(ST_Collect(road.way))) = 'ST_LineString'
+              ) AS crossing
+              -- where the node is along the road, and half the depth of the markings,
+              -- 3 Mercator metres, both as fractions of the length of the road
+              CROSS JOIN LATERAL (
+                SELECT ST_LineLocatePoint(crossing.way, crossing.node) AS position, 3.0 / ST_Length(crossing.way) AS half
+              ) AS along
+              -- the bars are drawn on the piece of road over the depth of the markings.
+              -- The refuge in the middle of the road is a feature of the road rather
+              -- than of the markings, so it is drawn on the middle half of it and reads
+              -- as a patch rather than as a stripe running the whole way over the road.
+              CROSS JOIN LATERAL (
+                SELECT 'bars' AS int_crossing_part,
+                       ST_LineSubstring(crossing.way, GREATEST(0, along.position - along.half), LEAST(1, along.position + along.half)) AS way
+                UNION ALL
+                SELECT 'island',
+                       ST_LineSubstring(crossing.way, GREATEST(0, along.position - along.half / 2), LEAST(1, along.position + along.half / 2))
+                  WHERE crossing.int_crossing_island = 'yes'
+              ) AS part
+              -- a piece that has shrunk to a point at the very end of a road
+              WHERE ST_NPoints(part.way) > 1 -- end of crossing select
             ) AS features
             -- the widths of the road at this zoom level, see line-widths.yaml
             LEFT JOIN carto_line_widths(Z(!scale_denominator!)) AS widths ON widths.class = width_class
