@@ -1791,7 +1791,7 @@ Layer:
                   )
                 END AS name,
               tags->'parking' AS parking,
-              CASE WHEN tags->'parking' IN ('surface', 'multi-storey', 'rooftop') THEN 'yes' ELSE 'no' END as int_largeparking,
+              CASE WHEN tags->'parking' IN ('surface', 'multi-storey', 'rooftop') OR NOT tags ? 'parking' THEN 'yes' ELSE 'no' END as int_normalparking,
               COALESCE(
                 'aeroway_' || CASE WHEN aeroway IN ('gate', 'apron', 'helipad', 'aerodrome') THEN aeroway END,
                 'tourism_' || CASE WHEN tourism IN ('alpine_hut', 'apartment', 'artwork', 'camp_site', 'caravan_site', 'chalet', 'gallery', 'guest_house',

@@ -1467,14 +1467,17 @@
   }
 
   [feature = 'amenity_parking'] {
-    [zoom >= 15][way_pixels > 750][int_largeparking = 'yes'],
-    [zoom >= 17][int_largeparking = 'yes'],
+    [zoom >= 15][way_pixels > 750][int_normalparking = 'yes'],
+    [zoom >= 17][int_normalparking = 'yes'],
     [zoom >= 18] {
       marker-file: url('symbols/amenity/parking.svg');
-      [int_largeparking != 'yes'] { marker-file: url('symbols/amenity/parking_subtle.svg'); }
+      [int_normalparking != 'yes'] { marker-file: url('symbols/amenity/parking_subtle.svg'); }
       marker-clip: false;
       marker-fill: @transportation-icon;
-      [int_access = 'restricted'] { marker-fill: @transportation-restricted; }
+      [int_access = 'restricted'] { 
+        [int_normalparking = 'yes'] { marker-file: url('symbols/amenity/parking_private.svg'); }
+        marker-fill: @transportation-restricted;
+      }
     }
   }
 
@@ -2891,21 +2894,21 @@
   }
 
   [feature = 'amenity_parking'] {
-    [zoom >= 15][way_pixels > 3000][int_largeparking = 'yes'],
+    [zoom >= 16][way_pixels > 3000][int_normalparking = 'yes'],
     [zoom >= 18] {
       text-name: "[name]";
       text-size: @standard-font-size;
       text-wrap-width: @standard-wrap-width;
       text-line-spacing: @standard-line-spacing-size;
       text-fill: @transportation-text;
-      text-dy: 8;
-      [int_largeparking = 'yes'] { text-dy: 9 }
+      text-dy: 7;
+      [int_normalparking = 'yes'] { text-dy: 9 }
       text-face-name: @standard-font;
       text-halo-radius: @standard-halo-radius;
       text-halo-fill: @standard-halo-fill;
       [int_access = 'restricted'] {
         text-fill: @transportation-restricted;
-        text-halo-radius: 0;
+        text-halo-fill: @parking;
       }
     }
   }
