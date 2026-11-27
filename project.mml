@@ -1782,9 +1782,9 @@ Layer:
                           OR tags->'mountain_pass' = 'yes')
                       THEN CONCAT(REPLACE(ROUND((tags->'ele')::NUMERIC)::TEXT, '-', U&'\2212'), U&'\00A0', 'm') END,
                     CASE
-                      WHEN (tags ? 'height') AND tags->'height' ~ '^\d{1,3}(\.\d+)?$'
+                      WHEN (tags ? 'height') AND tags->'height' ~ '^\d{1,3}(\.\d+)?( m)?$'
                         AND waterway = 'waterfall'
-                      THEN CONCAT(ROUND((tags->'height')::NUMERIC)::TEXT, U&'\00A0', 'm') END
+                      THEN CONCAT(ROUND(SUBSTRING(tags->'height', '^(\d{1,3}(\.\d+)?)( m)?$')::NUMERIC)::TEXT, U&'\00A0', 'm') END
                     )
                   )
                 END AS name,
