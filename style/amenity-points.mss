@@ -1927,14 +1927,16 @@
   [feature = 'historic_city_gate'][zoom >= 17],
   [feature = 'natural_cave_entrance'][zoom >= 15],
   [feature = 'man_made_mast'][zoom >= 18],
-  [feature = 'man_made_tower'][zoom >= 17],
+  [feature = 'man_made_tower']["tower:type" != 'lighting']["tower:type" != 'bell_tower']["tower:type" != 'watchtower'][zoom >= 17],
+  [feature = 'man_made_tower'][zoom >= 18],
   [feature = 'man_made_storage_tank'][zoom >= 18],
   [feature = 'man_made_silo'][zoom >= 18],
   [feature = 'man_made_communications_tower'][zoom >= 17],
   [feature = 'man_made_telescope']["telescope:type" != 'optical']["telescope:type" != null][zoom >= 16],
   [feature = 'man_made_telescope'][zoom >= 17],
   [feature = 'man_made_water_tower'][zoom >= 17],
-  [feature = 'man_made_chimney'][zoom >= 17],
+  [feature = 'man_made_chimney'][height > 30][zoom >= 17],
+  [feature = 'man_made_chimney'][zoom >= 18],
   [feature = 'man_made_crane'][zoom >= 17],
   [feature = 'man_made_waste_water_plant'][zoom >= 17] {
     text-name: "[name]";
