@@ -682,7 +682,7 @@ Layer:
                 p.highway AS type,
                 carto_highway_int_surface(surface) AS int_surface,
                 l.highway AS int_tc_type,
-                CASE WHEN l.service IN ('parking_aisle', 'drive-through', 'driveway')
+                CASE WHEN l.service IN ('parking_aisle', 'drive-through', 'driveway') OR l.leisure IN ('slipway')
                   THEN 'INT-minor'
                   ELSE 'INT-normal'
                 END AS int_tc_service,
