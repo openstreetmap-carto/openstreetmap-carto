@@ -433,17 +433,16 @@
       text-halo-radius: @standard-halo-radius * 1.5;
       [zoom >= 14] {
         text-size: 10;
-        text-wrap-width: 55; // 5.0 em
-        text-line-spacing: -0.55; // -0.05 em
-        text-margin: 7.7; // 0.7 em
+        text-wrap-width: 45; // 4.5 em
+        text-line-spacing: -0.8; // -0.08 em
+        text-margin: 7.0; // 0.7 em
       }
       [zoom >= 15] {
         text-size: 11;
         text-fill: @placenames-light;
-        text-halo-fill: @standard-halo-fill;
-        text-wrap-width: 45; // 4.5 em
-        text-line-spacing: -0.8; // -0.08 em
-        text-margin: 7.0; // 0.7 em
+        text-wrap-width: 55; // 5.0 em
+        text-line-spacing: -0.55; // -0.05 em
+        text-margin: 7.7; // 0.7 em
       }
       [zoom >= 16] {
         text-size: 12;
