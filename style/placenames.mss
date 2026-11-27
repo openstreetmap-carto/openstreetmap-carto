@@ -440,7 +440,6 @@
       [zoom >= 15] {
         text-size: 11;
         text-fill: @placenames-light;
-        text-halo-fill: @standard-halo-fill;
         text-wrap-width: 55; // 5.0 em
         text-line-spacing: -0.55; // -0.05 em
         text-margin: 7.7; // 0.7 em
