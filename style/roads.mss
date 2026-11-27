@@ -1909,12 +1909,6 @@ tertiary is rendered from z10 and is not included in osm_planet_roads. */
           line-dasharray: 5,3;
         }
       }
-      #bridges {
-        [zoom >= 14] {
-          line-width: 2;
-          line-color: #999;
-        }
-      }
     }
 
     [feature = 'railway_monorail'] {
