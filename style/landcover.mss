@@ -393,7 +393,9 @@
   }
 
   [feature = 'man_made_wastewater_plant'] {
-    polygon-fill: @wastewater_plant;
+    polygon-fill: @built-up-lowzoom;
+    [zoom >= 12] { polygon-fill: @built-up-z12; }
+    [zoom >= 13] { polygon-fill: @wastewater_plant; }
     [zoom >= 16] {
       line-width: @landuse-faint-outline-width;
       line-color: @wastewater_plant-line;
@@ -401,7 +403,9 @@
   }
 
   [feature = 'man_made_water_works'] {
-    polygon-fill: @water_works;
+    polygon-fill: @built-up-lowzoom;
+    [zoom >= 12] { polygon-fill: @built-up-z12; }
+    [zoom >= 13] { polygon-fill: @water_works; }
     [zoom >= 16] {
       line-width: @landuse-faint-outline-width;
       line-color: @water_works-line;
@@ -409,7 +413,9 @@
   }
 
   [feature = 'landuse_railway'][zoom >= 10] {
-    polygon-fill: @railway;
+    polygon-fill: @built-up-lowzoom;
+    [zoom >= 12] { polygon-fill: @built-up-z12; }
+    [zoom >= 13] { polygon-fill: @railway; }
     [way_pixels >= 4]  { polygon-gamma: 0.75; }
     [way_pixels >= 64] { polygon-gamma: 0.3;  }
   }
@@ -645,7 +651,9 @@
   }
 
   [feature = 'railway_station'][zoom >= 10] {
-    polygon-fill: @railway;
+    polygon-fill: @built-up-lowzoom;
+    [zoom >= 12] { polygon-fill: @built-up-z12; }
+    [zoom >= 13] { polygon-fill: @railway; }
   }
 
   [feature = 'leisure_sports_centre'],
