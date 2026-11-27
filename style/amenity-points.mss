@@ -2064,6 +2064,7 @@
       text-fill: @leisure-green;
       text-face-name: @standard-font;
       text-halo-fill: @standard-halo-fill;
+      text-halo-radius: @standard-halo-radius;
       [feature = 'leisure_dog_park'] { 
         text-halo-radius: @standard-halo-radius * 1.5; /* Extra halo needed to stand out from paw pattern. */
       }
