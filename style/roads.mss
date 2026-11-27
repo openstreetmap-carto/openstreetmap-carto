@@ -61,7 +61,7 @@
 @trunk-tunnel-fill: lighten(@trunk-fill, 10%);
 @primary-tunnel-fill: lighten(@primary-fill, 10%);
 @secondary-tunnel-fill: lighten(@secondary-fill, 5%);
-@tertiary-tunnel-fill: lighten(@tertiary-fill, 5%);
+@tertiary-tunnel-fill: darken(@tertiary-fill, 5%);
 @residential-tunnel-fill: darken(@residential-fill, 5%);
 @living-street-tunnel-fill: lighten(@living-street-fill, 3%);
 
