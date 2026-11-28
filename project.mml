@@ -95,6 +95,7 @@ Layer:
             way_pixels,
             COALESCE(aeroway, golf, amenity, wetland, power, landuse, leisure, man_made, "natural", shop, tourism, highway, railway) AS feature,
             religion,
+            int_surface,
             way
           FROM (SELECT
               COALESCE(way_area/NULLIF(POW(!scale_denominator!*0.001*0.28,2),0), 0) AS way_pixels,
@@ -104,7 +105,7 @@ Layer:
                                                     'hospital', 'kindergarten', 'grave_yard', 'prison', 'place_of_worship', 'clinic', 'ferry_terminal',
                                                     'marketplace', 'community_centre', 'social_facility', 'arts_centre', 'parking_space', 'bus_station',
                                                     'fire_station', 'police')
-                              OR amenity IN ('parking') AND (tags->'parking' NOT IN ('underground') OR (tags->'parking') IS NULL) THEN amenity END)) AS amenity,
+                              OR amenity IN ('parking') AND (tags->'parking' NOT IN ('underground') OR tags->'parking' IS NULL) THEN amenity END)) AS amenity,
               ('landuse_' || (CASE WHEN landuse IN ('quarry', 'vineyard', 'orchard', 'cemetery', 'residential', 'garages', 'meadow', 'grass',
                                                     'allotments', 'forest', 'farmyard', 'farmland', 'greenhouse_horticulture',
                                                     'recreation_ground', 'village_green', 'retail', 'industrial', 'railway', 'commercial',
@@ -121,6 +122,7 @@ Layer:
               ('highway_' || (CASE WHEN highway IN ('services', 'rest_area') THEN highway END)) AS highway,
               ('railway_' || (CASE WHEN railway = 'station' THEN railway END)) AS railway,
               CASE WHEN religion IN ('christian', 'jewish', 'muslim') THEN religion ELSE 'INT-generic'::text END AS religion,
+              carto_highway_int_surface(surface) AS int_surface,
               way
             FROM planet_osm_polygon
             WHERE (landuse IS NOT NULL
@@ -1788,7 +1790,8 @@ Layer:
                     )
                   )
                 END AS name,
-              tags->'parking' as "parking",
+              tags->'parking' AS parking,
+              CASE WHEN tags->'parking' IN ('surface', 'multi-storey', 'rooftop') OR NOT tags ? 'parking' THEN 'yes' ELSE 'no' END as int_normalparking,
               COALESCE(
                 'aeroway_' || CASE WHEN aeroway IN ('gate', 'apron', 'helipad', 'aerodrome') THEN aeroway END,
                 'tourism_' || CASE WHEN tourism IN ('alpine_hut', 'apartment', 'artwork', 'camp_site', 'caravan_site', 'chalet', 'gallery', 'guest_house',

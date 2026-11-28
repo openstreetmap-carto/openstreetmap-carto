@@ -597,13 +597,18 @@
   [feature = 'amenity_motorcycle_parking'],
   [feature = 'amenity_taxi'] {
     [zoom >= 14] {
-      polygon-fill: @parking;
+      [int_surface = 'unpaved'] {
+        polygon-pattern-file: url('symbols/unpaved/unpaved_parking.svg');
+      }
+      [int_surface != 'unpaved'] {
+        polygon-fill: @parking;
+        [way_pixels >= 4]  { polygon-gamma: 0.75; }
+        [way_pixels >= 64] { polygon-gamma: 0.3;  }
+      }
       [zoom >= 15] {
         line-width: 0.3;
         line-color: @parking-outline;
       }
-      [way_pixels >= 4]  { polygon-gamma: 0.75; }
-      [way_pixels >= 64] { polygon-gamma: 0.3;  }
     }
   }
 
